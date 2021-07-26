@@ -19,3 +19,36 @@
 2. 比丁阳的少：只对B cell进行分析，其实在属于T cell的cluster中也有部分的细胞同时表达CD79A 和CD3D，这类细胞没有进入我的分析流程
 
 ### CCA alignment
+
+
+
+<img src="https://gitee.com/huhansan666666/picture/raw/master/img/image-20210726101939147.png" alt="image-20210726101939147" style="zoom:50%;" /><img src="https://gitee.com/huhansan666666/picture/raw/master/img/image-20210726101958925.png" alt="image-20210726101958925" style="zoom:50%;" />
+
+一些marker gene的表达情况
+
+<img src="https://gitee.com/huhansan666666/picture/raw/master/img/image-20210726102113112.png" alt="image-20210726102113112" style="zoom:67%;" />
+
+![image-20210726102211984](https://gitee.com/huhansan666666/picture/raw/master/img/image-20210726102211984.png)
+
+
+
+
+
+
+
+
+
+使用singleR进行注释，大部分注释的结果是在B cell，少数是CLP和Monocytes，注释到T cell中的细胞非常的少
+
+![image-20210726102525332](https://gitee.com/huhansan666666/picture/raw/master/img/image-20210726102525332.png)
+
+![image-20210726102655858](https://gitee.com/huhansan666666/picture/raw/master/img/image-20210726102655858.png)
+
+tlb细胞的注释
+
+![image-20210726103924135](https://gitee.com/huhansan666666/picture/raw/master/img/image-20210726103924135.png)
+
+### check doublets via ‘solo’
+
+solo是一个基于神经网络的doublet检测工具，在基准测试中胜出了doublet finder，但是只用python版本
+
