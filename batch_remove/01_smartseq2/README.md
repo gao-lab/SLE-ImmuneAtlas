@@ -50,5 +50,7 @@ tlb细胞的注释
 
 ### check doublets via ‘solo’
 
-solo是一个基于神经网络的doublet检测工具，在基准测试中胜出了doublet finder，但是只用python版本
+solo是一个基于半监督深度学习的的doublet检测工具，在基准测试中胜出了之前的工具DoubletFinder和Scrublet，但是只有python版本，在我们全部的6个smart-seq2的数据集的所有细胞中运行了solo，只在GSE120575中检测到2个doublet（一共有16289个细胞），之后会用10X平台的数据作为对照
+
+![image-20210726191453174](https://gitee.com/huhansan666666/picture/raw/master/img/image-20210726191453174.png)
 
