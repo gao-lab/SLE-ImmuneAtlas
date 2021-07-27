@@ -1,6 +1,6 @@
 # 用solo定义doublet
 
-solo是一个利用半监督学习来寻找single cell RNA 数据中doublet的算法，在多个benchmark中都优于常用的DoubletFinfer和Scrublet算法，所以想用solo来定义数据集中的doublet，并寻找这些可能的doublet和TLB之间的关系
+[solo](https://github.com/calico/solo)是一个利用半监督学习来寻找single cell RNA 数据中doublet的算法，在多个benchmark中都优于常用的DoubletFinfer和Scrublet算法，所以想用solo来定义数据集中的doublet，并寻找这些可能的doublet和TLB之间的关系
 
 ### work on smartseq2 data
 
@@ -49,7 +49,28 @@ solo是一个利用半监督学习来寻找single cell RNA 数据中doublet的�
 | PBMC_donor_B                      | 7647        | 58                            | 0.76                         | 382                        | 5.00                      |
 | PBMC_donor_C                      | 9302        | 145                           | 1.56                         | 465                        | 5.00                      |
 | PBMC_whole_transcriptome          | 9365        | 385                           | 4.11                         | 468                        | 5.00                      |
+| **Summary**                       | **235606**  | **7193**                      | **-**                        | **11773**                  | **-**                     |
 
 ### 10x中定义的doublet与TLB关系
 
-ongoing...
+在上述的22个数据集中的所有B cell中我们运行了reference-based CCA，以消除它们之间的批次效应。发现有两群细胞远离主要的B cell群体，分别是高表达T cell的marker gene CD3D和Monocyte 细胞的marker gene CD14
+
+<img src="https://gitee.com/huhansan666666/picture/raw/master/img/image-20210727183600367.png" alt="image-20210727183600367" style="zoom:50%;" />
+
+两者的singleR 注释也是分别在T cell和Macrophage中高（cluster7，15表达T cell marker；cluster 16表达Monocyte marker）
+
+<img src="https://gitee.com/huhansan666666/picture/raw/master/img/image-20210727183730955.png" alt="image-20210727183730955" style="zoom:67%;" />
+
+但是solo的结果把它们都识别为doublet（不管是否指定solo的doublet比率，左侧为未指定，右侧为指定后）
+
+![image-20210727184106817](https://gitee.com/huhansan666666/picture/raw/master/img/image-20210727184106817.png)
+
+### 目前结论以及想法
+
+1. 从smart-seq2本身的原理以及solo的结果能够证明TLB细胞确实是存在的；
+2. solo将10x中大部分的TLB细胞识别为doublet，而将smart-seq2中是TLB都识别为singlet，说明两者之间存在一些差别；
+3. 10x中同时表达B cell和T cell marker 的细胞可能是测序产生的doublet、真实存在的TLB的混合，但是目前从数据上不好区分这两者，需要比较跨平台的数据，考虑到不同平台之间本身也存在batch effect，给这个问题增加了难度。
+
+### 问题
+
+- 10x数据中定义的TLB是否具有研究价值（在我们无法区分真正doublet和TLB的情况下）？
