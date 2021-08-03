@@ -9,7 +9,7 @@
 
 使用的是CCA 的默认参数，发现了可能的TLB细胞
 
-![image-20210728142551779](https://gitee.com/huhansan666666/picture/raw/master/img/image-20210728142551779.png)
+![image-20210728142551779](C:\Users\rui\Desktop\image-20210728142551779.png)
 
 将这一群细胞单独拿出来研究，并与之前在各个测序技术内部定义TLB的重合情况进行比较
 
