@@ -2,17 +2,17 @@
 
  郭国骥老师的 human cell landscape (HCL)项目，采用的是Microwell-seq，在141个检测的组织和器官，包含了成年人和胎儿的大部分重要器官，也有少量小鼠的数据（几乎所有器官都有重复实验）中，在8个数据集中发现了tlb分别如下
 
-| 数据集                    | 重复实验次数    | 占B细胞比例(%) |
-| ------------------------- | --------------- | -------------- |
-| Adult-Epityphlon1         | 1               | 7.25           |
-| Adult-Spleen1-2           | 2               | 2.1            |
-| Adult-Rectum1             | 1               | 10.1           |
-| Adult-Transverse-Colon2-1 | 3(2个中发现tlb) | 7.3            |
-| Adult-Transverse-Colon2-2 | 3(2个中发现tlb) | 1.6            |
-| Fetal-Pancreas1           | 3               | 53.8           |
-| Adult-Liver4-2            | 5               | 27.2           |
-| Adult-Ileum2              | 1               | 20.7           |
-|                           |                 |                |
+| 数据集                              | 重复实验次数    | 占B细胞比例(%) |
+| ----------------------------------- | --------------- | -------------- |
+| Adult-Epityphlon1                   | 1(1个中发现tlb) | 7.25           |
+| Adult-Spleen1-2                     | 2(1个中发现tlb) | 2.1            |
+| Adult-Rectum1                       | 1(1个中发现tlb) | 10.1           |
+| Adult-Transverse-Colon2-1           | 3(2个中发现tlb) | 7.3            |
+| Adult-Transverse-Colon2-2           | 3(2个中发现tlb) | 1.6            |
+| Fetal-Pancreas1                     | 3(1个中发现tlb) | 53.8           |
+| Adult-Liver4-2                      | 5(1个中发现tlb) | 27.2           |
+| Adult-Ileum2                        | 1(1个中发现tlb) | 20.7           |
+| 注意，其他没有发现TLB的组织没有列出 |                 |                |
 
 与之前的结果相比，
 
@@ -79,8 +79,6 @@ HNSCC数据集，一共有63个样本
 
 69 个 scRNA-seq 样本，有 52 名患者：包括 4 个 TNBC、4 个 BRCA1 TNBC、6 个 HER+ 肿瘤、19 个 ER+ 肿瘤和 6 个 ER+ 肿瘤的淋巴结转移的概况。它还包括来自 13 名没有乳腺癌的正常患者的总乳腺细胞、来自 11 名正常患者的上皮乳腺细胞以及来自 4 名具有 BRCA1 突变的癌前患者的总乳腺细胞的概况。
 
-由于命名不规范，统计起来非常困难
-
 | 分组                                     | 重复数量 | 有TLB的样本的数量 |
 | ---------------------------------------- | -------- | ----------------- |
 | Normal Total cells                       | 13       | 0                 |
@@ -118,13 +116,13 @@ HNSCC数据集，一共有63个样本
 
 ### GSE171555
 
-COVID-19中人PBMC的scRNA-seq，有四个队列一共四十八个样本
+COVID-19中人PBMC的scRNA-seq，有四个队列一共四十八个样本，TLB分布情况如下
 
 | 分组              | 重复数量 | 有TLB的样本的数量 |
 | ----------------- | -------- | ----------------- |
-| PBMC_hospitalized | 6        |                   |
-| PBMC_infected     | 29       |                   |
-| PBMC_exposed      | 8        |                   |
-| PBMC_healthy      | 5        |                   |
-| 总计              | 48       |                   |
+| PBMC_hospitalized | 6        | 1                 |
+| PBMC_infected     | 29       | 21                |
+| PBMC_exposed      | 8        | 6                 |
+| PBMC_healthy      | 5        | 5                 |
+| 总计              | 48       | 34                |
 
