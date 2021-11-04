@@ -1,9 +1,9 @@
 name,RNA,preseq_RNA,TCR,BCR,velocyto,sample_batch,group,cellranger_cell_number,cell_number_after_QC,gene_median,UMI_median,mean_reads_percell,time,target,loading,cell_activity
-WH1,√,none,√,√,√,4,SS_PAH,,,,,,,,,97.85%
-ZMY1,√,none,√,√,√,4,Healthy_Control,,,,,,,,,97.09%
-ZH,√,none,√,√,running,5,Healthy_Control,,,,,,,,,90.98%
-GW,√,√,√,√,running,5,SLE,,,,,,,,,93.00%
-HXR,√,√,√,√,running,6,SLE,,,,,,,,,91.00%
+WH1,√,none,√,√,√,4,SS_PAH,,,,,,,,,
+ZMY1,√,none,√,√,√,4,Healthy_Control,,,,,,,,,
+ZH,√,none,√,√,running,5,Healthy_Control,,,,,,,,,
+GW,√,√,√,√,running,5,SLE,,,,,,,,,
+HXR,√,√,√,√,running,6,SLE,,,,,,,,,
 WYF,√,√,√,√,running,6,SLE,,,,,,,,,
 ZS,√,none,√,√,running,6,Healthy_Control,,,,,,,,,
 ZPP,√,√,√,√,,7,SLE,,,,,,,,,
