@@ -1,17 +1,17 @@
 name,RNA,preseq_RNA,TCR,BCR,velocyto,sample_batch,group,cellranger_cell_number,cell_number_after_QC,gene_median,UMI_median,mean_reads_percell,time,target,loading,cell_activity
-WH1,√,x,√,√,,4,SS_PAH,9938,8488,1201,2833,"47,615"," 2020/12/24",5000,16920,97.85%
-ZMY1,√,x,√,√,,4,Healthy_Control,1866,1852,716,1464,"464,274"," 2021/4/7",8000,17850,97.09%
-ZH,√,,,,,5,Healthy_Control,5891,5814,814,1655,"132,323"," 2021/4/7",8000,19050,90.98%
-GW,√,,,,,5,SLE,3637,3494,1570,3895,"129,236"," 2021/4/27",8000,18506,93.00%
-HXR,√,√,√,√,,6,SLE,3243,3181,1152,2623,"145,919"," 2021/4/27",8000,18534,91.00%
-WYF,√,√,√,√,,6,SLE,,,,,,,,,
-ZS,√,none,√,√,,6,Healthy_Control,,,,,,,,,
+WH1,√,none,√,√,√,4,SS_PAH,,,,,,,,,97.85%
+ZMY1,√,none,√,√,√,4,Healthy_Control,,,,,,,,,97.09%
+ZH,√,none,√,√,running,5,Healthy_Control,,,,,,,,,90.98%
+GW,√,√,√,√,running,5,SLE,,,,,,,,,93.00%
+HXR,√,√,√,√,running,6,SLE,,,,,,,,,91.00%
+WYF,√,√,√,√,running,6,SLE,,,,,,,,,
+ZS,√,none,√,√,running,6,Healthy_Control,,,,,,,,,
 ZPP,√,√,√,√,,7,SLE,,,,,,,,,
-XYY2,√,√,√,√,,8,after_SLE_PAH,,,,,,,,,
-LL2,√,,√,√,,9,after_SLE_PAH,,,,,,,,,
-LGY,√,,√,√,,10,SLE,,,,,,,,,
-WH2,√,,√,√,,,after_SS_PAH,,,,,,,,,
-HXX,√,,√,√,,,SLE,,,,,,,,,
+XYY2,√,√,√,√,running,8,after_SLE_PAH,,,,,,,,,
+LL2,√,,√,√,running,9,after_SLE_PAH,,,,,,,,,
+LGY,√,,√,√,running,10,SLE,,,,,,,,,
+WH2,√,,√,√,running,,after_SS_PAH,,,,,,,,,
+HXX,running,,√,√,,,SLE,,,,,,,,,
 ZPP2,-,,√,√,,,after_SLE,,,,,,,,,
 WYF2,-,,-,-,,,after_SLE,,,,,,,,,
 HXR2,-,,-,-,,,after_SLE,,,,,,,,,
