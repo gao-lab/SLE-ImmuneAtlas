@@ -1,0 +1,5703 @@
+<!doctype html>
+    <html>
+    <head>
+    <title>/rd2/user/xiacr/sle/scripts/conga/BCR/all/step3/all_bcell</title>
+    
+    </head>
+    <body>
+
+    <h1>Overview:</h1>
+
+    This page contains the results of CoNGA analyses.
+    Results in tables may have been filtered to reduce redundancy,
+    focus on the most important columns, and
+    limit length; full tables should exist as OUTFILE_PREFIX*.tsv files.
+    <br>
+    <br>
+
+    
+<h1>Command:</h1>
+/rd2/user/xiacr/sle/source/conga/scripts/run_conga.py --gex_data /rd2/user/xiacr/sle/scripts/conga/BCR/all/step2/all_bcell_merged_gex.h5ad --gex_data_type h5ad --clones_file /rd2/user/xiacr/sle/scripts/conga/BCR/all/step2/all_bcell_merged_clones.tsv --organism human_ig --all --outfile_prefix /rd2/user/xiacr/sle/scripts/conga/BCR/all/step3/all_bcell
+<br>
+
+    <h1>Stats</h1>
+num_cells_w_gex: 253966 <br>
+num_features_start: 36601 <br>
+num_cells_w_tcr: 33275 <br>
+min_genes_per_cell: 200 <br>
+max_genes_per_cell: 2500 <br>
+max_percent_mito: 0.1 <br>
+num_filt_max_genes_per_cell: 6299 <br>
+num_filt_max_percent_mito: 139 <br>
+num_antibody_features: 0 <br>
+num_TR_genes: 211 <br>
+num_TR_genes_in_hvg_set: 142 <br>
+num_highly_variable_genes: 1174 <br>
+num_cells_after_filtering: 26821 <br>
+num_clonotypes: 25031 <br>
+max_clonotype_size: 86 <br>
+num_singleton_clonotypes: 24327 <br>
+nbr_frac_for_nndists: 0.01 <br>
+num_gvg_hit_clonotypes: 1434 <br>
+num_gvg_hit_biclusters: 15 <br>
+<h1>graph_vs_graph_stats</h1>
+<br>
+
+Here we are assessing overall graph-vs-graph correlation by looking at
+the shared edges between TCR and GEX neighbor graphs and comparing
+that observed number to the number we would expect if the graphs were
+completely uncorrelated. Our null model for uncorrelated graphs is to
+take the vertices of one graph and randomly renumber them (permute their
+labels). We compare the observed overlap to that expected under this null
+model by computing a Z-score, either by permuting one of the graph's
+vertices many times to get a mean and standard deviation of the overlap
+distribution, or, for large graphs where this is time consuming,
+by using a regression model for the
+standard deviation. The different rows of this table correspond to the
+different graph-graph comparisons that we make in the conga graph-vs-graph
+analysis: we compare K-nearest-neighbor graphs for GEX and TCR at different
+K values ("nbr_frac" aka neighbor-fraction, which reports K as a fraction
+of the total number of clonotypes) to each other and to GEX and TCR "cluster"
+graphs in which each clonotype is connected to all the other clonotypes with
+the same (GEX or TCR) cluster assignment. For two K values (the default),
+this gives 2*3=6 comparisons: GEX KNN graph vs TCR KNN graph, GEX cluster
+graph vs TCR KNN graph, and GEX KNN graph vs TCR cluster graph, for each of the
+two K values (aka nbr_fracs).
+<br><br>
+The column to look at is *overlap_zscore*. Higher values indicate more
+significant GEX/TCR covariation, with "interesting" levels starting around
+zscores of 3-5.
+<br><br>
+Columns in more detail:
+<br><br>
+graph_overlap_type: KNN ("nbr") or cluster versus KNN ("nbr") or cluster
+<br><br>
+nbr_frac: the K value for the KNN graph, as a fraction of total clonotypes
+<br><br>
+overlap: the observed overlap (number of shared edges) between GEX and TCR
+graphs
+<br><br>
+expected_overlap: the expected overlap under a shuffled null model.
+<br><br>
+overlap_zscore: a Z-score for the observed overlap computed by subtracting
+the expected overlap and dividing by the standard deviation estimated from
+shuffling.
+<br>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>overlap</th>
+      <th>expected_overlap</th>
+      <th>overlap_mean</th>
+      <th>overlap_sdev</th>
+      <th>overlap_zscore</th>
+      <th>overlap_zscore_fitted</th>
+      <th>overlap_zscore_source</th>
+      <th>nodes</th>
+      <th>calculation_time</th>
+      <th>calculation_time_fitted</th>
+      <th>gex_edges</th>
+      <th>tcr_edges</th>
+      <th>gex_indegree_variance</th>
+      <th>gex_indegree_skewness</th>
+      <th>gex_indegree_kurtosis</th>
+      <th>tcr_indegree_variance</th>
+      <th>tcr_indegree_skewness</th>
+      <th>tcr_indegree_kurtosis</th>
+      <th>indegree_correlation_R</th>
+      <th>indegree_correlation_P</th>
+      <th>nbr_frac</th>
+      <th>graph_overlap_type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>67060</td>
+      <td>6.250250e+04</td>
+      <td>62538.89</td>
+      <td>353.063079</td>
+      <td>12.805389</td>
+      <td>6.216604</td>
+      <td>shuffling</td>
+      <td>25031</td>
+      <td>55.026006</td>
+      <td>5.497920</td>
+      <td>6257750</td>
+      <td>6257750</td>
+      <td>1.272799</td>
+      <td>3.329496</td>
+      <td>17.811787</td>
+      <td>0.287224</td>
+      <td>1.388583</td>
+      <td>3.320291</td>
+      <td>-0.007007</td>
+      <td>2.676174e-01</td>
+      <td>0.01</td>
+      <td>gex_nbr_vs_tcr_nbr</td>
+    </tr>
+    <tr>
+      <td>337051</td>
+      <td>3.282749e+05</td>
+      <td>328250.74</td>
+      <td>1083.950401</td>
+      <td>8.118693</td>
+      <td>4.714063</td>
+      <td>shuffling</td>
+      <td>25031</td>
+      <td>308.925752</td>
+      <td>31.082915</td>
+      <td>6257750</td>
+      <td>32866878</td>
+      <td>1.272799</td>
+      <td>3.329496</td>
+      <td>17.811787</td>
+      <td>0.123039</td>
+      <td>0.005470</td>
+      <td>-1.094359</td>
+      <td>0.004764</td>
+      <td>4.510626e-01</td>
+      <td>0.01</td>
+      <td>gex_nbr_vs_tcr_cluster</td>
+    </tr>
+    <tr>
+      <td>649273</td>
+      <td>6.166781e+05</td>
+      <td>616785.77</td>
+      <td>1422.620975</td>
+      <td>22.836181</td>
+      <td>13.477637</td>
+      <td>shuffling</td>
+      <td>25031</td>
+      <td>589.652071</td>
+      <td>60.048241</td>
+      <td>61741810</td>
+      <td>6257750</td>
+      <td>0.274128</td>
+      <td>0.277886</td>
+      <td>-1.263760</td>
+      <td>0.287224</td>
+      <td>1.388583</td>
+      <td>3.320291</td>
+      <td>-0.001114</td>
+      <td>8.600591e-01</td>
+      <td>0.01</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+    </tr>
+    <tr>
+      <td>6249286</td>
+      <td>6.265259e+06</td>
+      <td>6264318.66</td>
+      <td>21454.804612</td>
+      <td>-0.700666</td>
+      <td>-0.968283</td>
+      <td>shuffling</td>
+      <td>25031</td>
+      <td>700.301116</td>
+      <td>555.318048</td>
+      <td>62652593</td>
+      <td>62652593</td>
+      <td>1.026751</td>
+      <td>1.854756</td>
+      <td>3.390747</td>
+      <td>0.267778</td>
+      <td>1.563882</td>
+      <td>4.070165</td>
+      <td>-0.039279</td>
+      <td>5.081729e-10</td>
+      <td>0.10</td>
+      <td>gex_nbr_vs_tcr_nbr</td>
+    </tr>
+    <tr>
+      <td>3315602</td>
+      <td>3.286688e+06</td>
+      <td>3286802.56</td>
+      <td>6157.688810</td>
+      <td>4.676989</td>
+      <td>3.334720</td>
+      <td>shuffling</td>
+      <td>25031</td>
+      <td>421.583902</td>
+      <td>283.087813</td>
+      <td>62652593</td>
+      <td>32866878</td>
+      <td>1.026751</td>
+      <td>1.854756</td>
+      <td>3.390747</td>
+      <td>0.123039</td>
+      <td>0.005470</td>
+      <td>-1.094359</td>
+      <td>-0.002954</td>
+      <td>6.402828e-01</td>
+      <td>0.10</td>
+      <td>gex_nbr_vs_tcr_cluster</td>
+    </tr>
+    <tr>
+      <td>6315380</td>
+      <td>6.174181e+06</td>
+      <td>6173151.90</td>
+      <td>10969.566824</td>
+      <td>12.965699</td>
+      <td>12.084267</td>
+      <td>shuffling</td>
+      <td>25031</td>
+      <td>868.690479</td>
+      <td>546.889676</td>
+      <td>61741810</td>
+      <td>62652593</td>
+      <td>0.274128</td>
+      <td>0.277886</td>
+      <td>-1.263760</td>
+      <td>0.267778</td>
+      <td>1.563882</td>
+      <td>4.070165</td>
+      <td>-0.007069</td>
+      <td>2.634095e-01</td>
+      <td>0.10</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+    </tr>
+  </tbody>
+</table><br>
+<h1>graph_vs_graph</h1>
+<br>
+Graph vs graph analysis looks for correlation between GEX and TCR space
+by finding statistically significant overlap between two similarity graphs,
+one defined by GEX similarity and one by TCR sequence similarity.
+<br><br>
+Overlap is defined one node (clonotype) at a time by looking for overlap
+between that node's neighbors in the GEX graph and its neighbors in the
+TCR graph. The null model is that the two neighbor sets are chosen
+independently at random.
+<br><br>
+CoNGA looks at two kinds of graphs: K nearest neighbor (KNN) graphs, where
+K = neighborhood size is specified as a fraction of the number of
+clonotypes (defaults for K are 0.01 and 0.1), and cluster graphs, where
+each clonotype is connected to all the other clonotypes in the same
+(GEX or TCR) cluster. Overlaps are computed 3 ways (GEX KNN vs TCR KNN,
+GEX KNN vs TCR cluster, and GEX cluster vs TCR KNN), for each of the
+K values (called nbr_fracs short for neighbor fractions).
+<br><br>
+Columns (depend slightly on whether hit is KNN v KNN or KNN v cluster):
+conga_score = P value for GEX/TCR overlap * number of clonotypes
+mait_fraction = fraction of the overlap made up of 'invariant' T cells
+num_neighbors* = size of neighborhood (K)
+cluster_size = size of cluster (for KNN v cluster graph overlaps)
+clone_index = 0-index of clonotype in adata object
+<br><br>
+    <br>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>conga_score</th>
+      <th>num_neighbors_gex</th>
+      <th>num_neighbors_tcr</th>
+      <th>overlap</th>
+      <th>overlap_corrected</th>
+      <th>mait_fraction</th>
+      <th>clone_index</th>
+      <th>nbr_frac</th>
+      <th>graph_overlap_type</th>
+      <th>cluster_size</th>
+      <th>gex_cluster</th>
+      <th>tcr_cluster</th>
+      <th>va</th>
+      <th>ja</th>
+      <th>cdr3a</th>
+      <th>vb</th>
+      <th>jb</th>
+      <th>cdr3b</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>8.487845e-54</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>621</td>
+      <td>609</td>
+      <td>0.0</td>
+      <td>7093</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQGTHWPWTF</td>
+      <td>IGHV3-11*01</td>
+      <td>IGHJ4*01</td>
+      <td>CATVLRGHNKDDGYW</td>
+    </tr>
+    <tr>
+      <td>2.635710e-48</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>604</td>
+      <td>595</td>
+      <td>0.0</td>
+      <td>24494</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>12</td>
+      <td>IGLV7-43*01</td>
+      <td>IGLJ3*01</td>
+      <td>CLLTSGGNQPWVF</td>
+      <td>IGHV3-7*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARGDVAFAEAAYW</td>
+    </tr>
+    <tr>
+      <td>3.940182e-48</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>607</td>
+      <td>593</td>
+      <td>0.0</td>
+      <td>7126</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ2*01</td>
+      <td>CMQGTHCPYTF</td>
+      <td>IGHV3-15*01</td>
+      <td>IGHJ4*01</td>
+      <td>CQDPFHGSGDSPGLVGW</td>
+    </tr>
+    <tr>
+      <td>4.321709e-47</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>602</td>
+      <td>591</td>
+      <td>0.0</td>
+      <td>6452</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-24*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQATPPWTF</td>
+      <td>IGHV3-15*01</td>
+      <td>IGHJ4*01</td>
+      <td>CTTAFRSGIYYNDYW</td>
+    </tr>
+    <tr>
+      <td>4.959163e-46</td>
+      <td>2503.0</td>
+      <td>2503.0</td>
+      <td>489</td>
+      <td>481</td>
+      <td>0.0</td>
+      <td>7089</td>
+      <td>0.1</td>
+      <td>gex_nbr_vs_tcr_nbr</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQGTHWPWTF</td>
+      <td>IGHV3-7*01</td>
+      <td>IGHJ1*01</td>
+      <td>CARGPLIVAAGFHW</td>
+    </tr>
+    <tr>
+      <td>4.916567e-45</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>599</td>
+      <td>584</td>
+      <td>0.0</td>
+      <td>7089</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQGTHWPWTF</td>
+      <td>IGHV3-7*01</td>
+      <td>IGHJ1*01</td>
+      <td>CARGPLIVAAGFHW</td>
+    </tr>
+    <tr>
+      <td>2.124933e-44</td>
+      <td>2503.0</td>
+      <td>2503.0</td>
+      <td>484</td>
+      <td>477</td>
+      <td>0.0</td>
+      <td>6985</td>
+      <td>0.1</td>
+      <td>gex_nbr_vs_tcr_nbr</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQGAHWPTF</td>
+      <td>IGHV3-7*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARDPGYSSFDYW</td>
+    </tr>
+    <tr>
+      <td>4.524386e-44</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>599</td>
+      <td>580</td>
+      <td>0.0</td>
+      <td>7836</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2D-29*01</td>
+      <td>IGKJ2*01</td>
+      <td>CMQGIHLPFTF</td>
+      <td>IGHV3-74*01</td>
+      <td>IGHJ4*01</td>
+      <td>CAREPTGKFYFDYW</td>
+    </tr>
+    <tr>
+      <td>4.892959e-44</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>594</td>
+      <td>582</td>
+      <td>0.0</td>
+      <td>6483</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-24*01</td>
+      <td>IGKJ1*01</td>
+      <td>CTQATYFPWTI</td>
+      <td>IGHV3-74*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARVQWDLRPWDYW</td>
+    </tr>
+    <tr>
+      <td>9.249191e-44</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>589</td>
+      <td>583</td>
+      <td>0.0</td>
+      <td>7249</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ2*01</td>
+      <td>CVQGTHWPPGFTF</td>
+      <td>IGHV3-7*01</td>
+      <td>IGHJ4*01</td>
+      <td>CATNWNSEVDSW</td>
+    </tr>
+    <tr>
+      <td>2.427027e-43</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>592</td>
+      <td>580</td>
+      <td>0.0</td>
+      <td>7937</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2D-29*01</td>
+      <td>IGKJ3*01</td>
+      <td>CMQGIHPIFTF</td>
+      <td>IGHV3-49*01</td>
+      <td>IGHJ4*01</td>
+      <td>CTRWNYYYERLFDYW</td>
+    </tr>
+    <tr>
+      <td>1.259476e-42</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>592</td>
+      <td>577</td>
+      <td>0.0</td>
+      <td>7228</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ2*01</td>
+      <td>CMQGTHWPYTF</td>
+      <td>IGHV3-15*01</td>
+      <td>IGHJ4*01</td>
+      <td>CATAPTRAYSYGYDYW</td>
+    </tr>
+    <tr>
+      <td>1.592939e-42</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>591</td>
+      <td>577</td>
+      <td>0.0</td>
+      <td>7092</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQGTHWPWTF</td>
+      <td>IGHV3-23*01</td>
+      <td>IGHJ4*01</td>
+      <td>CVTTKGDWTHDFW</td>
+    </tr>
+    <tr>
+      <td>2.545851e-42</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>589</td>
+      <td>577</td>
+      <td>0.0</td>
+      <td>7120</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ2*01</td>
+      <td>CMQGRHWPYTF</td>
+      <td>IGHV3-7*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARAYKGDGNPNYW</td>
+    </tr>
+    <tr>
+      <td>5.197318e-42</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>593</td>
+      <td>574</td>
+      <td>0.0</td>
+      <td>6679</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-28*01</td>
+      <td>IGKJ2*01</td>
+      <td>CLQGLQTPYTF</td>
+      <td>IGHV3-15*01</td>
+      <td>IGHJ4*01</td>
+      <td>CVRGPAIDYPDSW</td>
+    </tr>
+    <tr>
+      <td>5.567082e-42</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>588</td>
+      <td>576</td>
+      <td>0.0</td>
+      <td>7899</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2D-29*01</td>
+      <td>IGKJ2*01</td>
+      <td>CMQGTYLPYSF</td>
+      <td>IGHV3-15*01</td>
+      <td>IGHJ4*01</td>
+      <td>CTTVSGWGLFDHW</td>
+    </tr>
+    <tr>
+      <td>2.433281e-41</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>584</td>
+      <td>575</td>
+      <td>0.0</td>
+      <td>7233</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ2*01</td>
+      <td>CMQGTHWRYTF</td>
+      <td>IGHV3-72*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARGVSRYSGSLDYW</td>
+    </tr>
+    <tr>
+      <td>5.728971e-41</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>585</td>
+      <td>573</td>
+      <td>0.0</td>
+      <td>6667</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-28*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQFTNKRTF</td>
+      <td>IGHV3-7*01</td>
+      <td>IGHJ5*01</td>
+      <td>CSTCGDDYRNNWSSW</td>
+    </tr>
+    <tr>
+      <td>2.674563e-40</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>583</td>
+      <td>571</td>
+      <td>0.0</td>
+      <td>24760</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>12</td>
+      <td>IGLV7-46*01</td>
+      <td>IGLJ3*01</td>
+      <td>CLVSHRETRVF</td>
+      <td>IGHV3-15*01</td>
+      <td>IGHJ4*01</td>
+      <td>CTPSADCSRQSCNYW</td>
+    </tr>
+    <tr>
+      <td>5.755733e-40</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>582</td>
+      <td>570</td>
+      <td>0.0</td>
+      <td>7243</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ2*01</td>
+      <td>CMQITHWPFTF</td>
+      <td>IGHV3-7*01</td>
+      <td>IGHJ6*01</td>
+      <td>CVKQSRSRPGDYW</td>
+    </tr>
+    <tr>
+      <td>7.602300e-40</td>
+      <td>2503.0</td>
+      <td>2503.0</td>
+      <td>474</td>
+      <td>464</td>
+      <td>0.0</td>
+      <td>7092</td>
+      <td>0.1</td>
+      <td>gex_nbr_vs_tcr_nbr</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQGTHWPWTF</td>
+      <td>IGHV3-23*01</td>
+      <td>IGHJ4*01</td>
+      <td>CVTTKGDWTHDFW</td>
+    </tr>
+    <tr>
+      <td>1.343400e-39</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>583</td>
+      <td>568</td>
+      <td>0.0</td>
+      <td>6579</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-24*01</td>
+      <td>IGKJ5*01</td>
+      <td>CTQATQFPITF</td>
+      <td>IGHV3-15*01</td>
+      <td>IGHJ4*01</td>
+      <td>CTTGAYSWNDGKW</td>
+    </tr>
+    <tr>
+      <td>1.343400e-39</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>583</td>
+      <td>568</td>
+      <td>0.0</td>
+      <td>7823</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2D-29*01</td>
+      <td>IGKJ2*01</td>
+      <td>CLQGIHIPYTF</td>
+      <td>IGHV3-23*01</td>
+      <td>IGHJ4*01</td>
+      <td>CAKDAVGASPFDYW</td>
+    </tr>
+    <tr>
+      <td>1.941226e-39</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>579</td>
+      <td>569</td>
+      <td>0.0</td>
+      <td>8099</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2D-40*01</td>
+      <td>IGKJ2*01</td>
+      <td>CMQRKEFPYSF</td>
+      <td>IGHV3-23*01</td>
+      <td>IGHJ4*01</td>
+      <td>CSTYDRGLEVFDYW</td>
+    </tr>
+    <tr>
+      <td>2.876366e-39</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>582</td>
+      <td>567</td>
+      <td>0.0</td>
+      <td>7953</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2D-29*01</td>
+      <td>IGKJ3*01</td>
+      <td>CMQTLQLPRTF</td>
+      <td>IGHV3-7*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARDWGGSISCPAGYW</td>
+    </tr>
+    <tr>
+      <td>3.022886e-39</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>580</td>
+      <td>568</td>
+      <td>0.0</td>
+      <td>6539</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-24*01</td>
+      <td>IGKJ2*01</td>
+      <td>CTQATQFPYTF</td>
+      <td>IGHV3-23*01</td>
+      <td>IGHJ4*01</td>
+      <td>CASRSGIVATMGGYW</td>
+    </tr>
+    <tr>
+      <td>3.312013e-39</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>579</td>
+      <td>568</td>
+      <td>0.0</td>
+      <td>6979</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ1*01</td>
+      <td>CLQATHWPWTF</td>
+      <td>IGHV3-66*01</td>
+      <td>IGHJ4*01</td>
+      <td>CVNLRGSVTGMKDW</td>
+    </tr>
+    <tr>
+      <td>2.666596e-38</td>
+      <td>2503.0</td>
+      <td>2503.0</td>
+      <td>469</td>
+      <td>460</td>
+      <td>0.0</td>
+      <td>6523</td>
+      <td>0.1</td>
+      <td>gex_nbr_vs_tcr_nbr</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-24*01</td>
+      <td>IGKJ2*01</td>
+      <td>CMQVTQFPHTF</td>
+      <td>IGHV3-7*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARDDPSATKVDYW</td>
+    </tr>
+    <tr>
+      <td>5.404487e-38</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>576</td>
+      <td>564</td>
+      <td>0.0</td>
+      <td>6523</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-24*01</td>
+      <td>IGKJ2*01</td>
+      <td>CMQVTQFPHTF</td>
+      <td>IGHV3-7*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARDDPSATKVDYW</td>
+    </tr>
+    <tr>
+      <td>1.141425e-37</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>575</td>
+      <td>563</td>
+      <td>0.0</td>
+      <td>7320</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ4*01</td>
+      <td>CMQGTHWPPTF</td>
+      <td>IGHV3-23*01</td>
+      <td>IGHJ5*01</td>
+      <td>CAKDGAATGRYVSW</td>
+    </tr>
+    <tr>
+      <td>1.772672e-37</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>573</td>
+      <td>563</td>
+      <td>0.0</td>
+      <td>20189</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>IGLV2-23*01</td>
+      <td>IGLJ2*01</td>
+      <td>CCSRGDRDVVF</td>
+      <td>IGHV3-15*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARYTTRWSFDYW</td>
+    </tr>
+    <tr>
+      <td>4.637450e-37</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>571</td>
+      <td>562</td>
+      <td>0.0</td>
+      <td>7329</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ4*01</td>
+      <td>CSQATQWPLTF</td>
+      <td>IGHV3-15*01</td>
+      <td>IGHJ4*01</td>
+      <td>CTTSDYW</td>
+    </tr>
+    <tr>
+      <td>7.175592e-37</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>569</td>
+      <td>562</td>
+      <td>0.0</td>
+      <td>6985</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQGAHWPTF</td>
+      <td>IGHV3-7*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARDPGYSSFDYW</td>
+    </tr>
+    <tr>
+      <td>8.511410e-37</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>573</td>
+      <td>560</td>
+      <td>0.0</td>
+      <td>6999</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQGTHWPGTF</td>
+      <td>IGHV3-7*01</td>
+      <td>IGHJ5*01</td>
+      <td>CAKYKSSPGGDSW</td>
+    </tr>
+    <tr>
+      <td>1.058048e-36</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>572</td>
+      <td>560</td>
+      <td>0.0</td>
+      <td>7819</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2D-29*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQSLQLPWTF</td>
+      <td>IGHV3-15*01</td>
+      <td>IGHJ4*01</td>
+      <td>CTTDPQWMRSMG</td>
+    </tr>
+    <tr>
+      <td>1.083232e-36</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>572</td>
+      <td>560</td>
+      <td>0.0</td>
+      <td>7257</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ3*01</td>
+      <td>CMQGTHWPFTF</td>
+      <td>IGHV3-15*01</td>
+      <td>IGHJ4*01</td>
+      <td>CVTVRELLRYW</td>
+    </tr>
+    <tr>
+      <td>1.467097e-36</td>
+      <td>2503.0</td>
+      <td>2503.0</td>
+      <td>470</td>
+      <td>453</td>
+      <td>0.0</td>
+      <td>7822</td>
+      <td>0.1</td>
+      <td>gex_nbr_vs_tcr_nbr</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2D-29*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQTIQLPWTF</td>
+      <td>IGHV3-15*01</td>
+      <td>IGHJ4*01</td>
+      <td>CITDGGWQPYGYNYW</td>
+    </tr>
+    <tr>
+      <td>3.031484e-36</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>572</td>
+      <td>558</td>
+      <td>0.0</td>
+      <td>7293</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3322.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ4*01</td>
+      <td>CMQGTHWPLTF</td>
+      <td>IGHV1-46*01</td>
+      <td>IGHJ6*01</td>
+      <td>CATASELQLLWNGMDVW</td>
+    </tr>
+    <tr>
+      <td>5.055007e-36</td>
+      <td>2503.0</td>
+      <td>2503.0</td>
+      <td>467</td>
+      <td>452</td>
+      <td>0.0</td>
+      <td>7228</td>
+      <td>0.1</td>
+      <td>gex_nbr_vs_tcr_nbr</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ2*01</td>
+      <td>CMQGTHWPYTF</td>
+      <td>IGHV3-15*01</td>
+      <td>IGHJ4*01</td>
+      <td>CATAPTRAYSYGYDYW</td>
+    </tr>
+    <tr>
+      <td>6.229054e-36</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>571</td>
+      <td>557</td>
+      <td>0.0</td>
+      <td>7798</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2D-29*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQGMALPWTF</td>
+      <td>IGHV3-30*01</td>
+      <td>IGHJ4*01</td>
+      <td>CVKGDGNADYFDFW</td>
+    </tr>
+    <tr>
+      <td>6.795389e-36</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>573</td>
+      <td>556</td>
+      <td>0.0</td>
+      <td>7822</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2D-29*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQTIQLPWTF</td>
+      <td>IGHV3-15*01</td>
+      <td>IGHJ4*01</td>
+      <td>CITDGGWQPYGYNYW</td>
+    </tr>
+    <tr>
+      <td>7.722836e-36</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>570</td>
+      <td>557</td>
+      <td>0.0</td>
+      <td>7332</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ5*01</td>
+      <td>CMQGSHWPPITF</td>
+      <td>IGHV3-7*01</td>
+      <td>IGHJ5*01</td>
+      <td>CARGNPTPGDSW</td>
+    </tr>
+    <tr>
+      <td>7.813113e-36</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>570</td>
+      <td>557</td>
+      <td>0.0</td>
+      <td>7319</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ4*01</td>
+      <td>CMQGTHWPPTF</td>
+      <td>IGHV3-48*01</td>
+      <td>IGHJ4*01</td>
+      <td>CASWILSRTMVDYW</td>
+    </tr>
+    <tr>
+      <td>9.572091e-36</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>569</td>
+      <td>557</td>
+      <td>0.0</td>
+      <td>6981</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ1*01</td>
+      <td>CLQGTKWPPTF</td>
+      <td>IGHV3-23*01</td>
+      <td>IGHJ4*01</td>
+      <td>CANDPNWGSGCW</td>
+    </tr>
+    <tr>
+      <td>1.152560e-35</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>573</td>
+      <td>555</td>
+      <td>0.0</td>
+      <td>7748</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2D-29*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQGIHLPRTF</td>
+      <td>IGHV3-23*01</td>
+      <td>IGHJ4*01</td>
+      <td>CAKGYSSGWYGFDYW</td>
+    </tr>
+    <tr>
+      <td>2.455675e-35</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>567</td>
+      <td>556</td>
+      <td>0.0</td>
+      <td>7274</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ4*01</td>
+      <td>CFQGTHWPLTF</td>
+      <td>IGHV3-23*01</td>
+      <td>IGHJ4*01</td>
+      <td>CVRGIRAPSFSMG</td>
+    </tr>
+    <tr>
+      <td>2.484203e-35</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>567</td>
+      <td>556</td>
+      <td>0.0</td>
+      <td>7138</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ2*01</td>
+      <td>CMQGTHWPFTF</td>
+      <td>IGHV3-7*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARDPGWGALDYW</td>
+    </tr>
+    <tr>
+      <td>2.678593e-35</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>569</td>
+      <td>555</td>
+      <td>0.0</td>
+      <td>7568</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2D-28*01</td>
+      <td>IGKJ2*01</td>
+      <td>CMQVVQTPYSF</td>
+      <td>IGHV3-73*01</td>
+      <td>IGHJ4*01</td>
+      <td>CRGGQYPTIGW</td>
+    </tr>
+    <tr>
+      <td>3.038979e-35</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>566</td>
+      <td>556</td>
+      <td>0.0</td>
+      <td>7349</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ5*01</td>
+      <td>CMQGTHWPPTF</td>
+      <td>IGHV3-15*01</td>
+      <td>IGHJ3*01</td>
+      <td>CTTLPLKSLSWGAFDIW</td>
+    </tr>
+    <tr>
+      <td>3.038979e-35</td>
+      <td>NaN</td>
+      <td>2503.0</td>
+      <td>566</td>
+      <td>556</td>
+      <td>0.0</td>
+      <td>6525</td>
+      <td>0.1</td>
+      <td>gex_cluster_vs_tcr_nbr</td>
+      <td>3323.0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGKV2-24*01</td>
+      <td>IGKJ2*01</td>
+      <td>CTQATHFPPGTF</td>
+      <td>IGHV3-11*01</td>
+      <td>IGHJ4*01</td>
+      <td>CASLPIYEILTGW</td>
+    </tr>
+  </tbody>
+</table>Omitted 2074 lines
+<br>
+<h1>graph_vs_graph_logos</h1>
+<br>
+
+This figure summarizes the results of a CoNGA analysis that produces
+scores (CoNGA) and clusters. At the top are six
+2D UMAP projections of clonotypes in the dataset based on GEX similarity
+(top left three panels) and TCR similarity (top right three panels),
+colored from left to right by GEX cluster assignment;
+CoNGA score; joint GEX:TCR cluster assignment for
+clonotypes with significant CoNGA scores,
+using a bicolored disk whose left half indicates GEX cluster and whose right
+half indicates TCR cluster; TCR cluster; CoNGA; GEX:TCR cluster
+assignments for CoNGA hits, as in the third panel.
+<br><br>
+Below are two rows of GEX landscape plots colored by (first row, left)
+expression of selected marker genes, (second row, left) Z-score normalized and
+GEX-neighborhood averaged expression of the same marker genes, and
+(both rows, right) TCR sequence features (see CoNGA manuscript Table S3 for
+TCR feature descriptions).
+<br><br>
+GEX and TCR sequence features of CoNGA hits in clusters with
+25 or more hits are summarized by a series
+of logo-style visualizations, from left to right:
+differentially expressed genes (DEGs); TCR sequence logos showing the V and
+J gene usage and CDR3 sequences for the TCR alpha and beta chains; biased
+TCR sequence scores, with red indicating elevated scores and blue indicating
+decreased scores relative to the rest of the dataset (see CoNGA manuscript
+Table S3 for score definitions); GEX 'logos' for each cluster
+consisting of a panel of marker genes shown with red disks colored by
+mean expression and sized according to the fraction of cells expressing
+the gene (gene names are given above).
+<br><br>
+DEG and TCRseq sequence logos are scaled
+by the adjusted P value of the associations, with full logo height requiring
+a top adjusted P value below 10-6. DEGs with fold-change less than 2 are shown
+in gray. Each cluster is indicated by a bicolored disk colored according to
+GEX cluster (left half) and TCR cluster (right half). The two numbers above
+each disk show the number of hits within the cluster (on the left) and
+the total number of cells in those clonotypes (on the right). The dendrogram
+at the left shows similarity relationships among the clusters based on
+connections in the GEX and TCR neighbor graphs.
+<br><br>
+The choice of which marker genes to use for the GEX umap panels and for the
+cluster GEX logos can be configured using run_conga.py command line flags
+or arguments to the conga.plotting.make_logo_plots function.
+    <br>
+Image source: all_bcell_graph_vs_graph_logos.png<br>
+<img src="all_bcell_graph_vs_graph_logos.png"  width="1250"  />
+<h1>tcr_clumping</h1>
+<br>
+ This table stores the results of the TCR "clumping"
+analysis, which looks for neighborhoods in TCR space with more TCRs than
+expected by chance under a simple null model of VDJ rearrangement.
+<br><br>
+For each TCR in the dataset, we count how many TCRs are within a set of
+fixed TCRdist radii (defaults: 24,48,72,96), and compare that number
+to the expected number given the size of the dataset using the poisson
+model. Inspired by the ALICE and TCRnet methods.
+<br><br>
+Columns:
+clump_type='global' unless we are optionally looking for TCR clumps within
+   the individual GEX clusters
+num_nbrs = neighborhood size (number of other TCRs with TCRdist<nbr_radius)
+pvalue_adj= raw Poisson P value of the neighborhood size multiplied by
+   the number of TCRs in the dataset and the number of radii
+clonotype_fdr_value= Benjamin-Hochberg FDR value for the per-TCR
+   significance (ie, looking at all the radii).
+<br><br>
+    <br>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>clump_type</th>
+      <th>clone_index</th>
+      <th>nbr_radius</th>
+      <th>pvalue_adj</th>
+      <th>num_nbrs</th>
+      <th>expected_num_nbrs</th>
+      <th>raw_count</th>
+      <th>va</th>
+      <th>ja</th>
+      <th>cdr3a</th>
+      <th>vb</th>
+      <th>jb</th>
+      <th>cdr3b</th>
+      <th>clonotype_fdr_value</th>
+      <th>clumping_group</th>
+      <th>clusters_gex</th>
+      <th>clusters_tcr</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>global</td>
+      <td>7005</td>
+      <td>96</td>
+      <td>2.567289e-11</td>
+      <td>35</td>
+      <td>5.866902</td>
+      <td>585987.00</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQGTHWPPAF</td>
+      <td>IGHV3-23*01</td>
+      <td>IGHJ4*01</td>
+      <td>CAKALGYW</td>
+      <td>2.567289e-11</td>
+      <td>1</td>
+      <td>9</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>8074</td>
+      <td>96</td>
+      <td>1.238948e-08</td>
+      <td>33</td>
+      <td>6.464568</td>
+      <td>645682.00</td>
+      <td>IGKV2D-30*01</td>
+      <td>IGKJ5*01</td>
+      <td>CMQGTHWPPTF</td>
+      <td>IGHV3-7*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARELDYW</td>
+      <td>6.194738e-09</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>7051</td>
+      <td>96</td>
+      <td>1.965636e-07</td>
+      <td>28</td>
+      <td>5.149416</td>
+      <td>514345.00</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQGTHWPQTF</td>
+      <td>IGHV3-23*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARGNSAYW</td>
+      <td>5.864788e-08</td>
+      <td>1</td>
+      <td>7</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>7295</td>
+      <td>96</td>
+      <td>2.345915e-07</td>
+      <td>37</td>
+      <td>8.995490</td>
+      <td>898794.00</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ4*01</td>
+      <td>CMQGTHWPLTF</td>
+      <td>IGHV3-23*01</td>
+      <td>IGHJ5*01</td>
+      <td>CAKGTWADYW</td>
+      <td>5.864788e-08</td>
+      <td>1</td>
+      <td>7</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>7053</td>
+      <td>96</td>
+      <td>6.660351e-06</td>
+      <td>24</td>
+      <td>4.400184</td>
+      <td>439491.00</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQGTHWPQTF</td>
+      <td>IGHV3-11*01</td>
+      <td>IGHJ3*01</td>
+      <td>CSAFDIW</td>
+      <td>1.332070e-06</td>
+      <td>1</td>
+      <td>5</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>7277</td>
+      <td>96</td>
+      <td>2.158000e-05</td>
+      <td>22</td>
+      <td>3.897371</td>
+      <td>389270.00</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ4*01</td>
+      <td>CMQGAHWPLTF</td>
+      <td>IGHV3-30*01</td>
+      <td>IGHJ4*01</td>
+      <td>CALGQLLDYW</td>
+      <td>3.418104e-06</td>
+      <td>1</td>
+      <td>5</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>7077</td>
+      <td>96</td>
+      <td>2.721084e-05</td>
+      <td>30</td>
+      <td>7.309617</td>
+      <td>730465.00</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQGTHWPWTF</td>
+      <td>IGHV3-23*01</td>
+      <td>IGHJ4*01</td>
+      <td>CAKDLGAGTW</td>
+      <td>3.418104e-06</td>
+      <td>1</td>
+      <td>7</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>7054</td>
+      <td>96</td>
+      <td>2.734484e-05</td>
+      <td>32</td>
+      <td>8.241588</td>
+      <td>823171.00</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQGTHWPRTF</td>
+      <td>IGHV3-74*01</td>
+      <td>IGHJ6*01</td>
+      <td>CARDYGMDVW</td>
+      <td>3.418104e-06</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>7278</td>
+      <td>96</td>
+      <td>1.944482e-04</td>
+      <td>18</td>
+      <td>2.882425</td>
+      <td>287897.00</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ4*01</td>
+      <td>CMQGSHWPLTF</td>
+      <td>IGHV3-74*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARGPADL</td>
+      <td>2.160535e-05</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>7096</td>
+      <td>96</td>
+      <td>3.284006e-04</td>
+      <td>17</td>
+      <td>2.630803</td>
+      <td>262765.00</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQGTHWSWTF</td>
+      <td>IGHV3-7*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARDRGSRC</td>
+      <td>3.284006e-05</td>
+      <td>1</td>
+      <td>8</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>7242</td>
+      <td>96</td>
+      <td>7.986885e-04</td>
+      <td>14</td>
+      <td>1.798365</td>
+      <td>179621.00</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ2*01</td>
+      <td>CMQHTYWPHTF</td>
+      <td>IGHV3-7*01</td>
+      <td>IGHJ4*01</td>
+      <td>CTNGGSYW</td>
+      <td>7.260804e-05</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>7138</td>
+      <td>96</td>
+      <td>1.330657e-03</td>
+      <td>21</td>
+      <td>4.481823</td>
+      <td>447663.00</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ2*01</td>
+      <td>CMQGTHWPFTF</td>
+      <td>IGHV3-7*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARDPGWGALDYW</td>
+      <td>1.108881e-04</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>7078</td>
+      <td>96</td>
+      <td>2.890344e-03</td>
+      <td>21</td>
+      <td>4.695321</td>
+      <td>469213.00</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQGTHWPWTF</td>
+      <td>IGHV3-23*01</td>
+      <td>IGHJ4*01</td>
+      <td>CAKVQWELPW</td>
+      <td>2.075084e-04</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>7051</td>
+      <td>72</td>
+      <td>2.905118e-03</td>
+      <td>9</td>
+      <td>0.642835</td>
+      <td>64209.00</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQGTHWPQTF</td>
+      <td>IGHV3-23*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARGNSAYW</td>
+      <td>5.864788e-08</td>
+      <td>1</td>
+      <td>7</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>7080</td>
+      <td>96</td>
+      <td>3.301895e-03</td>
+      <td>27</td>
+      <td>7.545638</td>
+      <td>754051.00</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQGTHWPWTF</td>
+      <td>IGHV3-48*01</td>
+      <td>IGHJ4*01</td>
+      <td>CAAAGWGDYW</td>
+      <td>2.201264e-04</td>
+      <td>1</td>
+      <td>6</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>4259</td>
+      <td>96</td>
+      <td>7.132260e-03</td>
+      <td>42</td>
+      <td>16.248675</td>
+      <td>1623374.00</td>
+      <td>IGKV1D-17*01</td>
+      <td>IGKJ1*01</td>
+      <td>CLQHNSYPRTF</td>
+      <td>IGHV3-23*01</td>
+      <td>IGHJ4*01</td>
+      <td>CAKELSLKDW</td>
+      <td>4.402603e-04</td>
+      <td>2</td>
+      <td>8</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>7255</td>
+      <td>96</td>
+      <td>7.484425e-03</td>
+      <td>13</td>
+      <td>1.826499</td>
+      <td>182431.00</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ3*01</td>
+      <td>CMQGTHWLFTF</td>
+      <td>IGHV3-11*01</td>
+      <td>IGHJ6*01</td>
+      <td>CGRGNGWVW</td>
+      <td>4.402603e-04</td>
+      <td>1</td>
+      <td>12</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>7217</td>
+      <td>96</td>
+      <td>1.054440e-02</td>
+      <td>15</td>
+      <td>2.584577</td>
+      <td>258313.00</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ2*01</td>
+      <td>CMQGTHWPYTF</td>
+      <td>IGHV3-7*01</td>
+      <td>IGHJ3*01</td>
+      <td>CATREVTLNIW</td>
+      <td>5.854521e-04</td>
+      <td>1</td>
+      <td>13</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>20502</td>
+      <td>96</td>
+      <td>1.112359e-02</td>
+      <td>16</td>
+      <td>2.975026</td>
+      <td>297146.00</td>
+      <td>IGLV2-23*01</td>
+      <td>IGLJ3*01</td>
+      <td>CCSYAGSSTWVF</td>
+      <td>IGHV5-10-1*01</td>
+      <td>IGHJ3*01</td>
+      <td>CARQSGSGRAFDIW</td>
+      <td>5.854521e-04</td>
+      <td>17</td>
+      <td>2</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>7118</td>
+      <td>96</td>
+      <td>1.249870e-02</td>
+      <td>9</td>
+      <td>0.765227</td>
+      <td>76431.00</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ2*01</td>
+      <td>CMQGAYWPGTF</td>
+      <td>IGHV3-7*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARGVRGAGW</td>
+      <td>6.249351e-04</td>
+      <td>1</td>
+      <td>10</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>7056</td>
+      <td>96</td>
+      <td>1.501275e-02</td>
+      <td>20</td>
+      <td>4.736857</td>
+      <td>473118.00</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQGTHWPRTF</td>
+      <td>IGHV3-7*01</td>
+      <td>IGHJ4*01</td>
+      <td>CVRGISSPDYW</td>
+      <td>6.973937e-04</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>6469</td>
+      <td>96</td>
+      <td>1.534266e-02</td>
+      <td>14</td>
+      <td>2.295111</td>
+      <td>229236.00</td>
+      <td>IGKV2-24*01</td>
+      <td>IGKJ1*01</td>
+      <td>CTQATDFPWTF</td>
+      <td>IGHV3-23*01</td>
+      <td>IGHJ4*01</td>
+      <td>CSPGGGGGW</td>
+      <td>6.973937e-04</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>1836</td>
+      <td>96</td>
+      <td>1.885393e-02</td>
+      <td>3</td>
+      <td>0.010443</td>
+      <td>1043.00</td>
+      <td>IGKV1-39*01</td>
+      <td>IGKJ2*01</td>
+      <td>CQQSIKMPYTF</td>
+      <td>IGHV3-48*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARDSGTCDDDNCHNFDYW</td>
+      <td>8.086200e-04</td>
+      <td>9</td>
+      <td>1</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>7073</td>
+      <td>96</td>
+      <td>1.940688e-02</td>
+      <td>13</td>
+      <td>1.987963</td>
+      <td>198558.00</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQGTHWPWTF</td>
+      <td>IGHV3-15*01</td>
+      <td>IGHJ4*01</td>
+      <td>CTRRDGYNSM</td>
+      <td>8.086200e-04</td>
+      <td>1</td>
+      <td>3</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>422</td>
+      <td>96</td>
+      <td>2.733149e-02</td>
+      <td>8</td>
+      <td>0.608810</td>
+      <td>60825.00</td>
+      <td>IGKV1-16*01</td>
+      <td>IGKJ1*01</td>
+      <td>CQQYNSYPRTF</td>
+      <td>IGHV4-34*01</td>
+      <td>IGHJ4*01</td>
+      <td>CATTIGYRQAGGYW</td>
+      <td>1.093259e-03</td>
+      <td>5</td>
+      <td>5</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>7594</td>
+      <td>96</td>
+      <td>2.979244e-02</td>
+      <td>10</td>
+      <td>1.114672</td>
+      <td>111338.00</td>
+      <td>IGKV2D-28*01</td>
+      <td>IGKJ3*01</td>
+      <td>CMQALQTPFTF</td>
+      <td>IGHV3-33*01</td>
+      <td>IGHJ6*01</td>
+      <td>CARERMVRGVIYYYYGMDVW</td>
+      <td>1.145863e-03</td>
+      <td>3</td>
+      <td>11</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>7039</td>
+      <td>96</td>
+      <td>4.265040e-02</td>
+      <td>21</td>
+      <td>5.544876</td>
+      <td>554133.00</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQGTHWPPWTF</td>
+      <td>IGHV3-23*01</td>
+      <td>IGHJ4*01</td>
+      <td>CIFDFW</td>
+      <td>1.579645e-03</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>7039</td>
+      <td>72</td>
+      <td>4.619332e-02</td>
+      <td>9</td>
+      <td>0.896443</td>
+      <td>89587.00</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQGTHWPPWTF</td>
+      <td>IGHV3-23*01</td>
+      <td>IGHJ4*01</td>
+      <td>CIFDFW</td>
+      <td>1.579645e-03</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>4252</td>
+      <td>96</td>
+      <td>4.846449e-02</td>
+      <td>46</td>
+      <td>20.048058</td>
+      <td>2002723.00</td>
+      <td>IGKV1D-17*01</td>
+      <td>IGKJ1*01</td>
+      <td>CLQHNSYPRTF</td>
+      <td>IGHV3-23*01</td>
+      <td>IGHJ4*01</td>
+      <td>CAKDWGGYPHW</td>
+      <td>1.671189e-03</td>
+      <td>2</td>
+      <td>5</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>19150</td>
+      <td>96</td>
+      <td>5.254761e-02</td>
+      <td>20</td>
+      <td>5.139361</td>
+      <td>514533.00</td>
+      <td>IGLV2-14*01</td>
+      <td>IGLJ2*01</td>
+      <td>CSSYTSSSTLVF</td>
+      <td>IGHV3-43*01</td>
+      <td>IGHJ6*01</td>
+      <td>CAKDVGSWNYYGMDVW</td>
+      <td>1.751587e-03</td>
+      <td>15</td>
+      <td>11</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>720</td>
+      <td>96</td>
+      <td>1.112177e-01</td>
+      <td>32</td>
+      <td>11.934504</td>
+      <td>1192020.00</td>
+      <td>IGKV1-17*01</td>
+      <td>IGKJ2*01</td>
+      <td>CLQHNSYPHTF</td>
+      <td>IGHV3-23*01</td>
+      <td>IGHJ4*01</td>
+      <td>CAKALYGPDYW</td>
+      <td>3.526561e-03</td>
+      <td>2</td>
+      <td>4</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>428</td>
+      <td>96</td>
+      <td>1.128499e-01</td>
+      <td>29</td>
+      <td>10.202295</td>
+      <td>1019251.00</td>
+      <td>IGKV1-16*01</td>
+      <td>IGKJ1*01</td>
+      <td>CQQYNSYPWTF</td>
+      <td>IGHV3-23*01</td>
+      <td>IGHJ4*01</td>
+      <td>CAKVIAAAGYYW</td>
+      <td>3.526561e-03</td>
+      <td>2</td>
+      <td>0</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>20137</td>
+      <td>96</td>
+      <td>1.421368e-01</td>
+      <td>21</td>
+      <td>5.990362</td>
+      <td>599228.00</td>
+      <td>IGLV2-23*01</td>
+      <td>IGLJ1*01</td>
+      <td>CCSYAGSSTYVF</td>
+      <td>IGHV1-69D*01</td>
+      <td>IGHJ2*01</td>
+      <td>CARDSGNWYFDLW</td>
+      <td>4.307175e-03</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>7023</td>
+      <td>96</td>
+      <td>2.029769e-01</td>
+      <td>22</td>
+      <td>6.648273</td>
+      <td>664349.00</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ1*01</td>
+      <td>CMQGTHWPPTF</td>
+      <td>IGHV3-33*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARLGVGDYW</td>
+      <td>5.332129e-03</td>
+      <td>1</td>
+      <td>13</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>417</td>
+      <td>96</td>
+      <td>2.199425e-01</td>
+      <td>66</td>
+      <td>35.140169</td>
+      <td>3510787.00</td>
+      <td>IGKV1-16*01</td>
+      <td>IGKJ1*01</td>
+      <td>CQQYNSYPRTF</td>
+      <td>IGHV3-23*01</td>
+      <td>IGHJ4*01</td>
+      <td>CANTWSTFDYW</td>
+      <td>5.332129e-03</td>
+      <td>2</td>
+      <td>13</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>4319</td>
+      <td>96</td>
+      <td>2.206841e-01</td>
+      <td>24</td>
+      <td>7.750479</td>
+      <td>774119.00</td>
+      <td>IGKV1D-17*01</td>
+      <td>IGKJ2*01</td>
+      <td>CLQHSSFPYTF</td>
+      <td>IGHV3-23*01</td>
+      <td>IGHJ6*01</td>
+      <td>CARYFGVGDW</td>
+      <td>5.332129e-03</td>
+      <td>2</td>
+      <td>1</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>19744</td>
+      <td>96</td>
+      <td>2.462715e-01</td>
+      <td>42</td>
+      <td>18.699981</td>
+      <td>1867906.00</td>
+      <td>IGLV2-14*01</td>
+      <td>IGLJ3*01</td>
+      <td>CSSYTSSSTWVF</td>
+      <td>IGHV4-39*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARQGIAARPFDYW</td>
+      <td>5.332129e-03</td>
+      <td>16</td>
+      <td>2</td>
+      <td>13</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>17722</td>
+      <td>72</td>
+      <td>2.497190e-01</td>
+      <td>1</td>
+      <td>0.000002</td>
+      <td>0.25</td>
+      <td>IGLV1-51*01</td>
+      <td>IGLJ3*01</td>
+      <td>CGTWDSSLSAGVF</td>
+      <td>IGHV5-10-1*01</td>
+      <td>IGHJ6*01</td>
+      <td>CARRGGNSAFEFYYYNGMDVW</td>
+      <td>5.332129e-03</td>
+      <td>14</td>
+      <td>2</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>14227</td>
+      <td>72</td>
+      <td>2.498892e-01</td>
+      <td>1</td>
+      <td>0.000002</td>
+      <td>0.25</td>
+      <td>IGKV4-1*01</td>
+      <td>IGKJ4*01</td>
+      <td>CQQYYSTPLTF</td>
+      <td>IGHV4-59*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARGEGETIFGVTMFLWYFDYW</td>
+      <td>5.332129e-03</td>
+      <td>13</td>
+      <td>4</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>14227</td>
+      <td>96</td>
+      <td>2.498892e-01</td>
+      <td>1</td>
+      <td>0.000002</td>
+      <td>0.25</td>
+      <td>IGKV4-1*01</td>
+      <td>IGKJ4*01</td>
+      <td>CQQYYSTPLTF</td>
+      <td>IGHV4-59*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARGEGETIFGVTMFLWYFDYW</td>
+      <td>5.332129e-03</td>
+      <td>13</td>
+      <td>4</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>20539</td>
+      <td>72</td>
+      <td>2.498892e-01</td>
+      <td>1</td>
+      <td>0.000002</td>
+      <td>0.25</td>
+      <td>IGLV2-23*01</td>
+      <td>IGLJ3*01</td>
+      <td>CCSYAGSSTWVF</td>
+      <td>IGHV3-33*01</td>
+      <td>IGHJ3*01</td>
+      <td>CARALVGTAMVPSAFDIW</td>
+      <td>5.332129e-03</td>
+      <td>18</td>
+      <td>4</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>693</td>
+      <td>72</td>
+      <td>2.506000e-01</td>
+      <td>1</td>
+      <td>0.000003</td>
+      <td>0.25</td>
+      <td>IGKV1-17*01</td>
+      <td>IGKJ1*01</td>
+      <td>CLQHNSYPWTF</td>
+      <td>IGHV3-49*01</td>
+      <td>IGHJ4*01</td>
+      <td>CSRSFTEVTFEYLDYW</td>
+      <td>5.332129e-03</td>
+      <td>8</td>
+      <td>3</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>15055</td>
+      <td>96</td>
+      <td>2.506101e-01</td>
+      <td>1</td>
+      <td>0.000003</td>
+      <td>0.25</td>
+      <td>IGLV1-40*01</td>
+      <td>IGLJ3*01</td>
+      <td>CQSYDRNLDGWVF</td>
+      <td>IGHV2-5*01</td>
+      <td>IGHJ5*01</td>
+      <td>CAYRQRITMIRGQRVSDWFDPW</td>
+      <td>5.332129e-03</td>
+      <td>6</td>
+      <td>5</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>17108</td>
+      <td>72</td>
+      <td>2.506101e-01</td>
+      <td>1</td>
+      <td>0.000003</td>
+      <td>0.25</td>
+      <td>IGLV1-51*01</td>
+      <td>IGLJ2*01</td>
+      <td>CATWDSSLGAEVF</td>
+      <td>IGHV3-73*01</td>
+      <td>IGHJ4*01</td>
+      <td>CTKYCLDTTCSGGHYW</td>
+      <td>5.332129e-03</td>
+      <td>7</td>
+      <td>3</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>17102</td>
+      <td>72</td>
+      <td>2.506101e-01</td>
+      <td>1</td>
+      <td>0.000003</td>
+      <td>0.25</td>
+      <td>IGLV1-51*01</td>
+      <td>IGLJ2*01</td>
+      <td>CAAWDESLSAEFF</td>
+      <td>IGHV3-73*01</td>
+      <td>IGHJ4*01</td>
+      <td>CTQYCVAAYCSGGHYW</td>
+      <td>5.332129e-03</td>
+      <td>7</td>
+      <td>1</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>15058</td>
+      <td>72</td>
+      <td>2.506101e-01</td>
+      <td>1</td>
+      <td>0.000003</td>
+      <td>0.25</td>
+      <td>IGLV1-40*01</td>
+      <td>IGLJ3*01</td>
+      <td>CQSYDRTLDHWVL</td>
+      <td>IGHV2-5*01</td>
+      <td>IGHJ5*01</td>
+      <td>CAYRRGITLIRGRRASDWFDPW</td>
+      <td>5.332129e-03</td>
+      <td>6</td>
+      <td>5</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>15055</td>
+      <td>72</td>
+      <td>2.506101e-01</td>
+      <td>1</td>
+      <td>0.000003</td>
+      <td>0.25</td>
+      <td>IGLV1-40*01</td>
+      <td>IGLJ3*01</td>
+      <td>CQSYDRNLDGWVF</td>
+      <td>IGHV2-5*01</td>
+      <td>IGHJ5*01</td>
+      <td>CAYRQRITMIRGQRVSDWFDPW</td>
+      <td>5.332129e-03</td>
+      <td>6</td>
+      <td>5</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>7352</td>
+      <td>96</td>
+      <td>2.635124e-01</td>
+      <td>14</td>
+      <td>2.932465</td>
+      <td>292895.00</td>
+      <td>IGKV2-30*01</td>
+      <td>IGKJ5*01</td>
+      <td>CMQGTHWPQAF</td>
+      <td>IGHV1-18*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARVPGFYW</td>
+      <td>5.489843e-03</td>
+      <td>1</td>
+      <td>3</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>3458</td>
+      <td>96</td>
+      <td>2.965372e-01</td>
+      <td>33</td>
+      <td>13.133427</td>
+      <td>1311821.00</td>
+      <td>IGKV1-8*01</td>
+      <td>IGKJ2*01</td>
+      <td>CQQYYSYPRTF</td>
+      <td>IGHV4-34*01</td>
+      <td>IGHJ1*01</td>
+      <td>CARGFGYGGNW</td>
+      <td>6.051780e-03</td>
+      <td>5</td>
+      <td>4</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>global</td>
+      <td>20428</td>
+      <td>96</td>
+      <td>3.207890e-01</td>
+      <td>30</td>
+      <td>11.370260</td>
+      <td>1135754.00</td>
+      <td>IGLV2-23*01</td>
+      <td>IGLJ3*01</td>
+      <td>CCSYAGSSTFGF</td>
+      <td>IGHV3-48*01</td>
+      <td>IGHJ4*01</td>
+      <td>CARDPGSPFDYW</td>
+      <td>6.415779e-03</td>
+      <td>4</td>
+      <td>4</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>Omitted 14 lines
+<br>
+<h1>tcr_clumping_logos</h1>
+<br>
+
+This figure summarizes the results of a CoNGA analysis that produces
+scores (TCR clumping) and clusters. At the top are six
+2D UMAP projections of clonotypes in the dataset based on GEX similarity
+(top left three panels) and TCR similarity (top right three panels),
+colored from left to right by GEX cluster assignment;
+TCR clumping score; joint GEX:TCR cluster assignment for
+clonotypes with significant TCR clumping scores,
+using a bicolored disk whose left half indicates GEX cluster and whose right
+half indicates TCR cluster; TCR cluster; TCR clumping; GEX:TCR cluster
+assignments for TCR clumping hits, as in the third panel.
+<br><br>
+Below are two rows of GEX landscape plots colored by (first row, left)
+expression of selected marker genes, (second row, left) Z-score normalized and
+GEX-neighborhood averaged expression of the same marker genes, and
+(both rows, right) TCR sequence features (see CoNGA manuscript Table S3 for
+TCR feature descriptions).
+<br><br>
+GEX and TCR sequence features of TCR clumping hits in clusters with
+3 or more hits are summarized by a series
+of logo-style visualizations, from left to right:
+differentially expressed genes (DEGs); TCR sequence logos showing the V and
+J gene usage and CDR3 sequences for the TCR alpha and beta chains; biased
+TCR sequence scores, with red indicating elevated scores and blue indicating
+decreased scores relative to the rest of the dataset (see CoNGA manuscript
+Table S3 for score definitions); GEX 'logos' for each cluster
+consisting of a panel of marker genes shown with red disks colored by
+mean expression and sized according to the fraction of cells expressing
+the gene (gene names are given above).
+<br><br>
+DEG and TCRseq sequence logos are scaled
+by the adjusted P value of the associations, with full logo height requiring
+a top adjusted P value below 10-6. DEGs with fold-change less than 2 are shown
+in gray. Each cluster is indicated by a bicolored disk colored according to
+GEX cluster (left half) and TCR cluster (right half). The two numbers above
+each disk show the number of hits within the cluster (on the left) and
+the total number of cells in those clonotypes (on the right). The dendrogram
+at the left shows similarity relationships among the clusters based on
+connections in the GEX and TCR neighbor graphs.
+<br><br>
+The choice of which marker genes to use for the GEX umap panels and for the
+cluster GEX logos can be configured using run_conga.py command line flags
+or arguments to the conga.plotting.make_logo_plots function.
+    <br>
+Image source: all_bcell_tcr_clumping_logos.png<br>
+<img src="all_bcell_tcr_clumping_logos.png"  width="1250"  />
+<h1>tcr_graph_vs_gex_features</h1>
+<br>
+
+    This table has results from a graph-vs-features analysis in which we
+    look for genes that are differentially expressed (elevated) in specific
+    neighborhoods of the TCR neighbor graph. Differential expression is
+    assessed by a ttest first, for speed, and then
+    by a mannwhitneyu test for nbrhood/score combinations whose ttest P-value
+    passes an initial threshold (default is 10* the pvalue threshold).
+<br><br>
+    Each row of the table represents a single significant association, in other
+    words a neighborhood (defined by the central clonotype index) and a
+    gene.
+<br><br>
+    The columns are as follows:
+<br><br>
+    ttest_pvalue_adj= ttest_pvalue * number of comparisons
+    mwu_pvalue_adj= mannwhitney-U P-value * number of comparisons
+    log2enr = log2 fold change of gene in neighborhood (will be positive)
+    gex_cluster= the consensus GEX cluster of the clonotypes w/ biased scores
+    tcr_cluster= the consensus TCR cluster of the clonotypes w/ biased scores
+    num_fg= the number of clonotypes in the neighborhood (including center)
+    mean_fg= the mean value of the feature in the neighborhood
+    mean_bg= the mean value of the feature outside the neighborhood
+    feature= the name of the gene
+    mait_fraction= the fraction of the skewed clonotypes that have an invariant
+        TCR
+    clone_index= the index in the anndata dataset of the clonotype that is the
+        center of the neighborhood.
+<br><br>
+    <br>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>ttest_pvalue_adj</th>
+      <th>mwu_pvalue_adj</th>
+      <th>log2enr</th>
+      <th>gex_cluster</th>
+      <th>tcr_cluster</th>
+      <th>feature</th>
+      <th>mean_fg</th>
+      <th>mean_bg</th>
+      <th>num_fg</th>
+      <th>clone_index</th>
+      <th>mait_fraction</th>
+      <th>nbr_frac</th>
+      <th>graph_type</th>
+      <th>feature_type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>4.423906e-12</td>
+      <td>6.726182e-51</td>
+      <td>2.208973</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.088751</td>
+      <td>0.019875</td>
+      <td>2504</td>
+      <td>6667</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.245436e-25</td>
+      <td>6.430431e-48</td>
+      <td>1.051405</td>
+      <td>1</td>
+      <td>3</td>
+      <td>AIM2</td>
+      <td>0.349441</td>
+      <td>0.183834</td>
+      <td>2504</td>
+      <td>7126</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.690107e-26</td>
+      <td>9.033014e-48</td>
+      <td>0.969109</td>
+      <td>1</td>
+      <td>3</td>
+      <td>CD27</td>
+      <td>0.431428</td>
+      <td>0.243389</td>
+      <td>2504</td>
+      <td>6549</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>3.619600e-11</td>
+      <td>1.064069e-46</td>
+      <td>2.166833</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.087082</td>
+      <td>0.020060</td>
+      <td>2504</td>
+      <td>7126</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>6.511117e-25</td>
+      <td>6.993912e-46</td>
+      <td>1.043951</td>
+      <td>1</td>
+      <td>3</td>
+      <td>AIM2</td>
+      <td>0.348167</td>
+      <td>0.183976</td>
+      <td>2504</td>
+      <td>6549</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>6.265088e-11</td>
+      <td>1.159524e-45</td>
+      <td>2.127767</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.085550</td>
+      <td>0.020230</td>
+      <td>2504</td>
+      <td>6549</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.924138e-10</td>
+      <td>1.401748e-44</td>
+      <td>2.100227</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.084477</td>
+      <td>0.020350</td>
+      <td>2504</td>
+      <td>7326</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.301898e-24</td>
+      <td>1.987008e-44</td>
+      <td>1.043195</td>
+      <td>1</td>
+      <td>3</td>
+      <td>AIM2</td>
+      <td>0.348038</td>
+      <td>0.183990</td>
+      <td>2504</td>
+      <td>7093</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>3.330487e-10</td>
+      <td>1.367078e-43</td>
+      <td>2.085558</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.083909</td>
+      <td>0.020413</td>
+      <td>2504</td>
+      <td>6452</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.499496e-10</td>
+      <td>9.660867e-43</td>
+      <td>2.115129</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.085057</td>
+      <td>0.020285</td>
+      <td>2504</td>
+      <td>7978</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.156091e-09</td>
+      <td>1.437471e-41</td>
+      <td>2.074665</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.083489</td>
+      <td>0.020460</td>
+      <td>2504</td>
+      <td>7023</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.312165e-09</td>
+      <td>1.233118e-40</td>
+      <td>2.064054</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.083080</td>
+      <td>0.020505</td>
+      <td>2504</td>
+      <td>7094</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>4.994480e-09</td>
+      <td>1.723831e-40</td>
+      <td>1.984064</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.080034</td>
+      <td>0.020844</td>
+      <td>2504</td>
+      <td>7581</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.268545e-09</td>
+      <td>9.652370e-40</td>
+      <td>2.062619</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.083025</td>
+      <td>0.020511</td>
+      <td>2504</td>
+      <td>7781</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.924881e-09</td>
+      <td>1.068058e-39</td>
+      <td>2.065875</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.083150</td>
+      <td>0.020497</td>
+      <td>2504</td>
+      <td>7118</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>2.205861e-09</td>
+      <td>1.117847e-39</td>
+      <td>2.034007</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.081928</td>
+      <td>0.020633</td>
+      <td>2504</td>
+      <td>7817</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.954256e-09</td>
+      <td>1.138564e-39</td>
+      <td>2.029864</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.081770</td>
+      <td>0.020651</td>
+      <td>2504</td>
+      <td>7093</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.980971e-09</td>
+      <td>8.637176e-39</td>
+      <td>2.066300</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.083166</td>
+      <td>0.020495</td>
+      <td>2504</td>
+      <td>7089</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>3.639497e-09</td>
+      <td>9.914717e-39</td>
+      <td>2.020135</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.081400</td>
+      <td>0.020692</td>
+      <td>2504</td>
+      <td>7819</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>4.284904e-09</td>
+      <td>1.089772e-38</td>
+      <td>2.007284</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.080912</td>
+      <td>0.020746</td>
+      <td>2504</td>
+      <td>7338</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>7.248790e-09</td>
+      <td>1.198709e-38</td>
+      <td>1.995066</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.080449</td>
+      <td>0.020797</td>
+      <td>2504</td>
+      <td>7470</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>3.499697e-21</td>
+      <td>5.945702e-38</td>
+      <td>0.979919</td>
+      <td>1</td>
+      <td>3</td>
+      <td>AIM2</td>
+      <td>0.337357</td>
+      <td>0.185177</td>
+      <td>2504</td>
+      <td>7074</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.100221e-20</td>
+      <td>6.658757e-38</td>
+      <td>0.878237</td>
+      <td>1</td>
+      <td>3</td>
+      <td>CD27</td>
+      <td>0.412991</td>
+      <td>0.245438</td>
+      <td>2504</td>
+      <td>7126</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>4.195796e-09</td>
+      <td>7.817443e-38</td>
+      <td>2.050334</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.082553</td>
+      <td>0.020564</td>
+      <td>2504</td>
+      <td>7242</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>5.254316e-09</td>
+      <td>8.274671e-38</td>
+      <td>2.027109</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.081665</td>
+      <td>0.020662</td>
+      <td>2504</td>
+      <td>7213</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>5.158125e-09</td>
+      <td>8.525326e-38</td>
+      <td>2.033012</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.081890</td>
+      <td>0.020637</td>
+      <td>2504</td>
+      <td>6983</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>6.042741e-09</td>
+      <td>9.056572e-38</td>
+      <td>2.017605</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.081304</td>
+      <td>0.020702</td>
+      <td>2504</td>
+      <td>7230</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>5.425136e-09</td>
+      <td>9.174797e-38</td>
+      <td>2.004893</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.080821</td>
+      <td>0.020756</td>
+      <td>2504</td>
+      <td>7336</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>5.159024e-09</td>
+      <td>6.293252e-37</td>
+      <td>2.031391</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.081829</td>
+      <td>0.020644</td>
+      <td>2504</td>
+      <td>7937</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>7.839057e-09</td>
+      <td>7.033671e-37</td>
+      <td>2.019572</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.081378</td>
+      <td>0.020694</td>
+      <td>2504</td>
+      <td>8042</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.083192e-08</td>
+      <td>7.861394e-37</td>
+      <td>1.980709</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.079907</td>
+      <td>0.020858</td>
+      <td>2504</td>
+      <td>7232</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.129913e-08</td>
+      <td>7.973838e-37</td>
+      <td>1.991608</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.080318</td>
+      <td>0.020812</td>
+      <td>2504</td>
+      <td>7884</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.482843e-08</td>
+      <td>8.188127e-37</td>
+      <td>1.973086</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.079621</td>
+      <td>0.020889</td>
+      <td>2504</td>
+      <td>7248</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.229771e-08</td>
+      <td>8.358670e-37</td>
+      <td>1.987820</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.080175</td>
+      <td>0.020828</td>
+      <td>2504</td>
+      <td>7249</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.916248e-08</td>
+      <td>9.136089e-37</td>
+      <td>1.966815</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.079385</td>
+      <td>0.020916</td>
+      <td>2504</td>
+      <td>8059</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.737754e-08</td>
+      <td>9.439362e-37</td>
+      <td>1.951872</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.078826</td>
+      <td>0.020978</td>
+      <td>2504</td>
+      <td>7099</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>2.319782e-08</td>
+      <td>9.521207e-37</td>
+      <td>1.957971</td>
+      <td>1</td>
+      <td>0</td>
+      <td>RASSF6</td>
+      <td>0.079054</td>
+      <td>0.020952</td>
+      <td>2504</td>
+      <td>18370</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>7.965815e-09</td>
+      <td>5.020615e-36</td>
+      <td>2.022314</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.081483</td>
+      <td>0.020683</td>
+      <td>2504</td>
+      <td>7228</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.593675e-20</td>
+      <td>5.038452e-36</td>
+      <td>0.973533</td>
+      <td>1</td>
+      <td>3</td>
+      <td>AIM2</td>
+      <td>0.336292</td>
+      <td>0.185296</td>
+      <td>2504</td>
+      <td>7978</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.855023e-08</td>
+      <td>5.964428e-36</td>
+      <td>1.983190</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.080001</td>
+      <td>0.020847</td>
+      <td>2504</td>
+      <td>6973</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.327053e-08</td>
+      <td>6.040683e-36</td>
+      <td>1.985666</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.080094</td>
+      <td>0.020837</td>
+      <td>2504</td>
+      <td>7953</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.521996e-08</td>
+      <td>6.364141e-36</td>
+      <td>2.000973</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.080673</td>
+      <td>0.020773</td>
+      <td>2504</td>
+      <td>7056</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.690497e-08</td>
+      <td>6.440025e-36</td>
+      <td>1.982210</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.079964</td>
+      <td>0.020851</td>
+      <td>2504</td>
+      <td>6579</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.871119e-08</td>
+      <td>6.530063e-36</td>
+      <td>2.001950</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.080710</td>
+      <td>0.020768</td>
+      <td>2504</td>
+      <td>7217</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.867922e-08</td>
+      <td>6.690088e-36</td>
+      <td>1.980828</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.079912</td>
+      <td>0.020857</td>
+      <td>2504</td>
+      <td>6991</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>4.947490e-17</td>
+      <td>3.106489e-35</td>
+      <td>0.922884</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGHA1</td>
+      <td>0.571748</td>
+      <td>0.341358</td>
+      <td>2504</td>
+      <td>6549</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>8.442182e-19</td>
+      <td>3.201335e-35</td>
+      <td>0.931305</td>
+      <td>1</td>
+      <td>3</td>
+      <td>AIM2</td>
+      <td>0.329304</td>
+      <td>0.186073</td>
+      <td>2504</td>
+      <td>8095</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.761350e-08</td>
+      <td>4.692945e-35</td>
+      <td>1.992865</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.080366</td>
+      <td>0.020807</td>
+      <td>2504</td>
+      <td>7084</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>2.252486e-08</td>
+      <td>4.852922e-35</td>
+      <td>1.977517</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.079787</td>
+      <td>0.020871</td>
+      <td>2504</td>
+      <td>6753</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>2.849738e-08</td>
+      <td>5.143459e-35</td>
+      <td>1.988569</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.080204</td>
+      <td>0.020825</td>
+      <td>2504</td>
+      <td>7148</td>
+      <td>0.0</td>
+      <td>0.1</td>
+      <td>tcr_nbr</td>
+      <td>gex</td>
+    </tr>
+  </tbody>
+</table>Omitted 21720 lines
+<br>
+<h1>tcr_graph_vs_gex_features_plot</h1>
+<br>
+This plot summarizes the results of a graph
+versus features analysis by labeling the clonotypes at the center of
+each biased neighborhood with the name of the feature biased in that
+neighborhood. The feature names are drawn in colored boxes whose
+color is determined by the strength and direction of the feature score bias
+(from bright red for features that are strongly elevated to bright blue
+for features that are strongly decreased in the corresponding neighborhoods,
+relative to the rest of the dataset).
+<br><br>
+At most one feature (the top scoring) is shown for each clonotype
+(ie, neighborhood). The UMAP xy coordinates for this plot are
+stored in adata.obsm['X_tcr_2d']. The score used for ranking correlations
+is 'mwu_pvalue_adj'. The threshold score for displaying a feature is
+1.0. The feature column is 'feature'. Since
+we also run graph-vs-features using "neighbor" graphs that are defined
+by clusters, ie where each clonotype is connected to all the other
+clonotypes in the same cluster, some biased features may be associated with
+a cluster rather than a specific clonotype. Those features are labeled with
+a '*' at the end and shown near the centroid of the clonotypes belonging
+to that cluster.
+<br>
+Image source: all_bcell_tcr_graph_vs_gex_features_plot.png<br>
+<img src="all_bcell_tcr_graph_vs_gex_features_plot.png"  />
+<h1>tcr_graph_vs_gex_features_panels</h1>
+<br>
+Graph-versus-feature analysis was used to identify
+a set of GEX features that showed biased distributions
+in TCR neighborhoods. This plot shows the distribution of the
+top-scoring GEX features on the TCR
+UMAP 2D landscape. The features are ranked by 'mwu_pvalue_adj' ie
+Mann-Whitney-Wilcoxon adjusted P value (raw P value * number of comparisons).
+At most 3 features from clonotype neighbhorhoods
+in each (GEX,TCR) cluster pair are shown. The raw scores for each feature
+are averaged over the K nearest neighbors (K is indicated in the lower
+right corner of each panel) for each clonotype. The min and max
+nbr-averaged scores are shown in the upper corners of each panel.
+Points are plotted in order of increasing feature score.
+<br>
+Image source: all_bcell_tcr_graph_vs_gex_features_panels.png<br>
+<img src="all_bcell_tcr_graph_vs_gex_features_panels.png"  />
+<h1>tcr_genes_vs_gex_features</h1>
+<br>
+
+    This table has results from a graph-vs-features analysis in which we
+    look for genes that are differentially expressed (elevated) in specific
+    neighborhoods of the TCR neighbor graph. Differential expression is
+    assessed by a ttest first, for speed, and then
+    by a mannwhitneyu test for nbrhood/score combinations whose ttest P-value
+    passes an initial threshold (default is 10* the pvalue threshold).
+<br><br>
+    Each row of the table represents a single significant association, in other
+    words a neighborhood (defined by the central clonotype index) and a
+    gene.
+<br><br>
+    The columns are as follows:
+<br><br>
+    ttest_pvalue_adj= ttest_pvalue * number of comparisons
+    mwu_pvalue_adj= mannwhitney-U P-value * number of comparisons
+    log2enr = log2 fold change of gene in neighborhood (will be positive)
+    gex_cluster= the consensus GEX cluster of the clonotypes w/ biased scores
+    tcr_cluster= the consensus TCR cluster of the clonotypes w/ biased scores
+    num_fg= the number of clonotypes in the neighborhood (including center)
+    mean_fg= the mean value of the feature in the neighborhood
+    mean_bg= the mean value of the feature outside the neighborhood
+    feature= the name of the gene
+    mait_fraction= the fraction of the skewed clonotypes that have an invariant
+        TCR
+    clone_index= the index in the anndata dataset of the clonotype that is the
+        center of the neighborhood.
+<br><br>
+    
+        In this analysis the TCR graph is defined by
+        connecting all clonotypes that have the same VA/JA/VB/JB-gene segment
+        (it's run four times, once with each gene segment type)
+        <br>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>ttest_pvalue_adj</th>
+      <th>mwu_pvalue_adj</th>
+      <th>log2enr</th>
+      <th>gex_cluster</th>
+      <th>tcr_cluster</th>
+      <th>feature</th>
+      <th>mean_fg</th>
+      <th>mean_bg</th>
+      <th>num_fg</th>
+      <th>clone_index</th>
+      <th>mait_fraction</th>
+      <th>gene_segment</th>
+      <th>graph_type</th>
+      <th>feature_type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1.162377e-08</td>
+      <td>5.902308e-192</td>
+      <td>8.349147</td>
+      <td>0</td>
+      <td>2</td>
+      <td>AC135068.2</td>
+      <td>0.066819</td>
+      <td>0.000212</td>
+      <td>1587</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV4-59</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>8.581360e-26</td>
+      <td>1.758969e-27</td>
+      <td>0.445878</td>
+      <td>5</td>
+      <td>16</td>
+      <td>HLA-B</td>
+      <td>3.690301</td>
+      <td>3.390242</td>
+      <td>948</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV3-30</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>4.223046e+00</td>
+      <td>2.587339e-17</td>
+      <td>2.482647</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.133016</td>
+      <td>0.025136</td>
+      <td>378</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV3-74</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.261340e-18</td>
+      <td>1.264177e-14</td>
+      <td>1.062705</td>
+      <td>0</td>
+      <td>6</td>
+      <td>TCL1A</td>
+      <td>2.423744</td>
+      <td>1.779220</td>
+      <td>421</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGKV1-8</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>4.103712e-03</td>
+      <td>3.981888e-13</td>
+      <td>1.653635</td>
+      <td>1</td>
+      <td>0</td>
+      <td>LINC01781</td>
+      <td>0.380256</td>
+      <td>0.137194</td>
+      <td>378</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV3-74</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.360609e-01</td>
+      <td>6.517809e-12</td>
+      <td>1.923378</td>
+      <td>1</td>
+      <td>9</td>
+      <td>AIM2</td>
+      <td>0.605787</td>
+      <td>0.198464</td>
+      <td>119</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGKV1-39</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>4.639063e-04</td>
+      <td>2.467948e-11</td>
+      <td>1.153724</td>
+      <td>1</td>
+      <td>0</td>
+      <td>TNFRSF13B</td>
+      <td>0.485439</td>
+      <td>0.247535</td>
+      <td>378</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV3-74</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>2.213020e-07</td>
+      <td>9.886184e-11</td>
+      <td>0.734026</td>
+      <td>0</td>
+      <td>1</td>
+      <td>IL4R</td>
+      <td>0.885975</td>
+      <td>0.618937</td>
+      <td>792</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV1-69D</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.086931e-06</td>
+      <td>3.049943e-10</td>
+      <td>1.013404</td>
+      <td>0</td>
+      <td>6</td>
+      <td>IL4R</td>
+      <td>1.006952</td>
+      <td>0.620893</td>
+      <td>421</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGKV1-8</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>8.871407e-05</td>
+      <td>7.657572e-10</td>
+      <td>1.142935</td>
+      <td>0</td>
+      <td>0</td>
+      <td>COTL1</td>
+      <td>0.747841</td>
+      <td>0.407963</td>
+      <td>293</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV1-2</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>2.256899e-10</td>
+      <td>4.396422e-09</td>
+      <td>0.422311</td>
+      <td>2</td>
+      <td>2</td>
+      <td>HLA-DRB5</td>
+      <td>2.277519</td>
+      <td>2.019071</td>
+      <td>1469</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV4-34</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>3.455988e-02</td>
+      <td>1.191555e-08</td>
+      <td>1.168764</td>
+      <td>1</td>
+      <td>0</td>
+      <td>AIM2</td>
+      <td>0.399111</td>
+      <td>0.197354</td>
+      <td>378</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV3-74</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>4.198370e-01</td>
+      <td>3.407757e-08</td>
+      <td>1.613523</td>
+      <td>1</td>
+      <td>9</td>
+      <td>TNFRSF13B</td>
+      <td>0.624090</td>
+      <td>0.249347</td>
+      <td>119</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGKV1-39</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>8.575685e-03</td>
+      <td>5.304666e-08</td>
+      <td>0.283652</td>
+      <td>10</td>
+      <td>2</td>
+      <td>HLA-B</td>
+      <td>3.586876</td>
+      <td>3.396260</td>
+      <td>702</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV4-30-4</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>4.729491e-01</td>
+      <td>5.596178e-08</td>
+      <td>1.658902</td>
+      <td>1</td>
+      <td>9</td>
+      <td>CD27</td>
+      <td>0.662079</td>
+      <td>0.260289</td>
+      <td>119</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGKV1-39</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.912632e+00</td>
+      <td>5.715393e-08</td>
+      <td>1.674543</td>
+      <td>1</td>
+      <td>9</td>
+      <td>IGHG2</td>
+      <td>0.834873</td>
+      <td>0.342640</td>
+      <td>119</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGKV1-39</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>6.222105e+00</td>
+      <td>1.094587e-07</td>
+      <td>1.667858</td>
+      <td>1</td>
+      <td>3</td>
+      <td>RASSF6</td>
+      <td>0.077016</td>
+      <td>0.024884</td>
+      <td>903</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV3-7</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>6.327191e-06</td>
+      <td>2.195702e-07</td>
+      <td>0.292495</td>
+      <td>0</td>
+      <td>0</td>
+      <td>ATP5F1D</td>
+      <td>0.547498</td>
+      <td>0.466972</td>
+      <td>4714</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGLJ3</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>2.111031e-06</td>
+      <td>2.944683e-07</td>
+      <td>0.267536</td>
+      <td>0</td>
+      <td>0</td>
+      <td>RPL13</td>
+      <td>4.540297</td>
+      <td>4.357027</td>
+      <td>293</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV1-2</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>4.718929e-06</td>
+      <td>3.373076e-07</td>
+      <td>0.300387</td>
+      <td>0</td>
+      <td>1</td>
+      <td>RPS8</td>
+      <td>4.295569</td>
+      <td>4.090507</td>
+      <td>293</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV1-2</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>7.519236e+00</td>
+      <td>3.634691e-07</td>
+      <td>1.507930</td>
+      <td>8</td>
+      <td>16</td>
+      <td>BIK</td>
+      <td>0.066178</td>
+      <td>0.023772</td>
+      <td>948</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV3-30</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>3.547048e-01</td>
+      <td>8.119042e-07</td>
+      <td>0.925739</td>
+      <td>1</td>
+      <td>0</td>
+      <td>CD27</td>
+      <td>0.446306</td>
+      <td>0.259376</td>
+      <td>378</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV3-74</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.209070e-08</td>
+      <td>1.056758e-06</td>
+      <td>0.401650</td>
+      <td>0</td>
+      <td>2</td>
+      <td>IGHM</td>
+      <td>1.910977</td>
+      <td>1.678971</td>
+      <td>1469</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV4-34</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>3.149305e+00</td>
+      <td>1.350765e-06</td>
+      <td>1.653273</td>
+      <td>1</td>
+      <td>6</td>
+      <td>CD27</td>
+      <td>0.661082</td>
+      <td>0.260712</td>
+      <td>93</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV3-72</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>9.304317e-06</td>
+      <td>1.677305e-06</td>
+      <td>0.307463</td>
+      <td>0</td>
+      <td>5</td>
+      <td>IFT57</td>
+      <td>0.478249</td>
+      <td>0.402488</td>
+      <td>4714</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGLJ3</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>6.920536e-06</td>
+      <td>1.682211e-06</td>
+      <td>0.321188</td>
+      <td>0</td>
+      <td>1</td>
+      <td>RPS6</td>
+      <td>3.745506</td>
+      <td>3.528748</td>
+      <td>293</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV1-2</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>5.872571e-04</td>
+      <td>3.242872e-06</td>
+      <td>0.217792</td>
+      <td>0</td>
+      <td>2</td>
+      <td>IGHM</td>
+      <td>1.800361</td>
+      <td>1.675969</td>
+      <td>3344</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHJ3</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>4.272428e-10</td>
+      <td>7.639931e-06</td>
+      <td>0.618286</td>
+      <td>0</td>
+      <td>1</td>
+      <td>RPS3A</td>
+      <td>4.036645</td>
+      <td>3.617485</td>
+      <td>64</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV1-69</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>6.007125e-02</td>
+      <td>9.953365e-06</td>
+      <td>0.254378</td>
+      <td>0</td>
+      <td>0</td>
+      <td>RPS19</td>
+      <td>4.162416</td>
+      <td>3.989092</td>
+      <td>293</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV1-2</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>5.798709e+00</td>
+      <td>1.093518e-05</td>
+      <td>1.446788</td>
+      <td>1</td>
+      <td>6</td>
+      <td>EML6</td>
+      <td>0.028634</td>
+      <td>0.010600</td>
+      <td>2329</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV3-23</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.061380e-02</td>
+      <td>1.094688e-05</td>
+      <td>0.726708</td>
+      <td>1</td>
+      <td>16</td>
+      <td>TNFRSF13B</td>
+      <td>0.379935</td>
+      <td>0.246307</td>
+      <td>903</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV3-7</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>6.376064e+00</td>
+      <td>1.416241e-05</td>
+      <td>1.510022</td>
+      <td>1</td>
+      <td>6</td>
+      <td>TNFRSF13B</td>
+      <td>0.592451</td>
+      <td>0.249855</td>
+      <td>93</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV3-72</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.067702e-04</td>
+      <td>1.586724e-05</td>
+      <td>0.699437</td>
+      <td>0</td>
+      <td>6</td>
+      <td>FCER2</td>
+      <td>1.394203</td>
+      <td>1.053265</td>
+      <td>421</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGKV1-8</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>3.831733e-03</td>
+      <td>2.373214e-05</td>
+      <td>1.407974</td>
+      <td>1</td>
+      <td>9</td>
+      <td>CRIP1</td>
+      <td>1.722475</td>
+      <td>1.005346</td>
+      <td>119</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGKV1-39</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>6.946784e-01</td>
+      <td>3.413771e-05</td>
+      <td>0.680338</td>
+      <td>1</td>
+      <td>3</td>
+      <td>IGHA1</td>
+      <td>0.525154</td>
+      <td>0.358389</td>
+      <td>903</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV3-7</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.697560e-02</td>
+      <td>3.960039e-05</td>
+      <td>0.857940</td>
+      <td>0</td>
+      <td>0</td>
+      <td>ATP5F1D</td>
+      <td>0.748405</td>
+      <td>0.478983</td>
+      <td>293</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV1-2</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.289193e-03</td>
+      <td>5.207349e-05</td>
+      <td>0.599719</td>
+      <td>8</td>
+      <td>16</td>
+      <td>P4HB</td>
+      <td>0.567000</td>
+      <td>0.407776</td>
+      <td>948</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV3-30</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.013179e-03</td>
+      <td>7.766532e-05</td>
+      <td>0.522317</td>
+      <td>8</td>
+      <td>16</td>
+      <td>UBE2J1</td>
+      <td>0.804287</td>
+      <td>0.620546</td>
+      <td>948</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV3-30</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>7.993857e+00</td>
+      <td>8.382968e-05</td>
+      <td>1.125868</td>
+      <td>1</td>
+      <td>16</td>
+      <td>TFEC</td>
+      <td>0.102002</td>
+      <td>0.048035</td>
+      <td>903</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV3-7</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>2.797814e+00</td>
+      <td>8.858741e-05</td>
+      <td>0.591426</td>
+      <td>1</td>
+      <td>16</td>
+      <td>IGHG2</td>
+      <td>0.476407</td>
+      <td>0.340061</td>
+      <td>903</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV3-7</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.352888e-02</td>
+      <td>1.054980e-04</td>
+      <td>0.470567</td>
+      <td>5</td>
+      <td>2</td>
+      <td>FGR</td>
+      <td>0.546589</td>
+      <td>0.421939</td>
+      <td>1469</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV4-34</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>4.976147e-02</td>
+      <td>1.076059e-04</td>
+      <td>0.656578</td>
+      <td>1</td>
+      <td>16</td>
+      <td>JCHAIN</td>
+      <td>0.968808</td>
+      <td>0.711521</td>
+      <td>903</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV3-7</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.037094e-01</td>
+      <td>1.133031e-04</td>
+      <td>0.749543</td>
+      <td>1</td>
+      <td>16</td>
+      <td>AIM2</td>
+      <td>0.310850</td>
+      <td>0.196267</td>
+      <td>903</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV3-7</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>2.053443e-01</td>
+      <td>1.203319e-04</td>
+      <td>0.872916</td>
+      <td>1</td>
+      <td>0</td>
+      <td>LGALS1</td>
+      <td>0.676586</td>
+      <td>0.424028</td>
+      <td>378</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV3-74</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>4.560693e+00</td>
+      <td>1.367702e-04</td>
+      <td>1.168996</td>
+      <td>8</td>
+      <td>5</td>
+      <td>AL133467.1</td>
+      <td>0.107027</td>
+      <td>0.049017</td>
+      <td>948</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV3-30</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>3.229814e-02</td>
+      <td>3.317470e-04</td>
+      <td>0.332606</td>
+      <td>0</td>
+      <td>0</td>
+      <td>RPSA</td>
+      <td>3.210923</td>
+      <td>2.990779</td>
+      <td>293</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV1-2</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>5.162678e+00</td>
+      <td>4.019399e-04</td>
+      <td>1.337260</td>
+      <td>1</td>
+      <td>9</td>
+      <td>LGALS1</td>
+      <td>0.850706</td>
+      <td>0.425822</td>
+      <td>119</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGKV1-39</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>1.963252e-02</td>
+      <td>4.915597e-04</td>
+      <td>0.917397</td>
+      <td>8</td>
+      <td>16</td>
+      <td>FKBP11</td>
+      <td>0.320594</td>
+      <td>0.182412</td>
+      <td>948</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV3-30</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>4.761180e-03</td>
+      <td>5.302924e-04</td>
+      <td>0.672486</td>
+      <td>8</td>
+      <td>16</td>
+      <td>MYDGF</td>
+      <td>0.496543</td>
+      <td>0.338936</td>
+      <td>948</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV3-30</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+    <tr>
+      <td>2.488562e-03</td>
+      <td>5.594840e-04</td>
+      <td>0.362406</td>
+      <td>0</td>
+      <td>2</td>
+      <td>FCER2</td>
+      <td>1.219208</td>
+      <td>1.049011</td>
+      <td>1469</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>IGHV4-34</td>
+      <td>tcr_genes</td>
+      <td>gex</td>
+    </tr>
+  </tbody>
+</table>Omitted 132 lines
+<br>
+<h1>tcr_genes_vs_gex_features_panels</h1>
+<br>
+Graph-versus-feature analysis was used to identify
+a set of GEX features that showed biased distributions
+in TCR neighborhoods. This plot shows the distribution of the
+top-scoring GEX features on the TCR
+UMAP 2D landscape. The features are ranked by 'mwu_pvalue_adj' ie
+Mann-Whitney-Wilcoxon adjusted P value (raw P value * number of comparisons).
+At most 3 features from clonotype neighbhorhoods
+in each (GEX,TCR) cluster pair are shown. The raw scores for each feature
+are averaged over the K nearest neighbors (K is indicated in the lower
+right corner of each panel) for each clonotype. The min and max
+nbr-averaged scores are shown in the upper corners of each panel.
+Points are plotted in order of increasing feature score.
+<br>
+Image source: all_bcell_tcr_genes_vs_gex_features_panels.png<br>
+<img src="all_bcell_tcr_genes_vs_gex_features_panels.png"  />
+<h1>gex_graph_vs_tcr_features</h1>
+<br>
+
+    This table has results from a graph-vs-features analysis in which we
+    look at the distribution of a set of TCR-defined features over the GEX
+    neighbor graph. We look for neighborhoods in the graph that have biased
+    score distributions, as assessed by a ttest first, for speed, and then
+    by a mannwhitneyu test for nbrhood/score combinations whose ttest P-value
+    passes an initial threshold (default is 10* the pvalue threshold).
+<br><br>
+    Each row of the table represents a single significant association, in other
+    words a neighborhood (defined by the central clonotype index) and a
+    tcr feature.
+<br><br>
+    The columns are as follows:
+<br><br>
+    ttest_pvalue_adj= ttest_pvalue * number of comparisons
+    ttest_stat= ttest statistic (sign indicates where feature is up or down)
+    mwu_pvalue_adj= mannwhitney-U P-value * number of comparisons
+    gex_cluster= the consensus GEX cluster of the clonotypes w/ biased scores
+    tcr_cluster= the consensus TCR cluster of the clonotypes w/ biased scores
+    num_fg= the number of clonotypes in the neighborhood (including center)
+    mean_fg= the mean value of the feature in the neighborhood
+    mean_bg= the mean value of the feature outside the neighborhood
+    feature= the name of the TCR score
+    mait_fraction= the fraction of the skewed clonotypes that have an invariant
+        TCR
+    clone_index= the index in the anndata dataset of the clonotype that is the
+        center of the neighborhood.
+<br><br>
+    <br>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>ttest_pvalue_adj</th>
+      <th>ttest_stat</th>
+      <th>mwu_pvalue_adj</th>
+      <th>gex_cluster</th>
+      <th>tcr_cluster</th>
+      <th>num_fg</th>
+      <th>mean_fg</th>
+      <th>mean_bg</th>
+      <th>feature</th>
+      <th>mait_fraction</th>
+      <th>clone_index</th>
+      <th>nbr_frac</th>
+      <th>graph_type</th>
+      <th>feature_type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1.923892e-39</td>
+      <td>-14.485594</td>
+      <td>6.820888e-42</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.049515</td>
+      <td>1.252107</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>7106</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>4.120312e-34</td>
+      <td>-12.922442</td>
+      <td>2.324045e-37</td>
+      <td>1</td>
+      <td>3</td>
+      <td>3324</td>
+      <td>1.094642</td>
+      <td>1.252850</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>-1</td>
+      <td>0.0</td>
+      <td>gex_cluster</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>1.725188e-32</td>
+      <td>-13.266542</td>
+      <td>9.997540e-35</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.062417</td>
+      <td>1.250673</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>7558</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>8.288543e-31</td>
+      <td>-12.956410</td>
+      <td>2.261955e-33</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.066096</td>
+      <td>1.250264</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>20708</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>2.777827e-29</td>
+      <td>-12.668237</td>
+      <td>4.843401e-32</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.071798</td>
+      <td>1.249630</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>15386</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>7.969699e-04</td>
+      <td>6.386804</td>
+      <td>2.003189e-31</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>0.021565</td>
+      <td>0.002885</td>
+      <td>IGKV1-39</td>
+      <td>0.0</td>
+      <td>2566</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>7.969699e-04</td>
+      <td>6.386804</td>
+      <td>2.003189e-31</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>0.021565</td>
+      <td>0.002885</td>
+      <td>IGKV1-39</td>
+      <td>0.0</td>
+      <td>20708</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>1.431791e-29</td>
+      <td>-12.723132</td>
+      <td>2.576810e-31</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.070555</td>
+      <td>1.249768</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>1903</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>7.007185e-30</td>
+      <td>-12.781495</td>
+      <td>7.630686e-31</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.070437</td>
+      <td>1.249781</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>14777</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>1.250985e-29</td>
+      <td>-12.734539</td>
+      <td>9.733149e-31</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.069780</td>
+      <td>1.249854</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>3855</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>1.791758e-29</td>
+      <td>-12.704542</td>
+      <td>1.633541e-30</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.071051</td>
+      <td>1.249713</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>8513</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>4.898472e-29</td>
+      <td>-12.621164</td>
+      <td>2.709256e-30</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.072705</td>
+      <td>1.249529</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>9110</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>9.537759e-28</td>
+      <td>-12.373179</td>
+      <td>4.584459e-30</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.075477</td>
+      <td>1.249221</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>22163</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>2.871736e-27</td>
+      <td>-12.279541</td>
+      <td>4.958885e-29</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.077463</td>
+      <td>1.249000</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>22986</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>1.209330e-27</td>
+      <td>-12.353017</td>
+      <td>1.031670e-28</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.076007</td>
+      <td>1.249162</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>10617</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>1.554767e-27</td>
+      <td>-12.332532</td>
+      <td>1.167865e-28</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.074623</td>
+      <td>1.249316</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>2566</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>6.353459e-26</td>
+      <td>-12.014064</td>
+      <td>1.536659e-28</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.080837</td>
+      <td>1.248625</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>16954</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>1.020512e-26</td>
+      <td>-12.171675</td>
+      <td>1.746111e-28</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.078369</td>
+      <td>1.248900</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>10748</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>4.398073e-26</td>
+      <td>12.046329</td>
+      <td>1.855614e-28</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.799805</td>
+      <td>1.758314</td>
+      <td>alpha</td>
+      <td>0.0</td>
+      <td>7106</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>7.701674e-26</td>
+      <td>-11.997648</td>
+      <td>2.265050e-28</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.080468</td>
+      <td>1.248666</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>7092</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>8.204103e-27</td>
+      <td>-12.189783</td>
+      <td>2.753872e-28</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.079353</td>
+      <td>1.248790</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>2583</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>2.715925e-03</td>
+      <td>6.193507</td>
+      <td>4.679615e-28</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>0.020767</td>
+      <td>0.002974</td>
+      <td>IGKV1-39</td>
+      <td>0.0</td>
+      <td>7106</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>2.715925e-03</td>
+      <td>6.193507</td>
+      <td>4.679615e-28</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>0.020767</td>
+      <td>0.002974</td>
+      <td>IGKV1-39</td>
+      <td>0.0</td>
+      <td>18430</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>2.715925e-03</td>
+      <td>6.193507</td>
+      <td>4.679615e-28</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>0.020767</td>
+      <td>0.002974</td>
+      <td>IGKV1-39</td>
+      <td>0.0</td>
+      <td>6218</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>2.715925e-03</td>
+      <td>6.193507</td>
+      <td>4.679615e-28</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2504</td>
+      <td>0.020767</td>
+      <td>0.002974</td>
+      <td>IGKV1-39</td>
+      <td>0.0</td>
+      <td>15386</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>3.499796e-27</td>
+      <td>-12.263127</td>
+      <td>4.953098e-28</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.076826</td>
+      <td>1.249071</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>16417</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>7.962007e-27</td>
+      <td>-12.192335</td>
+      <td>7.464154e-28</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.079337</td>
+      <td>1.248792</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>3092</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>7.694951e-26</td>
+      <td>-11.998475</td>
+      <td>7.985792e-28</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.078721</td>
+      <td>1.248861</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>22778</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>2.348428e-26</td>
+      <td>-12.100669</td>
+      <td>8.501420e-28</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.078130</td>
+      <td>1.248926</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>24770</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>1.365634e-25</td>
+      <td>-11.948512</td>
+      <td>1.287138e-27</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.079678</td>
+      <td>1.248754</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>14579</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>1.994504e-25</td>
+      <td>-11.914976</td>
+      <td>4.036837e-27</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.081354</td>
+      <td>1.248568</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>6484</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>4.387651e-25</td>
+      <td>-11.846414</td>
+      <td>4.784707e-27</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.081308</td>
+      <td>1.248573</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>9815</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>3.465923e-25</td>
+      <td>-11.866929</td>
+      <td>7.278164e-27</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.081396</td>
+      <td>1.248563</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>20801</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>8.545849e-26</td>
+      <td>-11.988738</td>
+      <td>7.550930e-27</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.080330</td>
+      <td>1.248682</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>1787</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>1.387540e-25</td>
+      <td>-11.946968</td>
+      <td>9.923283e-27</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.080071</td>
+      <td>1.248711</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>17511</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>5.004270e-03</td>
+      <td>6.095045</td>
+      <td>1.966727e-26</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>0.020367</td>
+      <td>0.003019</td>
+      <td>IGKV1-39</td>
+      <td>0.0</td>
+      <td>24260</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>9.791031e-25</td>
+      <td>-11.775683</td>
+      <td>1.973902e-26</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.082579</td>
+      <td>1.248432</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>1919</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>2.268971e-25</td>
+      <td>-11.903637</td>
+      <td>2.231510e-26</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.081701</td>
+      <td>1.248529</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>20053</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>3.455385e-24</td>
+      <td>-11.663648</td>
+      <td>3.192525e-26</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.084934</td>
+      <td>1.248170</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>2981</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>1.394886e-24</td>
+      <td>-11.744854</td>
+      <td>4.794723e-26</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.081976</td>
+      <td>1.248499</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>14358</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>2.300528e-24</td>
+      <td>-11.700456</td>
+      <td>6.780349e-26</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.082799</td>
+      <td>1.248407</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>11525</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>1.738793e-23</td>
+      <td>11.519903</td>
+      <td>6.819559e-26</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>-0.547885</td>
+      <td>-0.722295</td>
+      <td>kf7</td>
+      <td>0.0</td>
+      <td>20708</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>9.345321e-24</td>
+      <td>-11.574269</td>
+      <td>1.012811e-25</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.087537</td>
+      <td>1.247881</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>1193</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>6.586492e-24</td>
+      <td>-11.605896</td>
+      <td>1.123636e-25</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.086312</td>
+      <td>1.248017</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>1861</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>4.466949e-24</td>
+      <td>-11.641532</td>
+      <td>1.268900e-25</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.083420</td>
+      <td>1.248338</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>12470</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>4.614042e-23</td>
+      <td>-11.430675</td>
+      <td>1.500255e-25</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.088987</td>
+      <td>1.247720</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>22510</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>1.038831e-24</td>
+      <td>-11.771188</td>
+      <td>1.962279e-25</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.080871</td>
+      <td>1.248622</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>9843</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>1.149930e-24</td>
+      <td>-11.761363</td>
+      <td>2.081053e-25</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.083084</td>
+      <td>1.248376</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>17470</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>3.893058e-24</td>
+      <td>-11.653389</td>
+      <td>2.669346e-25</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.084219</td>
+      <td>1.248250</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>1915</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+    <tr>
+      <td>1.938526e-24</td>
+      <td>-11.715533</td>
+      <td>3.064751e-25</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2504</td>
+      <td>1.082844</td>
+      <td>1.248402</td>
+      <td>af2</td>
+      <td>0.0</td>
+      <td>10228</td>
+      <td>0.1</td>
+      <td>gex_nbr</td>
+      <td>tcr</td>
+    </tr>
+  </tbody>
+</table>Omitted 24583 lines
+<br>
+<h1>gex_graph_vs_tcr_features_plot</h1>
+<br>
+This plot summarizes the results of a graph
+versus features analysis by labeling the clonotypes at the center of
+each biased neighborhood with the name of the feature biased in that
+neighborhood. The feature names are drawn in colored boxes whose
+color is determined by the strength and direction of the feature score bias
+(from bright red for features that are strongly elevated to bright blue
+for features that are strongly decreased in the corresponding neighborhoods,
+relative to the rest of the dataset).
+<br><br>
+At most one feature (the top scoring) is shown for each clonotype
+(ie, neighborhood). The UMAP xy coordinates for this plot are
+stored in adata.obsm['X_gex_2d']. The score used for ranking correlations
+is 'mwu_pvalue_adj'. The threshold score for displaying a feature is
+1.0. The feature column is 'feature'. Since
+we also run graph-vs-features using "neighbor" graphs that are defined
+by clusters, ie where each clonotype is connected to all the other
+clonotypes in the same cluster, some biased features may be associated with
+a cluster rather than a specific clonotype. Those features are labeled with
+a '*' at the end and shown near the centroid of the clonotypes belonging
+to that cluster.
+<br>
+Image source: all_bcell_gex_graph_vs_tcr_features_plot.png<br>
+<img src="all_bcell_gex_graph_vs_tcr_features_plot.png"  />
+<h1>gex_graph_vs_tcr_features_panels</h1>
+<br>
+Graph-versus-feature analysis was used to identify
+a set of TCR features that showed biased distributions
+in GEX neighborhoods. This plot shows the distribution of the
+top-scoring TCR features on the GEX
+UMAP 2D landscape. The features are ranked by 'mwu_pvalue_adj' ie
+Mann-Whitney-Wilcoxon adjusted P value (raw P value * number of comparisons).
+At most 3 features from clonotype neighbhorhoods
+in each (GEX,TCR) cluster pair are shown. The raw scores for each feature
+are averaged over the K nearest neighbors (K is indicated in the lower
+right corner of each panel) for each clonotype. The min and max
+nbr-averaged scores are shown in the upper corners of each panel.
+Points are plotted in order of increasing feature score.
+<br>
+Image source: all_bcell_gex_graph_vs_tcr_features_panels.png<br>
+<img src="all_bcell_gex_graph_vs_tcr_features_panels.png"  />
+<h1>graph_vs_features_gex_clustermap</h1>
+<br>
+This plot shows the distribution of significant
+    features from graph-vs-features or HotSpot analysis plotted across the
+    GEX landscape. Rows are features and columns are
+    individual clonotypes. Columns are ordered by hierarchical clustering
+    (if a dendrogram is present above the heatmap) or by a 1D UMAP projection
+    (used for very large datasets or if 'X_pca_gex' is not present in
+    adata.obsm_keys()). Rows are ordered by hierarchical clustering with
+    a correlation metric.
+<br><br>
+    The row colors to the left of the heatmap show the feature type
+    (blue=TCR, orange=GEX). The row colors to the left of those
+    indicate the strength of the graph-vs-feature correlation
+    (also included in the feature labels to the right of the heatmap;
+    keep in mind that highly significant P values for some features may shift
+    the colorscale so everything else looks dark blue).
+<br><br>
+    The column colors above the heatmap are GEX clusters
+    (and TCR V/J genes if plotting against the TCR landscape). The text
+    above the column colors provides more info.
+<br><br>
+    Feature scores are Z-score normalized and then averaged over the
+    K=250 nearest neighbors (0 means no nbr-averaging).
+<br><br>
+    The 'coolwarm' colormap is centered at Z=0.
+<br><br>
+    Since features of the same type (GEX or TCR) as the landscape and
+    neighbor graph (ie GEX features) are more highly
+    correlated over graph neighborhoods, their neighbor-averaged scores
+    will show more extreme variation. For this reason, the nbr-averaged
+    scores for these features from the same modality as the landscape
+    itself are downscaled by a factor of
+    rescale_factor_for_self_features=0.33.
+<br><br>
+    The colormap in the top left is for the Z-score normalized,
+    neighbor-averaged scores (multiply by 3.03
+    to get the color scores for the GEX features).
+<br><br>
+    <br>
+Image source: all_bcell_graph_vs_features_gex_clustermap.png<br>
+<img src="all_bcell_graph_vs_features_gex_clustermap.png"  width="1500"  />
+<h1>graph_vs_features_tcr_clustermap</h1>
+<br>
+This plot shows the distribution of significant
+    features from graph-vs-features or HotSpot analysis plotted across the
+    TCR landscape. Rows are features and columns are
+    individual clonotypes. Columns are ordered by hierarchical clustering
+    (if a dendrogram is present above the heatmap) or by a 1D UMAP projection
+    (used for very large datasets or if 'X_pca_tcr' is not present in
+    adata.obsm_keys()). Rows are ordered by hierarchical clustering with
+    a correlation metric.
+<br><br>
+    The row colors to the left of the heatmap show the feature type
+    (blue=TCR, orange=GEX). The row colors to the left of those
+    indicate the strength of the graph-vs-feature correlation
+    (also included in the feature labels to the right of the heatmap;
+    keep in mind that highly significant P values for some features may shift
+    the colorscale so everything else looks dark blue).
+<br><br>
+    The column colors above the heatmap are TCR clusters
+    (and TCR V/J genes if plotting against the TCR landscape). The text
+    above the column colors provides more info.
+<br><br>
+    Feature scores are Z-score normalized and then averaged over the
+    K=250 nearest neighbors (0 means no nbr-averaging).
+<br><br>
+    The 'coolwarm' colormap is centered at Z=0.
+<br><br>
+    Since features of the same type (GEX or TCR) as the landscape and
+    neighbor graph (ie TCR features) are more highly
+    correlated over graph neighborhoods, their neighbor-averaged scores
+    will show more extreme variation. For this reason, the nbr-averaged
+    scores for these features from the same modality as the landscape
+    itself are downscaled by a factor of
+    rescale_factor_for_self_features=0.33.
+<br><br>
+    The colormap in the top left is for the Z-score normalized,
+    neighbor-averaged scores (multiply by 3.03
+    to get the color scores for the TCR features).
+<br><br>
+    <br>
+Image source: all_bcell_graph_vs_features_tcr_clustermap.png<br>
+<img src="all_bcell_graph_vs_features_tcr_clustermap.png"  width="1500"  />
+<h1>graph_vs_summary</h1>
+<br>
+Summary figure for the graph-vs-graph and
+    graph-vs-features analyses.<br>
+Image source: all_bcell_graph_vs_summary.png<br>
+<img src="all_bcell_graph_vs_summary.png"  />
+<h1>gex_clusters_tcrdist_trees</h1>
+<br>
+These are TCRdist hierarchical clustering trees
+for the GEX clusters (cluster assignments stored in
+adata.obs['clusters_gex']). The trees are colored by CoNGA score
+with a color score range of 2.50e+02 (blue) to 2.50e-07 (red).
+For coloring, CoNGA scores are log-transformed, negated, and square-rooted
+(with an offset in there, too, roughly speaking).
+<br>
+Image source: all_bcell_gex_clusters_tcrdist_trees.png<br>
+<img src="all_bcell_gex_clusters_tcrdist_trees.png"  height="750"  />
+<h1>conga_threshold_tcrdist_tree</h1>
+<br>
+This is a TCRdist hierarchical clustering tree
+for the clonotypes with CoNGA score less than 10.0.
+The tree is colored by CoNGA score
+with a color score range of 1.00e+01 (blue) to 1.00e-08 (red).
+For coloring, CoNGA scores are log-transformed, negated, and square-rooted
+(with an offset in there, too, roughly speaking).
+<br>
+Image source: all_bcell_conga_threshold_tcrdist_tree.png<br>
+<img src="all_bcell_conga_threshold_tcrdist_tree.png"  height="750"  />
+<h1>hotspot_features</h1>
+<br>
+ Find GEX (TCR) features that show a biased
+    distribution across the TCR (GEX) neighbor graph,
+    using a simplified version of the Hotspot method
+    from the Yosef lab.
+<br><br>
+    DeTomaso, D., & Yosef, N. (2021).
+    "Hotspot identifies informative gene modules across modalities
+    of single-cell genomics."
+    Cell Systems, 12(5), 446–456.e9.
+<br><br>
+    PMID:33951459
+<br><br>
+    Columns:
+<br><br>
+    Z: HotSpot Z statistic
+<br><br>
+    pvalue_adj: Raw P value times the number of tests (crude Bonferroni
+    correction)
+<br><br>
+    nbr_frac: The K NN nbr fraction used for the neighbor graph construction
+    (nbr_frac = 0.1 means K=0.1*num_clonotypes neighbors)
+<br><br>
+
+    <br>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Z</th>
+      <th>pvalue_adj</th>
+      <th>feature</th>
+      <th>feature_type</th>
+      <th>nbr_frac</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>54.925242</td>
+      <td>0.000000e+00</td>
+      <td>gex_cluster1</td>
+      <td>gex</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>51.101410</td>
+      <td>0.000000e+00</td>
+      <td>TCL1A</td>
+      <td>gex</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>46.610037</td>
+      <td>0.000000e+00</td>
+      <td>cdr3len</td>
+      <td>tcr</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>45.867720</td>
+      <td>0.000000e+00</td>
+      <td>imhc</td>
+      <td>tcr</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>43.161363</td>
+      <td>0.000000e+00</td>
+      <td>RASSF6</td>
+      <td>gex</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>40.056613</td>
+      <td>0.000000e+00</td>
+      <td>gex_cluster1</td>
+      <td>gex</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <td>38.253121</td>
+      <td>0.000000e+00</td>
+      <td>TCL1A</td>
+      <td>gex</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <td>36.497384</td>
+      <td>1.104234e-289</td>
+      <td>af2</td>
+      <td>tcr</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>34.006251</td>
+      <td>1.978637e-249</td>
+      <td>AIM2</td>
+      <td>gex</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>33.196803</td>
+      <td>1.083461e-239</td>
+      <td>kf7</td>
+      <td>tcr</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>32.970505</td>
+      <td>2.363035e-234</td>
+      <td>FCER2</td>
+      <td>gex</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>31.631026</td>
+      <td>1.519591e-215</td>
+      <td>IGHA2</td>
+      <td>gex</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>31.248886</td>
+      <td>2.092093e-212</td>
+      <td>cdr3len</td>
+      <td>tcr</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <td>31.272985</td>
+      <td>1.194803e-210</td>
+      <td>RASSF6</td>
+      <td>gex</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <td>30.012159</td>
+      <td>6.163647e-196</td>
+      <td>imhc</td>
+      <td>tcr</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <td>30.115875</td>
+      <td>3.299136e-195</td>
+      <td>IL4R</td>
+      <td>gex</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>30.039505</td>
+      <td>3.289187e-194</td>
+      <td>IGHM</td>
+      <td>gex</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>29.151481</td>
+      <td>7.240608e-185</td>
+      <td>IGKV1-39</td>
+      <td>tcr</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>28.522031</td>
+      <td>6.862191e-175</td>
+      <td>TNFRSF13B</td>
+      <td>gex</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>27.872359</td>
+      <td>6.342549e-167</td>
+      <td>CD27</td>
+      <td>gex</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>27.521125</td>
+      <td>1.077905e-162</td>
+      <td>gex_cluster4</td>
+      <td>gex</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>27.251811</td>
+      <td>1.737832e-159</td>
+      <td>IGHA1</td>
+      <td>gex</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>27.071679</td>
+      <td>2.332123e-157</td>
+      <td>JCHAIN</td>
+      <td>gex</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>26.573869</td>
+      <td>1.495443e-151</td>
+      <td>gex_cluster0</td>
+      <td>gex</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>25.576352</td>
+      <td>2.530874e-142</td>
+      <td>volume</td>
+      <td>tcr</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>25.070642</td>
+      <td>1.142541e-134</td>
+      <td>AIM2</td>
+      <td>gex</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <td>24.051681</td>
+      <td>8.807642e-124</td>
+      <td>LINC01781</td>
+      <td>gex</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>23.769560</td>
+      <td>6.242430e-123</td>
+      <td>kf6</td>
+      <td>tcr</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>22.749589</td>
+      <td>1.310900e-112</td>
+      <td>af2</td>
+      <td>tcr</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <td>22.597655</td>
+      <td>4.135861e-111</td>
+      <td>IGHV3-7</td>
+      <td>tcr</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>22.537777</td>
+      <td>1.944512e-108</td>
+      <td>PLPP5</td>
+      <td>gex</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>22.263603</td>
+      <td>7.536578e-108</td>
+      <td>turn</td>
+      <td>tcr</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>21.958280</td>
+      <td>6.532303e-105</td>
+      <td>nndists_tcr</td>
+      <td>tcr</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>21.924678</td>
+      <td>1.660178e-102</td>
+      <td>HLA-DRB5</td>
+      <td>gex</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>21.576963</td>
+      <td>3.248460e-99</td>
+      <td>CD27</td>
+      <td>gex</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <td>21.151790</td>
+      <td>2.918885e-95</td>
+      <td>TNFRSF13B</td>
+      <td>gex</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <td>20.932897</td>
+      <td>2.951808e-93</td>
+      <td>IGHM</td>
+      <td>gex</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <td>20.688364</td>
+      <td>3.990303e-93</td>
+      <td>alpha</td>
+      <td>tcr</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>20.682867</td>
+      <td>4.472102e-93</td>
+      <td>kf9</td>
+      <td>tcr</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>20.860602</td>
+      <td>1.341792e-92</td>
+      <td>IGHA2</td>
+      <td>gex</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <td>20.534470</td>
+      <td>9.589803e-92</td>
+      <td>IGHV3-74</td>
+      <td>tcr</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>20.155122</td>
+      <td>2.196062e-88</td>
+      <td>kf7</td>
+      <td>tcr</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <td>20.053393</td>
+      <td>2.071448e-85</td>
+      <td>IFT57</td>
+      <td>gex</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>19.965956</td>
+      <td>1.196750e-84</td>
+      <td>KLF2</td>
+      <td>gex</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>19.947607</td>
+      <td>1.727550e-84</td>
+      <td>FCER2</td>
+      <td>gex</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <td>19.867129</td>
+      <td>8.609187e-84</td>
+      <td>CRIP1</td>
+      <td>gex</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>19.602763</td>
+      <td>1.609072e-81</td>
+      <td>AC135068.2</td>
+      <td>gex</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>19.339241</td>
+      <td>2.759305e-79</td>
+      <td>IGHA1</td>
+      <td>gex</td>
+      <td>0.01</td>
+    </tr>
+    <tr>
+      <td>18.952477</td>
+      <td>3.812592e-78</td>
+      <td>IGHV4-34</td>
+      <td>tcr</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>18.778184</td>
+      <td>1.030887e-76</td>
+      <td>kf2</td>
+      <td>tcr</td>
+      <td>0.10</td>
+    </tr>
+  </tbody>
+</table>Omitted 509 lines
+<br>
+<h1>hotspot_gex_umap</h1>
+<br>
+HotSpot analysis (Nir Yosef lab, PMID: 33951459)
+was used to identify a set of GEX (TCR) features that showed biased
+distributions in TCR (GEX) space. This plot shows the distribution of the
+top-scoring HotSpot features on the GEX
+UMAP 2D landscape. The features are ranked by adjusted P value
+(raw P value * number of comparisons). The raw scores for each feature
+are averaged over the K nearest neighbors (K is indicated in the lower
+right corner of each panel) for each clonotype. The min and max
+nbr-averaged scores are shown in the upper corners of each panel.
+<br><br>
+Features are filtered based on correlation coefficient to reduce
+redundancy: if a feature has a correlation of >= 0.9
+(the max_feature_correlation argument to conga.plotting.plot_hotspot_umap)
+to a previously plotted feature, that feature is skipped.
+Points are plotted in order of increasing feature score
+<br>
+Image source: all_bcell_hotspot_combo_features_0.100_nbrs_gex_plot_umap_nbr_avg.png<br>
+<img src="all_bcell_hotspot_combo_features_0.100_nbrs_gex_plot_umap_nbr_avg.png"  />
+<h1>hotspot_gex_clustermap</h1>
+<br>
+This plot shows the distribution of significant
+    features from graph-vs-features or HotSpot analysis plotted across the
+    GEX landscape. Rows are features and columns are
+    individual clonotypes. Columns are ordered by hierarchical clustering
+    (if a dendrogram is present above the heatmap) or by a 1D UMAP projection
+    (used for very large datasets or if 'X_pca_gex' is not present in
+    adata.obsm_keys()). Rows are ordered by hierarchical clustering with
+    a correlation metric.
+<br><br>
+    The row colors to the left of the heatmap show the feature type
+    (blue=TCR, orange=GEX). The row colors to the left of those
+    indicate the strength of the graph-vs-feature correlation
+    (also included in the feature labels to the right of the heatmap;
+    keep in mind that highly significant P values for some features may shift
+    the colorscale so everything else looks dark blue).
+<br><br>
+    The column colors above the heatmap are GEX clusters
+    (and TCR V/J genes if plotting against the TCR landscape). The text
+    above the column colors provides more info.
+<br><br>
+    Feature scores are Z-score normalized and then averaged over the
+    K=250 nearest neighbors (0 means no nbr-averaging).
+<br><br>
+    The 'coolwarm' colormap is centered at Z=0.
+<br><br>
+    Since features of the same type (GEX or TCR) as the landscape and
+    neighbor graph (ie GEX features) are more highly
+    correlated over graph neighborhoods, their neighbor-averaged scores
+    will show more extreme variation. For this reason, the nbr-averaged
+    scores for these features from the same modality as the landscape
+    itself are downscaled by a factor of
+    rescale_factor_for_self_features=0.33.
+<br><br>
+    The colormap in the top left is for the Z-score normalized,
+    neighbor-averaged scores (multiply by 3.03
+    to get the color scores for the GEX features).
+<br><br>
+    <br>
+Image source: all_bcell_hotspot_combo_features_0.100_nbrs_gex_plot_clustermap_nbr_avg.png<br>
+<img src="all_bcell_hotspot_combo_features_0.100_nbrs_gex_plot_clustermap_nbr_avg.png"  width="1500"  />
+<h1>hotspot_tcr_umap</h1>
+<br>
+HotSpot analysis (Nir Yosef lab, PMID: 33951459)
+was used to identify a set of GEX (TCR) features that showed biased
+distributions in TCR (GEX) space. This plot shows the distribution of the
+top-scoring HotSpot features on the TCR
+UMAP 2D landscape. The features are ranked by adjusted P value
+(raw P value * number of comparisons). The raw scores for each feature
+are averaged over the K nearest neighbors (K is indicated in the lower
+right corner of each panel) for each clonotype. The min and max
+nbr-averaged scores are shown in the upper corners of each panel.
+<br><br>
+Features are filtered based on correlation coefficient to reduce
+redundancy: if a feature has a correlation of >= 0.9
+(the max_feature_correlation argument to conga.plotting.plot_hotspot_umap)
+to a previously plotted feature, that feature is skipped.
+Points are plotted in order of increasing feature score
+<br>
+Image source: all_bcell_hotspot_combo_features_0.100_nbrs_tcr_plot_umap_nbr_avg.png<br>
+<img src="all_bcell_hotspot_combo_features_0.100_nbrs_tcr_plot_umap_nbr_avg.png"  />
+<h1>hotspot_tcr_clustermap</h1>
+<br>
+This plot shows the distribution of significant
+    features from graph-vs-features or HotSpot analysis plotted across the
+    TCR landscape. Rows are features and columns are
+    individual clonotypes. Columns are ordered by hierarchical clustering
+    (if a dendrogram is present above the heatmap) or by a 1D UMAP projection
+    (used for very large datasets or if 'X_pca_tcr' is not present in
+    adata.obsm_keys()). Rows are ordered by hierarchical clustering with
+    a correlation metric.
+<br><br>
+    The row colors to the left of the heatmap show the feature type
+    (blue=TCR, orange=GEX). The row colors to the left of those
+    indicate the strength of the graph-vs-feature correlation
+    (also included in the feature labels to the right of the heatmap;
+    keep in mind that highly significant P values for some features may shift
+    the colorscale so everything else looks dark blue).
+<br><br>
+    The column colors above the heatmap are TCR clusters
+    (and TCR V/J genes if plotting against the TCR landscape). The text
+    above the column colors provides more info.
+<br><br>
+    Feature scores are Z-score normalized and then averaged over the
+    K=250 nearest neighbors (0 means no nbr-averaging).
+<br><br>
+    The 'coolwarm' colormap is centered at Z=0.
+<br><br>
+    Since features of the same type (GEX or TCR) as the landscape and
+    neighbor graph (ie TCR features) are more highly
+    correlated over graph neighborhoods, their neighbor-averaged scores
+    will show more extreme variation. For this reason, the nbr-averaged
+    scores for these features from the same modality as the landscape
+    itself are downscaled by a factor of
+    rescale_factor_for_self_features=0.33.
+<br><br>
+    The colormap in the top left is for the Z-score normalized,
+    neighbor-averaged scores (multiply by 3.03
+    to get the color scores for the TCR features).
+<br><br>
+    <br>
+Image source: all_bcell_hotspot_combo_features_0.100_nbrs_tcr_plot_clustermap_nbr_avg.png<br>
+<img src="all_bcell_hotspot_combo_features_0.100_nbrs_tcr_plot_clustermap_nbr_avg.png"  width="1500"  />
+
+    </body>
+    </html>
+    
