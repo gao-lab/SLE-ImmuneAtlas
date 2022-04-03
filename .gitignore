@@ -1,1 +1,13 @@
-meeting_briefing
+*
+!*/
+# set special file type
+!*.py
+!*.R
+!*.ipynb
+!*.pdf
+!*.html
+!*.md
+!*.csv
+
+output
+final
