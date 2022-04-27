@@ -1,4 +1,5 @@
 library(Scillus)
+library(CEMiTool)
 
 setwd('/data/sle')
 output_path <- './output_file/seurat/mono_dc/'
@@ -36,15 +37,19 @@ DotPlot(pdc_filter, features =  grep(rownames(pdc), pattern = '^TLR', value = T)
 VlnPlot(pdc_filter, features =  grep(rownames(pdc), pattern = '^TLR', value = T)[-10], stack = T)
 
 FeaturePlot(pdc_filter, features = c('AXL','FCER1A','CST3','CD1C'))
-FeaturePlot(pdc_harmony, features = c('CD3D','CD79A','CD14','PPBP'))
+FeaturePlot(pdc_filter, features = c('CD3D','CD79A','CD14','PPBP'))
 
 DotPlot(pdc_filter, features = c('IRF9','STAT1','STAT2'), 
         split.by = 'treatment', cols = c("red", "blue", "green"))
 
+DotPlot2(pdc_filter,marker_list  =c('IRF9','STAT1','STAT2'), group.by = 'treatment')
+
 
 #----------------------------- Find Marker Gene --------------------------------
 # marker_pdc_c6 <- FindMarkers(pdc_filter, ident.1 = 6, only.pos = T)
-marker_pdc_sle <-  FindMarkers(pdc_filter, ident.1 = 'SLE', only.pos = T,group.by = 'group')
+marker_pdc_sle <-  FindMarkers(pdc_filter, ident.1 = 'untreated', only.pos = F,group.by = 'treatment') %>%
+    filter(p_val_adj < 0.05) %>% arrange(desc(avg_log2FC))
+
 marker_pdc_all <- FindAllMarkers(pdc_filter, only.pos = T)
 marker_pdc_all %<>% filter(p_val_adj < 0.05)  %>% top_n(avg_log2FC  , n = 10) %>% View()
 pdc_marker <- marker_pdc_sle %>% filter(p_val_adj < 0.05)  %>% top_n(avg_log2FC  , n = 10) %>% rownames()
@@ -152,10 +157,50 @@ ggpaired(pdc_pair_df, cond1 = 'before', cond2 = 'after',
 
 
 
+# 
+gmt_fname <- system.file("extdata", "pathways.gmt", package = "CEMiTool")
+gmt_in <- read_gmt(gmt_fname)
+# int_fname <- system.file("extdata", "interactions.tsv", package = "CEMiTool")
+# int_df <- read.delim(int_fname)
+# use SCENIC 
+int_df <- read_csv('./scripts/SCENIC/pDC/pdc_high_confidence_regulate.csv',col_names = T)
+int_df <- int_df[,c(2,3)]
+
+sample_annot <- data.frame(matrix(data = NA, ncol = 2, nrow = 430) )
+colnames(sample_annot) <- c('SampleName', 'Class')
+sample_annot$SampleName <- Cells(pdc_filter)
+sample_annot$Class <- pdc_filter$treatment
+cem <- cemitool(pdc_filter@assays$RNA@data %>%as.data.frame(), sample_annot, gmt_in,interactions = int_df,
+                filter=TRUE, plot=TRUE, verbose=TRUE)
+# back_run(func = cemitool,out_name = 'cem',job_name = 'cemitool',
+#          pdc_filter@assays$RNA@data %>%as.data.frame(), sample_annot, gmt_in, 
+#          filter=TRUE, plot=TRUE, verbose=TRUE)
+
+generate_report(cem, directory="./tmp/CEMiTool_pDC_Report", force = T)
+show_plot(cem, "interaction")
+
+DoHeatmap2(pdc_filter,marker_list = c('APBBIIP','ABCE1','A1BG','COMMD1'))
 
 
+library('igraph')
+int_df <- int_df[int_df$importance > 10,]
+links <- int_df[,-1]
+nodes <- rbind(data.frame(gene = unique(links$TF),  attr = rep('TF',length(unique(links$TF)))),
+              data.frame(gene = unique(links$target),  attr = rep('target',length(unique(links$target))))
+              ) 
+nodes <- nodes[!duplicated(nodes[,1]),]
+net <- graph_from_data_frame(d=links, vertices=nodes, directed=T) 
+net <- simplify(net, remove.multiple = F, remove.loops = T) 
+l <- layout_with_fr(net)
 
-
-
-
+deg <- degree(net, mode="all")
+V(net)$deg <- deg
+V(net)$size <- log2(deg) + 1
+sub_net <- subgraph(net, V(net)$deg > 2)
+# V(net)$color <- ifelse(answers[V(net), 2] == 1, "blue", "red")
+# E(net)$width <- E(net)$/6
+plot(sub_net, layout=layout_with_fr,
+     edge.arrow.size=.1,edge.color="#FFE4B5",
+     vertex.size=V(net)$size ,vertex.label.cex=0.5,
+     vertex.color="#40E0D0", vertex.label.color="#696969",vertex.frame.color="#ffffff")
 

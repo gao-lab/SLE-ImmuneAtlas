@@ -5,7 +5,7 @@ library(Seurat)
 
 setwd('/data/sle/')
 # source()
-output_path <- './output_file/scRepertotre/TCR/'
+output_path <- './final//scRepertotre/TCR/'
 
 #------------------------------ Read File --------------------------------------
 tcr_sample <- list.files('./data/10x_tcr/',,pattern = 'csv$')
@@ -33,13 +33,13 @@ contig_list_tcr <- list(GW_tcr.csv,GZR_tcr.csv,HXR_tcr.csv,HXR2_tcr.csv,HXX_tcr.
                     XYY_tcr.csv,XYY2_tcr.csv,ZH_tcr.csv,ZMY1_tcr.csv,ZPP_tcr.csv,
                     ZPP2_tcr.csv,ZS_tcr.csv)
 
-# combined_tcr <- combineTCR(contig_list_tcr,
-#                            samples = tcr_sample_name, 
-#                            ID = tcr_id)
-back_run(combineTCR, out_name = 'combined_tcr',job_name = 'combined_tcr',
-         contig_list_tcr,samples = tcr_sample_name, ID = tcr_id)
+combined_tcr_GD <- combineTCR(contig_list_tcr,
+                           samples = tcr_sample_name,
+                           ID = tcr_id,cells = 'T-GD')
+# back_run(combineTCR, out_name = 'combined_tcr',job_name = 'combined_tcr',
+#          contig_list_tcr,samples = tcr_sample_name, ID = tcr_id)
 
-# rm(list(tcr_sample,tcr_sample_name,tcr_id,tcr_group,contig_list))
+rm(list(tcr_sample,tcr_sample_name,tcr_list,tcr_id,tcr_group,contig_list_tcr,combined_tcr_GD))
 
 
 #------------------------------ Save File --------------------------------------

@@ -44,10 +44,10 @@ t_cd4_tfh_marker <- c('CXCR5','BCL6','TOX','TOX2','BTLA','ICOS','CD40LG','ICA1')
 t_cd4_all_marker <- c(t_cd4_th1_marker,t_cd4_th2_marker,t_cd4_th17_marker,
                       t_cd4_tfh_marker,t_cd4_treg_marker) %>% unique()
 
-t_yd_marker <- c('TRDV1','TRDV2','TRGV9')
-t_MAIT_marker <- c('TRAV1-2','TRAJ33','TRAJ20','TRAJ12','KLRB1','IL18RAP')
+t_gd_marker <- c('TRDV1','TRDV2','TRGV9')
+t_MAIT_marker <- c('TRAV1-2','TRAJ33','TRAJ12','KLRB1','IL18RAP')
 t_invarient_NKT_marker <- c('TRAV10','TRAJ18','CD1D')
-t_rare_marker <- c(t_yd_marker,t_MAIT_marker,t_invarient_NKT_marker)
+t_rare_marker <- c(t_gd_marker,t_MAIT_marker,t_invarient_NKT_marker)
 t_sub_marker <- c('MK167','TOP2A', # prolife
                   'LAG3','PDCD1','CD38','TIGIT','HAVCR2','CXCL13',   # CD8 exhaustion
                   'FASLG','IFNG','CCL5',  # CD8 efector
@@ -119,7 +119,75 @@ IFN_genes = c("ABCE1","ADAR","BST2","CACTIN","CDC37","CNOT7","DCST1","EGR1","FAD
 
 
 # -------------------------------- Functions -----------------------------------
-# read
+# calculate the overlap before and after the treatment (just simplify the scatterClonotype())
+# @ <all>    : please refer scatterClonotype()
+# @ filter_NA: filter the cell without heavy chain
+treat_overlap <- function (df, cloneCall = "gene+nt", x.axis = NULL, dot.size = 'total',
+                           y.axis = NULL, chain = "both", split.by = NULL ,filter_NA = T){
+  df <- list.input.return(df, split.by)
+  cloneCall <- theCall(cloneCall)
+  axes <- which(names(df) %in% c(x.axis, y.axis, dot.size))
+  if (chain != "both") {
+    for (i in axes) {
+      df[[i]] <- off.the.chain(df[[i]], chain, cloneCall)
+    }
+  }
+  x.df <- as.data.frame(table(df[[x.axis]][, cloneCall]))
+  colnames(x.df)[2] <- x.axis
+  y.df <- as.data.frame(table(df[[y.axis]][, cloneCall]))
+  colnames(y.df)[2] <- y.axis
+  combined.df <- merge(x.df, y.df, by = "Var1", all = TRUE)
+  combined.df[is.na(combined.df)] <- 0
+  combined.df <- combined.df[!grepl('NA_NA_',combined.df$Var1),]
+  return(combined.df)
+}
+environment(treat_overlap) <- asNamespace('scRepertoire')
+
+
+# Beautify the vizGenes()
+# @combined_xcr : a seurat object which
+# @gene         : see vizGenes()
+# @chain        : see vizGenes()
+# @title        : title of the plot
+# @limit        : set limit of max value(value greater than this vill be white !!!)
+# >>> Nothing (plotting)
+vizGenes2 <- function(combined_xcr, gene = 'V', chain='IGH',y.axis = 'J',title= 'Need Title',limit = c(0,0.1)){
+  vizGenes(combined_xcr, gene = gene, chain = chain, y.axis = y.axis , 
+           plot = "heatmap", scale = TRUE, order = "gene") +  theme_void()+
+    ggtitle(title) + theme(axis.text.x = element_text(angle = 90,vjust = 1,size = 10,hjust = 1)) + 
+    theme(axis.text.x = element_text(size = 8),axis.text.y =element_text(size = 8) ) +
+    scale_fill_viridis( na.value = "grey",limit = limit,space = "Lab",name = "Preference")
+}
+
+
+# Beautify the clonalOverlap()
+# @seu_with_xcr : a seurat object which
+# @cloneCall    : see clonalOverlap()
+# @method       : see clonalOverlap()
+# @title        : title of the plot
+# @limit        : set limit of max value(value greater than this vill be white !!!)
+# >>> Nothing (plotting)
+clonalOverlap2 <- function(seu_with_xcr, cloneCall = 'gene+nt',method='jaccard',
+                           title= 'Need Title',limit = c(0,0.5) ){
+  clonalOverlap(seu_with_xcr, cloneCall=cloneCall, method=method,exportTable = T) %>% reshape2::melt('names') %>% 
+    ggplot(aes(x = names,y = variable,fill = value))+
+    geom_tile()+theme_bw()+
+    theme_minimal()+ # 设置主题为无边框
+    scale_fill_viridis( na.value = "white",limit =limit,space = "Lab",name = paste0(str_to_title(method) ,' index')) +
+    labs(title = title)+
+    theme(axis.text.x = element_text(angle = 45,vjust = 1,size = 10,hjust = 1),
+          plot.title = element_text(size = 14,hjust = 0.5,face = "bold"),
+          legend.title = element_text(size = 12),
+          axis.title = element_blank(), # 去除横纵坐标轴标题标签
+          panel.grid.major = element_blank(), # 去除背景网格线
+          panel.background = element_blank(), # 去除背景颜色
+          legend.justification = c(1,0),
+          legend.position = c(1.3,0.3), # 图例位置
+          legend.direction = "horizontal")+ # vertical(垂直)/horizontal(水平)
+    coord_fixed()+ # 确保x轴一个单位与y轴一个单位长度相同
+    guides(fill = guide_colorbar(barwidth = 9,barheight = 1.5, # 图例长宽
+                                 title.position = "top",title.hjust = 0.1))
+}
 
 
 # Convert seurat object to iTALK data
@@ -246,7 +314,7 @@ ht <- function(d, m=5, n=m){
 # >>> None (plot in rstudio)
 plot_gsea <- function(seu_obj,group_by,focus,title = 'please change title',
                     pvalue_cut= 0.05,plot_length =20,
-                    species ="Homo sapiens",category = 'C2'){
+                    species ="Homo sapiens",category = 'H'){
   library(msigdbr)
   library(fgsea)
   library(presto)
@@ -267,8 +335,10 @@ plot_gsea <- function(seu_obj,group_by,focus,title = 'please change title',
   
   fgsea_results %<>% arrange (padj,desc(NES)) %>% select (pathway, padj, NES) %>%
     {rbind(head(., 8), tail(., 8))} 
-  View(fgsea_results)
+
   print(dim(fgsea_results))
+  fgsea_results$pathway <- str_split_fixed(fgsea_results$pathway , pattern = '_',n=2)[2] %>% str_replace('_',' ') %>% str_to_title()
+  View(fgsea_results)
   
   plot <- fgsea_results %>% 
     mutate(short_name = str_split_fixed(pathway, "_",2)[,2])%>%
@@ -421,12 +491,12 @@ DotPlot2 <- function(seu_obj,marker_list, group.by = NULL,split.by=NULL){
 # Beautify the seurat function DoHeatmap()
 # @para seu_obj:     seurat object
 # @para marker_list: marker genes list
-DoHeatmap2 <- function(seu_obj,marker_list){
+DoHeatmap2 <- function(seu_obj,marker_list,group.by=NULL){
   if(length(Cells(seu_obj)) > 15000){
     print('please downsample')
   }else{
     print(
-      DoHeatmap(seu_obj, marker_list)+guides(color = FALSE) +
+      DoHeatmap(seu_obj, marker_list,group.by = group.by)+guides(color = FALSE) +
         scale_fill_gradient2(low = rev(c('#d1e5f0','#67a9cf','#2166ac')), 
                              mid = "white", high = rev(c('#b2182b','#ef8a62','#fddbc7')),
                              midpoint = 0, guide = "colourbar", aesthetics = "fill")

@@ -22,6 +22,7 @@ DimPlot(cd4_filter, label = T,cols = rev(get_color(11)), group.by = 'subtype', p
 # plot_scdata(cd4_filter, color_by = "treatment", pal_setup = 'Set2') + 
 #   plot_scdata(cd4_filter, color_by = "seurat_clusters", pal_setup = 'Set1')
 
+FeaturePlot(cd4_filter, features = c('IL17A','IFNG','IL17F','IL17B','IL1B'))
 
 #--------------------------------- Vis Marker ----------------------------------
 VlnPlot(cd4_filter, features = c('CD4','CD8A','CD8B','PDCD1'))
@@ -48,12 +49,29 @@ marker_cd4_c1 <- FindMarkers(cd4_filter, ident.1 = 1, only.pos = T,logfc.thresho
 VlnPlot(cd4_filter,features = c('PDCD1','ICOS'), split.by = 'group',stack = T)
 #---------------------------------- Anno ---------------------------------------
 cd4_filter$subtype <- 'unknown'
+
+# we find that we can not explain the Th1 ratio up with Th17 ratio down in SLE
+# So I decided to anno them as Th1-liked cell totally
+# cd4_filter$subtype[which(cd4_filter$seurat_clusters %in% c(10))] <- 'T.CD4.IFN-response'
+# cd4_filter$subtype[which(cd4_filter$seurat_clusters %in% c(7,9))] <- 'T.CD4.Treg'
+# cd4_filter$subtype[which(cd4_filter$seurat_clusters %in% c(3))] <- 'T.CD4.Th1.cxcr3'
+# cd4_filter$subtype[which(cd4_filter$seurat_clusters %in% c(5))] <- 'T.CD4.Th1'
+# cd4_filter$subtype[which(cd4_filter$seurat_clusters %in% c(6))] <- 'T.CD4.Th2'
+# cd4_filter$subtype[which(cd4_filter$seurat_clusters %in% c(4))] <- 'T.CD4.Th17'
+# # cd4_filter$subtype[which(cd4_filter$seurat_clusters %in% c(2))] <- 'Tcm'
+# # cd4_filter$subtype[which(cd4_filter$seurat_clusters %in% c(4))] <- 'Tem'
+# cd4_filter$subtype[which(cd4_filter$seurat_clusters %in% c(8))] <- 'T.CD4.Tfh'
+# # cd4_filter$subtype[which(cd4_filter$seurat_clusters %in% c(9))] <- 'Tfh'
+# cd4_filter$subtype[which(cd4_filter$seurat_clusters %in% c(0,1,2))] <- 'T.CD4.naive'
+# DimPlot(cd4_filter, label = T, group.by = 'subtype')
+
+
 cd4_filter$subtype[which(cd4_filter$seurat_clusters %in% c(10))] <- 'T.CD4.IFN-response'
 cd4_filter$subtype[which(cd4_filter$seurat_clusters %in% c(7,9))] <- 'T.CD4.Treg'
-cd4_filter$subtype[which(cd4_filter$seurat_clusters %in% c(3))] <- 'T.CD4.Th1.cxcr3'
-cd4_filter$subtype[which(cd4_filter$seurat_clusters %in% c(5))] <- 'T.CD4.Th1'
+# cd4_filter$subtype[which(cd4_filter$seurat_clusters %in% c(3))] <- 'T.CD4.Th1.cxcr3'
+cd4_filter$subtype[which(cd4_filter$seurat_clusters %in% c(3,4,5))] <- 'T.CD4.Th1'
 cd4_filter$subtype[which(cd4_filter$seurat_clusters %in% c(6))] <- 'T.CD4.Th2'
-cd4_filter$subtype[which(cd4_filter$seurat_clusters %in% c(4))] <- 'T.CD4.Th17'
+# cd4_filter$subtype[which(cd4_filter$seurat_clusters %in% c(4))] <- 'T.CD4.Th17'
 # cd4_filter$subtype[which(cd4_filter$seurat_clusters %in% c(2))] <- 'Tcm'
 # cd4_filter$subtype[which(cd4_filter$seurat_clusters %in% c(4))] <- 'Tem'
 cd4_filter$subtype[which(cd4_filter$seurat_clusters %in% c(8))] <- 'T.CD4.Tfh'
@@ -81,9 +99,10 @@ cd4_filter@meta.data  %>%
   group_by(orig.ident,subtype) %>% summarise(sub_num = n()) %>% 
   mutate(sample_num = sum(sub_num)) %>% mutate(Ratio = sub_num/sample_num*100) %>%
   left_join(cd4_filter@meta.data[,c(1,4,5,6)]  %>%  distinct() ) %>%
+  filter(group != 'treated') %>% 
   ggpubr::ggboxplot(x='group',y='Ratio', fill = 'group',
                     palette =c("#FC4E07" ,"#00AFBB"))+ 
-  facet_wrap(~subtype,scales = "free",ncol = 4) + 
+  facet_wrap(~subtype,scales = "free",ncol = 8) + 
   stat_compare_means(comparisons = list(c("SLE", "HC")),  method = "t.test" )
 
 # By cluster
@@ -116,7 +135,7 @@ data.frame(sample = tmp1$orig.ident, subtype= tmp1$subtype,
   ggpaired( cond1 = 'before', cond2 = 'after',
             fill  = "condition", line.color = "gray", line.size = 0.4,
             palette = "npg") +  stat_compare_means(paired = TRUE, method = 't.test',label.x = 1.4,label = 'p.format')+
-  ylab('Prolife Plasma ratio') + facet_wrap(~subtype,scales= "free",ncol = 4 )
+  ylab('Prolife Plasma ratio') + facet_wrap(~subtype,scales= "free",ncol = 8 )
 
 # treatment paired (cluster)
 tmp1<- cd4_filter@meta.data  %>% 
