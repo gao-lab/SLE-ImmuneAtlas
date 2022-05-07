@@ -42,7 +42,7 @@ DotPlot2(mono_dc_filter, marker_list = macro_sub_marker)
 ## Mono DC cell marker 
 DotPlot2(mono_dc_filter, marker_list = macro_sub_marker)
 
-# pub
+# pub (ratio)
 ggplot(data = mono_dc_filter@meta.data, aes(x = treatment, 
                                           fill =subtype))+
   geom_bar(stat = 'count',position = 'fill') + labs(y = 'proportions', x = "") + 
@@ -84,8 +84,8 @@ plan('sequential')
 #----------------------------- Anno Cell Sub type ------------------------------
 # cdc1 marker CD1C and cdc2 marker CLEC9A
 mono_dc_filter$subtype <- 'unknown'
-mono_dc_filter$subtype[which(mono_dc_filter$seurat_clusters %in% c(1,2,5,10))] <- 'Mono.CD14'
-mono_dc_filter$subtype[which(mono_dc_filter$seurat_clusters %in% c(0))] <- 'Mono.CD14.LGALS2+'
+mono_dc_filter$subtype[which(mono_dc_filter$seurat_clusters %in% c(1,2,5))] <- 'Mono.CD14'
+mono_dc_filter$subtype[which(mono_dc_filter$seurat_clusters %in% c(0,10))] <- 'Mono.CD14.LGALS2+'
 mono_dc_filter$subtype[which(mono_dc_filter$seurat_clusters %in% c(3))] <- 'Mono.CD14.APOBEC3A+'
 mono_dc_filter$subtype[which(mono_dc_filter$seurat_clusters %in% c(4))] <- 'Mono.CD14.recruit'
 mono_dc_filter$subtype[which(mono_dc_filter$seurat_clusters %in% c(7,8,14))] <- 'Mono.CD16'
@@ -98,14 +98,14 @@ mono_dc_filter$subtype[which(mono_dc_filter$seurat_clusters %in% c())] <- 'doube
 table(mono_dc_filter$subtype)
 
 # pub
-DimPlot(mono_dc_filter,group.by = 'subtype', label = T,cols = get_color(len = 10,set_len = 11),pt.size = 0.1) + NoAxes() 
+DimPlot(mono_dc_filter,group.by = 'subtype', label = T,cols = get_color(len = 10,set_len = 11,set = 'set1'),pt.size = 0.1) + NoAxes() 
 
 
 #-------------------------- Compare at Sample Level ----------------------------
 # Barplot prolife (NO prolife)
 ggplot(mono_dc_filter@meta.data, aes(x=seurat_clusters, fill=Phase))+
   geom_bar(stat = 'count',position = 'fill') + labs(y = 'proportions', x = "") + 
-  scale_fill_discrete(names(table(tcell_harm$seurat_clusters))) + 
+  scale_fill_discrete(names(table(mono_dc_filter$seurat_clusters))) + 
   labs(fill="Phase") + coord_flip()
 
 # Cluster by group

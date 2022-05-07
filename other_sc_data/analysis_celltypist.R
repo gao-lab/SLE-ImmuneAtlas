@@ -9,20 +9,24 @@ obs <- fread('./other_sc_data/predictions_obs.csv',header = T)
 # obs$label <- 'unknown'
 obs$label <- celltypist_anno$predicted_labels
 
-table(obs$sample)
-table(obs$group)
-table(obs$treatment)
+# table(obs$sample)
+# table(obs$group)
+# table(obs$treatment)
+
+obs$group <- factor(obs$group, levels = c('sle_treated','sle_flare','sle','hc','sle_child','hc_child','IFNbeta_stim'))
+
 
 obs  %>% 
     group_by(sample,label) %>% summarise(sub_num = n()) %>% 
     mutate(sample_num = sum(sub_num)) %>% mutate(Ratio = sub_num/sample_num*100) %>%
     left_join(obs[,c(5,28)]  %>%  distinct(),by = c('sample' = 'sample') ) %>%
-    # filter(group != 'treated') %>% 
+    filter(!group %in% c('IFNbeta_stim','sle_treated') ) %>%
     ggpubr::ggboxplot(x='group',y='Ratio', fill = 'group',
                       palette = get_color(7))+ 
-    facet_wrap(~label,scales = "free_y",ncol = 7) +
-    theme(axis.text.x = element_text(angle = 90, hjust = 0.5)) + 
-    stat_compare_means(comparisons = list(c("SLE", "HC")),  method = "t.test" )
+    facet_wrap(~label,scales = "free_y",ncol = 11) +
+    theme(axis.text.x = element_text(angle = 30, hjust = 1)) + 
+    scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+    stat_compare_means(label = "p.signif" ,comparisons = list(c("sle", "sle_flare"),c('hc_child','sle_child'),c('sle','hc'),c('sle_flare','hc')) )
 
 
 stat_obs <- obs  %>% 
@@ -49,7 +53,7 @@ obs  %>%
                       palette = get_color(7))+ 
     facet_wrap(~label,scales = "free_y",ncol = 7) +
     theme(axis.text.x = element_text(angle = 90, hjust = 0.5)) + 
-    stat_compare_means(comparisons = list(c("sle", "hc"),c('sle_flare','hc'),c('sle_treated','hc')),  method = "t.test" )
+    stat_compare_means(comparisons = list(c("sle", "hc"),c('sle_flare','hc'),c('sle_treated','hc')) )
 
 
 
@@ -74,7 +78,35 @@ for(i in 1:4){
                           palette = get_color(7))+ 
         facet_wrap(~label,scales = "free_y",ncol = 7) +
         theme(axis.text.x = element_text(angle = 90, hjust = 0.5)) + 
-        stat_compare_means(comparisons = list(c("sle", "hc"),c('sle_flare','hc'),c('sle_flare','sle')),  method = "t.test" )
+        stat_compare_means(comparisons = list(c("sle", "hc"),c('sle_flare','hc'),c('sle_flare','sle')),label = "p.signif")
 }
 do.call(grid.arrange,p)
 p
+
+
+pbmc_all@meta.data  %>% 
+    group_by(orig.ident,subtype) %>% summarise(sub_num = n()) %>% 
+    mutate(sample_num = sum(sub_num)) %>% mutate(Ratio = sub_num/sample_num*100) %>%
+    left_join(pbmc_all@meta.data[,c(1,4,5,6)]  %>%  distinct() ) %>%
+    ggpubr::ggboxplot(x='treatment',y='Ratio', fill = 'treatment',
+                      palette =c("#B3D492","#DA9494","#9FB1D4"))+ 
+    facet_wrap(~subtype,scales = "free",nrow = 4) + 
+    stat_compare_means(comparisons = my_comparisons, hide.ns = F,label = "p.signif") 
+
+
+################################################################################
+#
+# pDC cell number decrease in SLE
+#
+################################################################################
+obs  %>% 
+    group_by(sample,label) %>% summarise(sub_num = n()) %>% 
+    mutate(sample_num = sum(sub_num)) %>% mutate(Ratio = sub_num/sample_num*100) %>%
+    left_join(obs[,c(5,28,55)]  %>%  distinct(),by = c('sample' = 'sample') ) %>%
+    filter(label == 'pDC') %>%
+    ggpubr::ggboxplot(x='group_main',y='Ratio', fill = 'group_main',
+                      palette = get_color(7))+ 
+    facet_wrap(~label,scales = "free_y",ncol = 7) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 0.5)) + 
+    stat_compare_means(comparisons = list(c("sle", "hc"),c('sle_flare','hc') ))
+

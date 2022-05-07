@@ -119,6 +119,51 @@ IFN_genes = c("ABCE1","ADAR","BST2","CACTIN","CDC37","CNOT7","DCST1","EGR1","FAD
 
 
 # -------------------------------- Functions -----------------------------------
+# do Reactome Analysis via ReactomeGSA(see https://bioconductor.org/packages/release/bioc/vignettes/ReactomeGSA/inst/doc/analysing-scRNAseq.html)
+# @ seu_obj     : seurat object
+# @ focus       : Idents of the seurat
+# @ max_pathways: how many pathways should we plot in the heatmap
+# >>> nothing
+plot_reactome <- function(seu_obj, focus = NULL,max_pathways = 18){
+  if(!is.null(focus)){
+    Idents(seu_obj) <- focus
+  }
+  gsva_result <- analyse_sc_clusters(seu_obj,verbose = TRUE)
+  pathway_expression <- pathways(gsva_result)
+  colnames(pathway_expression) <- gsub("\\.Seurat", "", colnames(pathway_expression))
+  pathway_expression[1:3,]
+  max_difference <- do.call(rbind, apply(pathway_expression, 1, function(row) {
+    values <- as.numeric(row[2:length(row)])
+    return(data.frame(name = row[1], min = min(values), max = max(values)))
+  }))
+  
+  max_difference$diff <- max_difference$max - max_difference$min
+  # sort based on the difference
+  max_difference <- max_difference[order(max_difference$diff, decreasing = T), ]
+  
+  head(max_difference)
+  plot_gsva_pathway(gsva_result, pathway_id = rownames(max_difference)[1])
+  plot_gsva_heatmap(gsva_result, max_pathways = max_pathways, margins = c(12,24))
+}
+
+
+# do KEGG or GO enrichment and plot 
+# @genes: genes in Gene Symbol format
+# >>> nothing 
+keggo_plot <- function(genes) {
+  library(clusterProfiler)
+  gene =  bitr(genes, fromType="SYMBOL", toType=c("ENSEMBL", "ENTREZID"), OrgDb="org.Hs.eg.db")
+  kegg <- enrichKEGG(gene = gene$ENTREZID,
+                     organism = 'hsa',
+                     pvalueCutoff = 1)
+  dotplot(kegg,title="Enrichment KEGG_dot") %>% print()
+  
+  ego_ALL <- enrichGO(gene = gene$ENTREZID, OrgDb = org.Hs.eg.db, 
+                      ont = "ALL",pAdjustMethod = "BH", readable = TRUE) 
+  dotplot(ego_ALL,showCategory=10,split='ONTOLOGY') +  facet_grid(ONTOLOGY~.,scale="free") %>% print()
+}
+
+
 # calculate the overlap before and after the treatment (just simplify the scatterClonotype())
 # @ <all>    : please refer scatterClonotype()
 # @ filter_NA: filter the cell without heavy chain

@@ -31,6 +31,7 @@ t_b_subtype_score <- pbmc_augur_subtype_score %>% filter(!cell_group %in% c('unk
 ggboxplot(t_b_subtype_score,x = 'cell_group', y='score') + ylim(c(0.5,0.8))
 
 t_b_subtype_score$cell_group <- factor(t_b_subtype_score$cell_group,levels = c('naive','memory','effector'))
-ggline(t_b_subtype_score, x = "cell_group", y = "score", color = "main_group",
-       add = c("mean_se", "jitter"), palette = c("#00AFBB", "#E7B800",'red','blue')) +
-    xlab('') + ylab('Augur score')+ stat_compare_means(method = "anova",label.x = 1.8)
+ggline(t_b_subtype_score, x = "cell_group", y = "score", color = "main_group",point.size = 2,
+       add = c("mean_se", "jitter"), palette = c("#DA9494", "#9FB1D4",'red','blue')) +
+    xlab('Cell Status') + ylab('Augur score')+ stat_compare_means(method = "anova",label.x = 1.8) + 
+    theme(legend.position="right",legend.title = element_text()) + labs(col="Cell Type")

@@ -62,8 +62,6 @@ clonalProportion(combined_tcr.filter, cloneCall = "gene+nt",split = c(10, 100, 1
 
 
 
-
-
 ################################################################################
 #
 # Clone overlap  analysis 
@@ -89,5 +87,11 @@ rm(hc_cd8_tcr,untreat_cd8_tcr,treat_cd8_tcr);gc()
 # sample overlap before and after treatment
 scatterClonotype(combined_tcr.filter, cloneCall ="gene+nt", x.axis = "ZPP", y.axis = "ZPP2",
                  dot.size = "total",graph = "count")
+
+clonalOverlap(combined_tcr.filter, cloneCall = "gene+nt", 
+              method = "jaccard") + theme_minimal() + 
+    scale_fill_viridis( na.value = "white",limit =c(0,0.11),space = "Lab",name = 'jaccard')+
+    xlab('') + ylab('')
+
 
 

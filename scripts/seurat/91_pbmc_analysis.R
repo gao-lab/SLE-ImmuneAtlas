@@ -96,5 +96,29 @@ ggplot(data = pbmc_all@meta.data, aes(x = pbmc_all$orig.ident,
                        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))+
     theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 
+# pub 
+# box plot of main type
+my_comparisons <- list( c("HC", "untreated"), c("HC", "treated"), c("untreated", "treated") )
+pbmc_all@meta.data  %>% 
+    group_by(orig.ident,main_type) %>% summarise(sub_num = n()) %>% 
+    mutate(sample_num = sum(sub_num)) %>% mutate(Ratio = sub_num/sample_num*100) %>%
+    left_join(pbmc_all@meta.data[,c(1,4,5,6)]  %>%  distinct() ) %>%
+    ggpubr::ggboxplot(x='treatment',y='Ratio', fill = 'treatment',
+                      palette =c("#B3D492","#DA9494","#9FB1D4"))+ 
+    facet_wrap(~main_type,scales = "free",nrow = 2) + 
+    stat_compare_means(comparisons = my_comparisons, hide.ns = F,label = "p.signif") 
+    # stat_compare_means(method = "anova",label.x = 1.7)
+
+# box plot of subtype 
+pbmc_all@meta.data  %>% 
+    group_by(orig.ident,subtype) %>% summarise(sub_num = n()) %>% 
+    mutate(sample_num = sum(sub_num)) %>% mutate(Ratio = sub_num/sample_num*100) %>%
+    left_join(pbmc_all@meta.data[,c(1,4,5,6)]  %>%  distinct() ) %>%
+    ggpubr::ggboxplot(x='treatment',y='Ratio', fill = 'treatment',
+                      palette =c("#B3D492","#DA9494","#9FB1D4"))+ 
+    facet_wrap(~subtype,scales = "free",nrow = 4) + 
+    stat_compare_means(comparisons = my_comparisons, hide.ns = F,label = "p.signif") 
+# stat_compare_means(method = "anova",label.x = 1.7)
+
 # -------------------------------- Save the data -------------------------------
 save(pbmc_all, file = 'final/seurat/pbmc/04-pbmc_all_anno_modify_meta.rdata')

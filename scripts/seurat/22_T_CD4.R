@@ -46,6 +46,9 @@ marker_all_cd4.filter %>% group_by(cluster) %>% top_n(avg_log2FC  , n = 10) %>% 
 
 marker_cd4_c1 <- FindMarkers(cd4_filter, ident.1 = 1, only.pos = T,logfc.threshold = 0.25)
 
+marker_cd4_c10 <- FindMarkers(cd4_filter, ident.1 = 10, only.pos = T,logfc.threshold = 0.25) %>% 
+  filter(p_val_adj <0.05) %>% arrange(-avg_log2FC )
+
 VlnPlot(cd4_filter,features = c('PDCD1','ICOS'), split.by = 'group',stack = T)
 #---------------------------------- Anno ---------------------------------------
 cd4_filter$subtype <- 'unknown'

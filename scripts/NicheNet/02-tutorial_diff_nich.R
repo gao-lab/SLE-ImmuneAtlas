@@ -1,10 +1,12 @@
 # This is follow the tutorial on web 
 # https://github.com/saeyslab/nichenetr/blob/master/vignettes/differential_nichenet_pEMT.md
+# NOTE: we can use seurat future multi-threads function to speed up
 
 library(nichenetr)
 library(RColorBrewer)
 library(tidyverse)
-library(Seurat) #
+library(Seurat) 
+library(future)
 
 setwd('/data/sle/')
 source('./scripts/function_R/utils.R')
@@ -17,28 +19,32 @@ weighted_networks = readRDS('./scripts/NicheNet/source/weighted_networks.rds')
 organism = "human"
 assay_oi = 'RNA'
 
-load('.//scripts/NicheNet/pbmc_all_downsample.rdata')
+# load('.//scripts/NicheNet/pbmc_all_downsample.rdata')
+load('./final/seurat/pbmc/04-pbmc_all_anno_modify_meta.rdata')
 
+Idents(pbmc_all) <- 'treatment'
+pbmc_nich <- subset(pbmc_all, idents =c('treated'), invert = T)
+rm(pbmc_all)
 
-pbmc_all_downsample$aggre = paste(pbmc_all_downsample$main_type, pbmc_all_downsample$treatment,sep = "_") 
-pbmc_all_downsample$aggre %>% table()
-Idents(pbmc_all_downsample) <- 'aggre'
-
+pbmc_nich$aggre = paste(pbmc_nich$main_type, pbmc_nich$treatment,sep = "_") 
+pbmc_nich$aggre %>% table()
+Idents(pbmc_nich) <- 'aggre'
 
 # ------------------------- Step1 Define the compare ----------------------------
 niches = list( 
-  "plasma_untreated_niche" = list( 
-     "sender" = c("pDC_untreated", "cDC_untreated", "Mono.CD16_untreated", "T.cyto_untreated", "Mono.CD14_untreated"), 
+  "untreated_niche" = list( 
+     "sender" = pbmc_nich$aggre %>% unique() %>% grep(pattern = 'untreated',value = T), 
      "receiver" = c("Plasma_untreated")), 
- "plasma_treated_niche" = list( 
-      "sender" = c("pDC_treated", "cDC_treated", "Mono.CD16_treated","T.cyto_treated","Mono.CD14_treated"), 
-      "receiver" = c("Plasma_treated")) )
+ "HC_niche" = list( 
+      "sender" = pbmc_nich$aggre %>% unique() %>% grep(pattern = 'HC',value = T), 
+      "receiver" = c("Plasma_HC")) )
 # only ligands important for sender cell types
-DE_sender = calculate_niche_de(seurat_obj = pbmc_all_downsample %>% subset(features = lr_network$ligand %>% unique()), 
+plan("multiprocess", workers = 12)
+DE_sender = calculate_niche_de(seurat_obj = pbmc_nich %>% subset(features = lr_network$ligand %>% unique()), 
                                niches = niches, type = "sender", assay_oi = 'RNA')
 
 # only receptors now, later on: DE analysis to find targets
-DE_receiver = calculate_niche_de(seurat_obj = pbmc_all_downsample %>% subset(features = lr_network$receptor %>% unique()), 
+DE_receiver = calculate_niche_de(seurat_obj = pbmc_nich %>% subset(features = lr_network$receptor %>% unique()), 
                                  niches = niches, type = "receiver", assay_oi = 'RNA') 
 
 # ------------------------ Step2 DEG between the niches -------------------------
@@ -55,8 +61,8 @@ DE_sender_receiver = combine_sender_receiver_de(DE_sender_processed, DE_receiver
 include_spatial_info_sender = FALSE
 include_spatial_info_receiver = FALSE
 
-spatial_info = tibble(celltype_region_oi = "CAF_High", celltype_other_region = "myofibroblast_High", niche =  "pEMT_High_niche", celltype_type = "sender") # user adaptation required on own dataset
-specificity_score_spatial = "lfc"
+# spatial_info = tibble(celltype_region_oi = "CAF_High", celltype_other_region = "myofibroblast_High", niche =  "pEMT_High_niche", celltype_type = "sender") # user adaptation required on own dataset
+# specificity_score_spatial = "lfc"
 
 # this is how this should be defined if you don't have spatial info
 # mock spatial info
@@ -100,7 +106,8 @@ if(include_spatial_info_receiver == TRUE){
 lfc_cutoff = 0.15 # recommended for 10x as min_lfc cutoff. 
 specificity_score_targets = "min_lfc"
 
-DE_receiver_targets = calculate_niche_de_targets(seurat_obj = pbmc_all_downsample, 
+# plan("multiprocess", workers = 12)
+DE_receiver_targets = calculate_niche_de_targets(seurat_obj = pbmc_nich, 
                                                  niches = niches, lfc_cutoff = lfc_cutoff, 
                                                  expression_pct = expression_pct, assay_oi = 'RNA') 
 DE_receiver_processed_targets = process_receiver_target_de(DE_receiver_targets = DE_receiver_targets, 
@@ -121,23 +128,29 @@ length(geneset_niche2)
 
 top_n_target = 250
 niche_geneset_list = list(
-  "pEMT_High_niche" = list(
+  "untreated_niche" = list(
     "receiver" = niches[[1]]$receiver,
     "geneset" = geneset_niche1,
     "background" = background),
-  "pEMT_Low_niche" = list(
+  "HC_niche" = list(
     "receiver" = niches[[2]]$receiver,
     "geneset" = geneset_niche2 ,
     "background" = background)
 )
 
-ligand_activities_targets = get_ligand_activities_targets(niche_geneset_list = niche_geneset_list, ligand_target_matrix = ligand_target_matrix, top_n_target = top_n_target)
-
+plan('sequential')
+# trace("get_ligand_activities_targets",edit=TRUE)
+# edit(get_ligand_activities_targets)
+# untrace("get_ligand_activities_targets")
+# debugonce(get_ligand_activities_targets)
+ligand_activities_targets = get_ligand_activities_targets(niche_geneset_list = niche_geneset_list, 
+                                                          ligand_target_matrix = ligand_target_matrix,
+                                                          top_n_target = top_n_target)
 
 # ---------------------- Step 5 ------------------------------------------------
 features_oi = union(lr_network$ligand, lr_network$receptor) %>% union(ligand_activities_targets$target) %>% setdiff(NA)
 
-dotplot = suppressWarnings(Seurat::DotPlot(pbmc_all_downsample %>% subset(idents = niches %>% unlist() %>% unique()), features = features_oi, assay = assay_oi))
+dotplot = suppressWarnings(Seurat::DotPlot(pbmc_nich %>% subset(idents = niches %>% unlist() %>% unique()), features = features_oi, assay = assay_oi))
 exprs_tbl = dotplot$data %>% as_tibble()
 exprs_tbl = exprs_tbl %>% rename(celltype = id, gene = features.plot, expression = avg.exp, expression_scaled = avg.exp.scaled, fraction = pct.exp) %>%
   mutate(fraction = fraction/100) %>% as_tibble() %>% select(celltype, gene, expression, expression_scaled, fraction) %>% distinct() %>% arrange(gene) %>% mutate(gene = as.character(gene))
@@ -217,5 +230,7 @@ lfc_plot
 # lfc_plot_spatial = make_ligand_receptor_lfc_spatial_plot(receiver_oi, prioritized_tbl_oi, prioritization_tables$prioritization_tbl_ligand_receptor, ligand_spatial = include_spatial_info_sender, receptor_spatial = include_spatial_info_receiver, plot_legend = FALSE, heights = NULL, widths = NULL)
 # lfc_plot_spatial
 
+trace('make_ligand_activity_target_exprs_plot', edit = T)
+untrace()
 exprs_activity_target_plot = make_ligand_activity_target_exprs_plot(receiver_oi, prioritized_tbl_oi,  prioritization_tables$prioritization_tbl_ligand_receptor,  prioritization_tables$prioritization_tbl_ligand_target, output$exprs_tbl_ligand,  output$exprs_tbl_target, lfc_cutoff, ligand_target_matrix, plot_legend = FALSE, heights = NULL, widths = NULL)
 exprs_activity_target_plot$combined_plot

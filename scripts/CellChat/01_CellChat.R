@@ -3,9 +3,10 @@ library(CellChat)
 load('./final/seurat/pbmc/04-pbmc_all_anno_modify_meta.rdata')
 
 cellchat <- createCellChat(object = pbmc_all, group.by = "main_type", assay = "RNA")
+CellChatDB.use <- CellChatDB
 CellChatDB <- CellChatDB.human 
 # CellChatDB.use <- subsetDB(CellChatDB, search = "Secreted Signaling") 
-CellChatDB.use <- CellChatDB
+
 cellchat@DB <- CellChatDB.use
 
 cellchat <- subsetData(cellchat)
@@ -99,10 +100,11 @@ cellchat <- netClustering(cellchat, type = "functional")
 #> Classification learning of the signaling networks for a single dataset
 # Visualization in 2D-space
 netVisual_embedding(cellchat, type = "functional", label.size = 3.5)
-library(reticulate)
-use_condaenv('s')
 
 
+
+#----------------------------- Save the File ------------------------------------
+save(cellchat, file = './final/CellChat/01-all_pbmc_merge_CellChat.rdata')
 
 
 

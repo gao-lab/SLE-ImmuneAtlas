@@ -47,6 +47,10 @@ marker_cd8_c6 %<>% filter(p_val_adj <0.05) %>% arrange(-avg_log2FC )
 marker_cd8_c8 <- FindMarkers(cd8_filter, ident.1 = 8, only.pos = T,logfc.threshold = 0.25)
 marker_cd8_c8 %<>% filter(p_val_adj <0.05) %>% arrange(-avg_log2FC )
 
+marker_cd8_c10 <- FindMarkers(cd8_filter, ident.1 = 10, only.pos = T,logfc.threshold = 0.25) %>% 
+  filter(p_val_adj <0.05) %>% arrange(-avg_log2FC )
+
+
 #---------------------------------- Anno ---------------------------------------
 cd8_filter$subtype <- 'unknown'
 cd8_filter$subtype[which(cd8_filter$seurat_clusters %in% c(9))] <- 'T.CD8.Tex'
