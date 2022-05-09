@@ -116,7 +116,7 @@ mono_dc_filter@meta.data  %>% group_by(orig.ident,seurat_clusters) %>%
   filter(treatment != 'treated') %>%
   ggpubr::ggboxplot(x='group',y='Ratio', color = 'group',
                     palette =c("#FC4E07", "#E7B800", "#00AFBB"))+ 
-  facet_wrap(~seurat_clusters,scales = "free")+ stat_compare_means(method = 't.test')
+  facet_wrap(~seurat_clusters,scales = "free")+ stat_compare_means()
 
 # pub
 # By Group
@@ -124,9 +124,12 @@ mono_dc_filter@meta.data  %>%
   group_by(orig.ident,subtype) %>% summarise(sub_num = n()) %>% 
   mutate(sample_num = sum(sub_num)) %>% mutate(Ratio = sub_num/sample_num*100) %>%
   left_join(mono_dc_filter@meta.data[,c(1,4,5,6)]  %>%  distinct() ) %>%
+  filter(!treatment == 'treated') %>%
   ggpubr::ggboxplot(x='group',y='Ratio', fill = 'group',
-                    palette =c("#FC4E07", "#228B22"))+ 
-  facet_wrap(~subtype,scales = "free",nrow = 2) + stat_compare_means(method = 't.test',label.x = 1.2)
+                    palette =c("#DA9494", "#B4D493"))+ 
+  facet_wrap(~subtype,scales = "free",nrow = 2) + stat_compare_means(label.x = 1.2)+
+  theme_cowplot()
+
 
 # By Treatment
 mono_dc_filter@meta.data  %>% 

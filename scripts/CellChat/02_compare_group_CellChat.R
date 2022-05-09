@@ -67,6 +67,8 @@ gg1 <- netAnalysis_signalingChanges_scatter(cellchat, idents.use = "Plasma", sig
 rankNet(cellchat, mode = "comparison", stacked = T, do.stat = T,comparison = c(1, 3),
         color.use = c('#DA9494','#B4D493'), font.size = 10)
 netAnalysis_contribution(group_list[[1]], signaling = 'CCL',return.data = T, font.size = 10)
+tmp <- netAnalysis_contribution(group_list[[1]], signaling = 'CCL',return.data = T, font.size = 10)
+ggbarplot(tmp$LR.contribution,x = 'name',y = 'contribution', fill = 'name', color = 'name', palette = c( "#5D9DCC","#E7525A"))
 netAnalysis_contribution(group_list[[2]], signaling = 'CCL',return.data = T, font.size = 10)
 
 netVisual_bubble(cellchat, sources.use = 2, targets.use = c(5:11),  comparison = c(1, 3), angle.x = 45)

@@ -40,15 +40,15 @@ ggboxplot( "subtype", "mu_freq_seq_r", color = "disease",
 compare_group <-  list(c('HC','untreated'),c('treated','untreated'),c('HC','treated'))
 SHM_cell$treatment <- factor(SHM_cell$treatment,levels = c('HC','untreated','treated')) 
 SHM_cell %>% filter(!subtype %in% c('B.naive','B.IFN-response','B.transition')) %>%
-    filter(!c_call %in% c('IGHG4','IGHD','IGHM')) %>% 
-    ggboxplot( 'treatment', "mu_freq_seq_r", color = "treatment",
-               palette = c("#4169E1", "#FF8C00","#808000")) + ggtitle("Total mutations(replace)") +
+    filter(!c_call %in% c('IGHG4','IGHD')) %>% 
+    ggboxplot( 'treatment', "mu_freq_seq_r", fill = "treatment",
+               palette = c("#B4D493", "#DA9494","#9FB1D4")) + ggtitle("Total mutations(replace)") +
     xlab("B cell subtype") + ylab("Mutation frequency") +
     theme_bw() + 
     facet_grid(subtype ~ c_call)  +
     stat_compare_means(mapping = aes(treatment),label = "p.signif",hide.ns = F,
                                     comparisons =compare_group,label.y =c(0.1,0.12,0.14)) +
-    theme(axis.text.x=element_text(angle=30, hjust=1))
+     xlab('') + theme_cowplot()+ theme(axis.text.x=element_text(angle=30, hjust=1))
 
 SHM_cell %>% filter(!subtype %in% c('B.naive','B.IFN-response','B.transition')) %>%
     filter(!c_call %in% c('IGHG4','IGHD','IGHM')) %>% 

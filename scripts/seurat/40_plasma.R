@@ -90,14 +90,14 @@ as.data.frame((table(plasma_filter$orig.ident)/table(all_cell$orig.ident))* 100)
 
 # Boxplot: plasmablast/pbmc ratio (only before treatment )
 plasmablast_meta <- plasma_filter@meta.data %>% filter(subtype == 'plasmablast')
-as.data.frame((table(plasmablast_meta$orig.ident)/table(all_cell$orig.ident))* 100) %>% 
+as.data.frame((table(plasmablast_meta$orig.ident)/table(pbmc_all$orig.ident))* 100) %>% 
     data.frame() %>% rename(orig.ident = Var1 ) %>% 
     left_join(plasmablast_meta[c('orig.ident', 'group', 'treatment', 'pair')]) %>% 
     unique()  %>% mutate(oppo = 100-Freq) %>%
     # filter(!treatment == 'treated') %>%
     ggboxplot(x ='group',y='Freq',fill = 'group',
               palette  = c("#00AFBB","#E7B800","#FC4E07"), add="jitter")+ ylab('Plasmablast / PBMC (%)')+
-    stat_compare_means(comparisons = my_comparisons,  method = "t.test" )
+    stat_compare_means(label.x = 1.5)
 
 # Boxplot: plasmablast/plasma ratio (only before treatment )
 as.data.frame((table(plasmablast_meta$orig.ident)/table(plasma_filter$orig.ident))* 100) %>% 

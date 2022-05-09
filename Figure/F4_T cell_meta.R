@@ -101,3 +101,54 @@ DimPlot(cd8_filter, group.by = 'subtype',raster=FALSE, cols =
 DotPlot2(cd8_filter, marker_list =  head(rownames(marker_cd8_c10)), group.by = 'subtype')
 VlnPlot(cd8_filter, features = head(rownames(marker_cd8_c10)),
         group.by = 'subtype', stack = T, cols = get_color(6))
+
+
+################################################################################
+#
+# Extend Data Fig4c: clone before and after treatemnt
+#
+################################################################################
+library(patchwork)
+# trace('scatterClonotype',edit = T)
+# untrace('scatterClonotype')
+p1 <- scatterClonotype(combined_tcr.filter, cloneCall ="gene+nt",
+                        x.axis = "LL", 
+                        y.axis = "LL2",
+                        dot.size = "total",
+                        graph = "count",exportTable = F)
+
+p2 <- scatterClonotype(combined_tcr.filter, cloneCall ="gene+nt",
+                        x.axis = "ZPP", 
+                        y.axis = "ZPP2",
+                        dot.size = "total",
+                        graph = "count",exportTable = F)
+p3 <- scatterClonotype(combined_tcr.filter, cloneCall ="gene+nt",
+                        x.axis = "WYF", 
+                        y.axis = "WYF2",
+                        dot.size = "total",
+                        graph = "count",exportTable = F)
+p4 <- scatterClonotype(combined_tcr.filter, cloneCall ="gene+nt",
+                        x.axis = "HXR", 
+                        y.axis = "HXR2",
+                        dot.size = "total",
+                        graph = "count",exportTable = F)
+
+p5 <- scatterClonotype(combined_tcr.filter, cloneCall ="gene+nt",
+                        x.axis = "XH", 
+                        y.axis = "XYY",
+                        dot.size = "total",
+                        graph = "count",exportTable = F)
+
+for(i in c(1:5)){
+    name <- paste0('p',i)
+     assign(name, get(name) +  
+                scale_color_manual(labels = c("Dual expand", "Untreat expand",'Untreat single',
+                                              'Treat expand','Treat single'), values = c(get_color(5))) +
+                xlab('Untreated') + ylab('Treated') +theme_cowplot() + ggtitle(paste0('Pair ',i))
+     )
+}
+
+(p1+p2+p3)/(p4+p5+ plot_spacer() )
+
+
+

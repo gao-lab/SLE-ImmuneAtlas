@@ -231,6 +231,6 @@ lfc_plot
 # lfc_plot_spatial
 
 trace('make_ligand_activity_target_exprs_plot', edit = T)
-untrace()
+untrace('make_ligand_activity_target_exprs_plot')
 exprs_activity_target_plot = make_ligand_activity_target_exprs_plot(receiver_oi, prioritized_tbl_oi,  prioritization_tables$prioritization_tbl_ligand_receptor,  prioritization_tables$prioritization_tbl_ligand_target, output$exprs_tbl_ligand,  output$exprs_tbl_target, lfc_cutoff, ligand_target_matrix, plot_legend = FALSE, heights = NULL, widths = NULL)
 exprs_activity_target_plot$combined_plot

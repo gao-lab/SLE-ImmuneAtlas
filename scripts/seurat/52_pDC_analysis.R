@@ -61,9 +61,9 @@ DotPlot2(pdc_filter, marker_list = pdc_marker, group.by = 'group') + theme_bw() 
           panel.background = element_rect(colour = "grey", size=1)) + xlab('') + 
     theme(axis.text.x = element_text(angle = 90))
 
-seu_plot_heatmap(pdc_filter, marker_pdc_sle %>% filter(p_val_adj < 0.05)  %>% top_n(avg_log2FC  , n = 10) %>% rownames()
-                 ,sort_var =  c('group','treatment'),row_font_size = 8,
-                 ,anno_var = c('group','treatment'),anno_colors = list('Set2','Set3'))
+seu_plot_heatmap(pdc_filter, marker_pdc_sle %>% filter(p_val_adj < 0.05)  %>% top_n(avg_log2FC  , n = 10) %>% rownames(),
+                 sort_var =  c('group','treatment'),row_font_size = 8,
+                 anno_var = c('group','treatment'),anno_colors = list('Set2','Set3'))
 
 Idents(pdc_filter) <- 'group'
 gsea_reslut <-plot_gsea(pdc_filter, group_by = 'group', focus = 'SLE',
@@ -160,11 +160,11 @@ ggpaired(pdc_pair_df, cond1 = 'before', cond2 = 'after',
 # 
 gmt_fname <- system.file("extdata", "pathways.gmt", package = "CEMiTool")
 gmt_in <- read_gmt(gmt_fname)
-# int_fname <- system.file("extdata", "interactions.tsv", package = "CEMiTool")
-# int_df <- read.delim(int_fname)
+int_fname <- system.file("extdata", "interactions.tsv", package = "CEMiTool")
+int_df <- read.delim(int_fname)
 # use SCENIC 
-int_df <- read_csv('./scripts/SCENIC/pDC/pdc_high_confidence_regulate.csv',col_names = T)
-int_df <- int_df[,c(2,3)]
+# int_df <- read_csv('./scripts/SCENIC/pDC/pdc_high_confidence_regulate.csv',col_names = T)
+# int_df <- int_df[,c(2,3)]
 
 sample_annot <- data.frame(matrix(data = NA, ncol = 2, nrow = 430) )
 colnames(sample_annot) <- c('SampleName', 'Class')
@@ -177,7 +177,7 @@ cem <- cemitool(pdc_filter@assays$RNA@data %>%as.data.frame(), sample_annot, gmt
 #          filter=TRUE, plot=TRUE, verbose=TRUE)
 
 generate_report(cem, directory="./tmp/CEMiTool_pDC_Report", force = T)
-show_plot(cem, "interaction")
+tmp <- show_plot(cem, "ora")
 
 DoHeatmap2(pdc_filter,marker_list = c('APBBIIP','ABCE1','A1BG','COMMD1'))
 

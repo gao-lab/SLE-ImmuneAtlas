@@ -10,6 +10,23 @@ DimPlot(cd4_filter, group.by = 'subtype',raster=FALSE, cols = get_color(8,set = 
 
 ################################################################################
 #
+# Extened Data Fig5: IFN-response CD4 ratio 
+#
+################################################################################
+cd4_filter@meta.data  %>% 
+    group_by(orig.ident,subtype) %>% summarise(sub_num = n()) %>% 
+    mutate(sample_num = sum(sub_num)) %>% mutate(Ratio = sub_num/sample_num*100) %>%
+    left_join(cd4_filter@meta.data[,c(1,4,5,6)]  %>%  distinct() ) %>%
+    filter(group != 'treated') %>% filter(subtype == 'T.CD4.Treg') %>% 
+    ggpubr::ggboxplot(x='group',y='Ratio', fill = 'group',
+                      palette =c("#DA9494", "#B4D493"))+ 
+    facet_wrap(~subtype,scales = "free",ncol = 8) + 
+    stat_compare_means( label = 'p.signif',label.x = 1.5 ) + 
+    xlab('') + ylab('Ratio of CD4 T cell') + theme_cowplot()
+
+
+################################################################################
+#
 # Figure 5B
 #
 ################################################################################
@@ -19,7 +36,7 @@ DotPlot2(cd4_filter, marker_list =  head(rownames(marker_cd4_c10)), group.by = '
 
 ################################################################################
 #
-# Figure 5C
+# Figure 5C : rario change of treg
 #
 ################################################################################
 # in core datastet
@@ -66,4 +83,19 @@ data.frame(sample = tmp1$orig.ident, subtype= tmp1$subtype,
     stat_compare_means(paired = TRUE, method = 't.test',label.x = 1.4)+
     ylab('Ratio of CD4+ T cells') + facet_wrap(~subtype,scales= "free",ncol = 3 ) +
     theme(legend.position="right")
+
+
+################################################################################
+#
+# Figure 5e: kegg of Treg
+#
+################################################################################
+library(clusterProfiler)
+library(org.Hs.eg.db)
+gene <-  bitr(rownames(marker_Treg_sle %>% head(50)), fromType="SYMBOL", toType=c("ENSEMBL", "ENTREZID"), OrgDb="org.Hs.eg.db")
+kegg <- enrichKEGG(gene = gene$ENTREZID,organism = 'hsa',pvalueCutoff = 0.1)
+dotplot(kegg,title="Enrichment KEGG_dot")
+ego_ALL <- enrichGO(gene = gene$ENTREZID, OrgDb = org.Hs.eg.db,ont = "ALL",pAdjustMethod = "BH", readable = TRUE)
+dotplot(ego_ALL,showCategory=10,split='ONTOLOGY') +  facet_grid(ONTOLOGY~.,scale="free")
+
 
