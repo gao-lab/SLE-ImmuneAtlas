@@ -1,5 +1,6 @@
 library(tidyverse)
 library(scRepertoire)
+library(data.table)
 setwd('/data/sle/')
 
 ################################################################################
@@ -68,6 +69,8 @@ clonalProportion(combined_tcr.filter, cloneCall = "gene+nt",split = c(10, 100, 1
 #
 ################################################################################
 # subtype overlap 
+clonalOverlap2(cd8_tcr, cloneCall="gene+nt", method="jaccard",title = 'All',limit = c(0,0.2)) 
+
 Idents(cd8_tcr) <- 'treatment'
 hc_cd8_tcr <- subset(cd8_tcr,idents = 'HC'); Idents(hc_cd8_tcr) <- 'subtype'
 untreat_cd8_tcr <- subset(cd8_tcr,idents = 'untreated'); Idents(untreat_cd8_tcr) <- 'subtype'

@@ -16,7 +16,7 @@ pbmc_all@meta.data  %>%
 # add  cd4 and cd8 label
 pbmc_all$cd4_8 <- 'not'
 pbmc_all$cd4_8[which( grepl('CD4',pbmc_all$subtype))] <- 'CD4'
-pbmc_all$cd4_8data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAWElEQVR42mNgGPTAxsZmJsVqQApgmGw1yApwKcQiT7phRBuCzzCSDSHGMKINIeDNmWQlA2IigKJwIssQkHdINgxfmBBtGDEBS3KCxBc7pMQgMYE5c/AXPwAwSX4lV3pTWwAAAABJRU5ErkJggg==[which( grepl('CD8',pbmc_all$subtype))] <- 'CD8'
+pbmc_all$cd4_8[which( grepl('CD8',pbmc_all$subtype))] <- 'CD8'
 
 pbmc_all@meta.data  %>% 
     group_by(orig.ident,cd4_8) %>% summarise(sub_num = n()) %>% 

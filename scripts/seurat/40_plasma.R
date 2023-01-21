@@ -126,12 +126,12 @@ data.frame(sample = tmp1$orig.ident, before=tmp2$Freq, after=tmp1$Freq ) %>%
         ylab('Plasmablast / Plasma (%)')
     
 # Boxplot: (paired)plasmablast/pbmc ratio 
-tmp1<- (table(plasmablast_meta$orig.ident)/table(all_cell$orig.ident) * 100) %>% 
+tmp1<- (table(plasmablast_meta$orig.ident)/table(pbmc_all$orig.ident) * 100) %>% 
     data.frame() %>% rename(orig.ident = Var1 ) %>% 
     left_join(plasma_filter@meta.data[c('orig.ident', 'group', 'treatment', 'pair')]) %>% 
     unique() %>% filter(!pair == 'unpaired') %>% filter(treatment =='treated') %>%
     filter(!orig.ident == 'XYY2')
-tmp2<- (table(plasmablast_meta$orig.ident)/table(all_cell$orig.ident) * 100) %>% 
+tmp2<- (table(plasmablast_meta$orig.ident)/table(pbmc_all$orig.ident) * 100) %>% 
     data.frame() %>% rename(orig.ident = Var1 ) %>% 
     left_join(plasma_filter@meta.data[c('orig.ident', 'group', 'treatment', 'pair')]) %>% 
     unique() %>% filter(!pair == 'unpaired') %>% filter(treatment =='untreated')
@@ -204,6 +204,6 @@ seu_plot_heatmap(plasma_filter_harmony, marker_plasma_filter_all,sort_var =  c('
 
 
 
-#------------------------ Save the Anno Objcet --------------------------------------
+#------------------------ Save the Anno Objcet ---------------------------------
 save(plasma_filter, file = './final/seurat/plasma/03-plasma_anno_filter_No_harm.rdata')
 

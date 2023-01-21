@@ -1,16 +1,17 @@
 library(tidyverse)
 library(scRepertoire)
 setwd('/data/sle/')
-
+source('./scripts/function_R/utils.R')
 
 ################################################################################
 #
 # Create seurat object 
 #
 ################################################################################
-# NOTE: we use some shared object in the 03_cd4_TCR.R
+# NOTE: we use some shared object in the 03_CD8_TCR.R (combined_tcr.df)
+load('./final/seurat/t_cell/04-CD4_Tcell_filter_anno.rdata')
 
-# -------------- bulid seurat object with TCR -------------
+# -------------- build seurat object with TCR -------------
 scRepertoire_barcode <- cd4_filter@meta.data %>% rownames_to_column('barcode')%>% 
     mutate(new_barcode = str_split_fixed(barcode ,'_',2)[,1])%>% 
     mutate(scRepertoire=paste0(orig.ident,'_',group,'_',new_barcode) )%>% select(scRepertoire) 
@@ -21,7 +22,7 @@ cd4_tcr <- RenameCells(cd4_filter, new.names = scRepertoire_barcode$scRepertoire
 # intersect 49375 
 intersect(Cells(cd4_tcr),combined_tcr.df$barcode) %>% length()
 
-cd4_tcr <- combineExpression(combined_tcr, cd4_tcr,  cloneCall="gene+nt", 
+cd4_tcr <- combineExpression(combined_tcr, cd4_tcr, cloneCall="gene+nt", 
                              group.by = "sample", proportion = FALSE, 
                              cloneTypes=c(Single=1, Small=10, Medium=100, Large=1000, Super = 5000))
 # modify show order
@@ -30,7 +31,7 @@ cd4_tcr$cloneType <- factor(cd4_tcr$cloneType,
                                        "Small (1 < X <= 10)", "Single (0 < X <= 1)", NA))
 save(cd4_tcr, file = 'final/scRepertoire/TCR/cd4_tcr.rdata')
 
-
+load('final/scRepertoire/TCR/cd4_tcr.rdata')
 ################################################################################
 #
 # Clone expansion analysis 

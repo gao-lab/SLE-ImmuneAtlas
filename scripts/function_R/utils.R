@@ -1,8 +1,12 @@
 # -------------------------------- Initialize ----------------------------------
 setwd('/data/sle')
 Sys.setenv("R_REMOTES_NO_ERRORS_FROM_WARNINGS" = "true")
-.libPaths("/home/rstudio/R/x86_64-pc-linux-gnu-library/4.0")
-# .libPaths("/home/liny/R/x86_64-pc-linux-gnu-library/4.0")
+# .libPaths(c(.libPaths(),"/usr/local/lib/R/site-library",
+#             "/home/rstudio/R/x86_64-pc-linux-gnu-library/4.0",
+#             # "/home/liny/R/x86_64-pc-linux-gnu-library/4.0"
+#             "/usr/local/lib/R/library"
+#             ))
+# .libPaths("/usr/local/lib/R/library")
 
 packages <- c("Seurat", "tidyverse","harmony","cowplot")
 purrr::walk(packages, library, character.only = TRUE)
@@ -119,6 +123,44 @@ IFN_genes = c("ABCE1","ADAR","BST2","CACTIN","CDC37","CNOT7","DCST1","EGR1","FAD
 
 
 # -------------------------------- Functions -----------------------------------
+# plot pie plot 
+# @ data
+# @ count
+# @ group
+# @ titile
+# @ out
+pie_plot <- function(data, count, group, title, out = False){
+  # Compute percentages
+  data$fraction <- data[[count]] / sum(data[[count]])
+  
+  # Compute the cumulative percentages (top of each rectangle)
+  data$ymax <- cumsum(data$fraction)
+  
+  # Compute the bottom of each rectangle
+  data$ymin <- c(0, head(data$ymax, n=-1))
+  
+  # Compute label position
+  data$labelPosition <- (data$ymax + data$ymin) / 2
+  
+  # Compute a good label
+  data$label <- paste0(data[[group]], " ", data[[count]])
+  
+  # Make the plot
+  ggplot(data, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=get(group))) +
+    geom_rect() +
+    geom_text_repel( x=2, aes(y=labelPosition, label=label, color=get(group)), size=5) + # x here controls label position (inner / outer)
+    # c('#4575B4','#91BFDB','#7886A1','#fd382d','#FC8D59','#FFB95A','#88A16F')
+    scale_fill_manual(values = c('#4575B4','#91BFDB','#9FB1D4','#fd382d','#FC8D59','#FFB95A','#B4D493')) +
+    scale_color_manual(values = c('#4575B4','#91BFDB','#9FB1D4','#fd382d','#FC8D59','#FFB95A','#B4D493')) +
+    # scale_fill_brewer(palette=) +
+    # scale_color_brewer(palette='RdYlBu') +
+    coord_polar(theta="y") +
+    xlim(c(-1, 4)) +
+    theme_void() +
+    theme(legend.position = "none")
+}
+
+
 # do Reactome Analysis via ReactomeGSA(see https://bioconductor.org/packages/release/bioc/vignettes/ReactomeGSA/inst/doc/analysing-scRNAseq.html)
 # @ seu_obj     : seurat object
 # @ focus       : Idents of the seurat
@@ -478,6 +520,7 @@ do_harmony <- function(seu_obj = seu_obj,harmony_slot='orig.ident',theta = 2,fro
 # @export    : export parameters for job()
 # @...       : the list of the current function parameters
 back_run <- function(func, out_name, job_name, ...){
+  library(job)
   job::job({
     print('----start----')
     # print(ls())
@@ -653,7 +696,7 @@ detachAllPackages <- function() {
 # @cluster   : a colunm which is the target of the sankey
 # >>> sankey plot
 getSankey <- function(reference, clusters, plot_width = 400, plot_height = 600, colors = NULL) {
-  library(googleVis)
+  # library(googleVis)
   Var1 <- value <- NULL
   res.all <- NULL
   for (j in names(table(reference))) {

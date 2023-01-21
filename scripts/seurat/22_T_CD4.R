@@ -1,4 +1,4 @@
-
+library(Seurat)
 library(cowplot)
 library(harmony)
 library(RColorBrewer)
@@ -99,24 +99,24 @@ cd4_filter@meta.data %>% filter(group != 'pSS_pah') %>%
 
 # By subtype
 cd4_filter@meta.data  %>% 
-  group_by(orig.ident,subtype) %>% summarise(sub_num = n()) %>% 
-  mutate(sample_num = sum(sub_num)) %>% mutate(Ratio = sub_num/sample_num*100) %>%
-  left_join(cd4_filter@meta.data[,c(1,4,5,6)]  %>%  distinct() ) %>%
+  group_by(orig.ident,subtype) %>% summarise(sub_num=n()) %>% 
+  mutate(sample_num=sum(sub_num)) %>% mutate(Ratio=sub_num/sample_num*100) %>%
+  left_join(cd4_filter@meta.data[, c(1,4,5,6)] %>% distinct()) %>%
   filter(group != 'treated') %>% 
-  ggpubr::ggboxplot(x='group',y='Ratio', fill = 'group',
-                    palette =c("#FC4E07" ,"#00AFBB"))+ 
-  facet_wrap(~subtype,scales = "free",ncol = 8) + 
-  stat_compare_means(comparisons = list(c("SLE", "HC")),  method = "t.test" )
+  ggpubr::ggboxplot(x='group', y='Ratio', fill='group',
+                    palette=c("#FC4E07" ,"#00AFBB"))+ 
+  facet_wrap(~subtype, scales="free", ncol=4) + 
+  stat_compare_means(comparisons=list(c("SLE", "HC")), method="wilcox", label='p.signif')
 
 # By cluster
 cd4_filter@meta.data  %>% 
   group_by(orig.ident,seurat_clusters) %>% summarise(sub_num = n()) %>% 
   mutate(sample_num = sum(sub_num)) %>% mutate(Ratio = sub_num/sample_num*100) %>%
   left_join(cd4_filter@meta.data[,c(1,4,5,6)]  %>%  distinct() ) %>%
-  ggpubr::ggboxplot(x='group',y='Ratio', fill = 'group',
-                    palette =c("#FC4E07","#00AFBB"))+ 
-  facet_wrap(~seurat_clusters,scales = "free") + 
-  stat_compare_means(  method = "t.test" )
+  ggpubr::ggboxplot(x='group', y='Ratio', fill='group',
+                    palette=c("#FC4E07","#00AFBB"))+ 
+  facet_wrap(~seurat_clusters, scales="free") + 
+  stat_compare_means( method = "wilcox" )
 
 # treatment paired
 tmp1<- cd4_filter@meta.data  %>% 
@@ -137,7 +137,7 @@ data.frame(sample = tmp1$orig.ident, subtype= tmp1$subtype,
   #                                          "B.mem.IGHM+","B.mem","B.mem.CXCR3+","B.mem.CD27-"))) %>%
   ggpaired( cond1 = 'before', cond2 = 'after',
             fill  = "condition", line.color = "gray", line.size = 0.4,
-            palette = "npg") +  stat_compare_means(paired = TRUE, method = 't.test',label.x = 1.4,label = 'p.format')+
+            palette = "npg") +  stat_compare_means(paired = TRUE, method = 't.test',label.x = 1.4, label='p.format')+
   ylab('Prolife Plasma ratio') + facet_wrap(~subtype,scales= "free",ncol = 8 )
 
 # treatment paired (cluster)
@@ -164,6 +164,24 @@ data.frame(sample = tmp1$orig.ident, seurat_clusters= tmp1$seurat_clusters,
 
 #---------------------------------- Save ---------------------------------------
 save(cd4_filter,file = './final/seurat/t_cell/04-CD4_Tcell_filter_anno.rdata')
+
+
+
+#--------------------------------- Treg HVGs -----------------------------------
+load('./final/seurat/t_cell/04-CD4_Tcell_filter_anno.rdata')
+Idents(cd4_filter) <- 'subtype'
+treg <- subset(cd4_filter, idents = 'T.CD4.Treg')
+Idents(treg) <- 'treatment'
+
+marker_treg_untreat <- FindMarkers(treg, ident.1 = 'untreated', ident.2 = 'HC')
+marker_treg_untreat_filter <- marker_treg_untreat[!startsWith(rownames(marker_treg_untreat),'MT'),]
+marker_treg_untreat_filter <- marker_treg_untreat_filter[!startsWith(rownames(marker_treg_untreat_filter),'RP'),]
+marker_treg_untreat_filter %>% arrange(avg_log2FC) %>% head(20)
+marker_treg_untreat_filter %>% arrange(avg_log2FC) %>% tail(20)
+EnhancedVolcano(marker_treg_untreat_filter,
+                lab = rownames(marker_treg_untreat_filter),
+                x = 'avg_log2FC', pointSize = 4, xlim = c(-3,3),
+                y = 'p_val_adj', FCcutoff = 0.7,legendPosition = 'right', title = 'Treg')
 
 
 

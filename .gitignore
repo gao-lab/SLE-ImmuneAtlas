@@ -1,0 +1,34 @@
+* 
+!*/
+# set special file type
+!*.py
+!*.R
+!*.ipynb
+# !*.pdf
+# !*.html
+# !*.png
+# !*.jpg
+# !*.jpeg
+# !*.svg
+!*.md
+!*.gitignore
+
+
+
+.ipynb_checkpoints
+.vscode
+.snakemake
+
+tmp
+source
+data
+output_file
+final
+vdj/immcatation/source
+vdj/VDJtools/vdjtools
+vdj/VDJview/VDJView
+tcr_vdj/VDJtools/vdjtools
+tcr_vdj/publication/vdjtools
+
+**/vdjtools
+.virtual_documents
