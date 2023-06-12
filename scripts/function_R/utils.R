@@ -120,10 +120,18 @@ IFN_genes = c("ABCE1","ADAR","BST2","CACTIN","CDC37","CNOT7","DCST1","EGR1","FAD
              "SHMT2","SP100","STAT1","STAT2","TBK1","TREX1","TRIM56","TRIM6","TTLL12","TYK2","UBE2K","USP18","WNT5A","XAF1",
              "YTHDF2","YTHDF3","ZBP1")
 
+IFN_genes = c("ABCE1","ADAR","BST2","CACTIN","CDC37","CNOT7","DCST1","EGR1","FADD","GBP2","HLA-A","HLA-B","HLA-C",
+              "HLA-E","HLA-F","HLA-G","HLA-H","HSP90AB1","IFI27","IFI35","IFI6","IFIT1","IFIT2","IFIT3","IFITM1","IFITM2",
+              "IFITM3","IFNA1","IFNA10","IFNA13","IFNA14","IFNA16","IFNA17","IFNA2","IFNA21","IFNA4","IFNA5","IFNA6","IFNA7",
+              "IFNA8","IFNAR1","IFNAR2","IFNB1","IKBKE","IP6K2","IRAK1","IRF1","IRF2","IRF3","IRF4","IRF5","IRF6","IRF7","IRF8",
+              "IRF9","ISG15","ISG20","JAK1","LSM14A","MAVS","METTL3","MIR21","MMP12","MUL1","MX1","MX2","MYD88","NLRC5",
+              "OAS1","OAS2","OAS3","OASL","PSMB8","PTPN1","PTPN11","PTPN2","PTPN6","RNASEL","RSAD2","SAMHD1","SETD2","SHFL",
+              "SHMT2","SP100","STAT1","STAT2","TBK1","TREX1","TRIM56","TRIM6","TTLL12","TYK2","UBE2K","USP18","WNT5A","XAF1",
+              "YTHDF2","YTHDF3","ZBP1")
 
 
 # -------------------------------- Functions -----------------------------------
-# plot pie plot 
+# plot pie plot
 # @ data
 # @ count
 # @ group
@@ -262,7 +270,7 @@ clonalOverlap2 <- function(seu_with_xcr, cloneCall = 'gene+nt',method='jaccard',
     theme_minimal()+ # 设置主题为无边框
     scale_fill_viridis( na.value = "white",limit =limit,space = "Lab",name = paste0(str_to_title(method) ,' index')) +
     labs(title = title)+
-    theme(axis.text.x = element_text(angle = 45,vjust = 1,size = 10,hjust = 1),
+    theme(axis.text.x = element_text(angle = 45,vjust = 1, hjust = 1),
           plot.title = element_text(size = 14,hjust = 0.5,face = "bold"),
           legend.title = element_text(size = 12),
           axis.title = element_blank(), # 去除横纵坐标轴标题标签

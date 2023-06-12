@@ -28,7 +28,7 @@ paired_sledai <- data.frame(colnames= c('HXR','LL','WYF','XYY','ZPP') ,
                             before =c(7,8,11,6,3), after = c(4,2,4,2,2))
 paired_sledai %>% ggpaired(cond1 = 'before', cond2 ='after', color = 'condition',
                            palette = 'npg', line.color = "gray", line.size = 0.5) +
-    ylab('SELDAI index') + xlab('') +
+    ylab('SLEDAI index') + xlab('') +
     stat_compare_means(label = "p.signif", label.x = 1.5, label.y = 10, paired = T,method = 't.test')
 
 # plasmablast 

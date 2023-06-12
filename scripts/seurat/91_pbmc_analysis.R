@@ -77,14 +77,16 @@ pbmc_all$orig.ident <- factor(pbmc_all$orig.ident,
                                       'HXR2','LL2','WYF2','XYY','XYY2','ZPP2'))
 # pub
 # Bar plot :main cell type distribution in PBMC
-ggplot(data = pbmc_all@meta.data, aes(x = pbmc_all$orig.ident, 
+ggplot(data = pbmc_all@meta.data, aes(x = pbmc_all$sample_name, 
                                       fill =pbmc_all$main_type))+
     geom_bar(stat = 'count',position = 'fill') + labs(y = 'proportions', x = "") + 
-    scale_fill_discrete(labels= names(table(pbmc_all$main_type))) + xlab('')+
-    labs(fill="") +  scale_fill_manual(values=get_color(14,set = 'Set1',set_len = 9)) +
-     theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
-                         panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))+
-    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+    scale_fill_discrete(labels= names(table(pbmc_all$main_type))) + xlab('')+ labs(fill="") + 
+    scale_fill_manual(values=get_color(14 ,set = 'Paired',set_len = 9)) +
+    # scale_color_npg() +
+    theme_bw() + theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+                        panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"),
+                        text = element_text(size = 15,colour = 'black',face="bold"),
+                       axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 # pub
 # Bar plot :subclusters distribution in PBMC
 ggplot(data = pbmc_all@meta.data, aes(x = pbmc_all$orig.ident, 

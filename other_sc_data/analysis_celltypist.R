@@ -26,7 +26,8 @@ obs  %>%
     facet_wrap(~label,scales = "free_y",ncol = 11) +
     theme(axis.text.x = element_text(angle = 30, hjust = 1)) + 
     scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
-    stat_compare_means(label = "p.signif" ,comparisons = list(c("sle", "sle_flare"),c('hc_child','sle_child'),c('sle','hc'),c('sle_flare','hc')) )
+    stat_compare_means(label = "p.signif" ,comparisons = list(c("sle", "sle_flare"),c('hc_child','sle_child'),c('sle','hc'),c('sle_flare','hc')),
+                       method = 't.test')
 
 
 stat_obs <- obs  %>% 
