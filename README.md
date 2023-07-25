@@ -1,6 +1,6 @@
 # Code of single cell analysis of SLE samples
 
-This repo will keep the reproducible analysis pipeline of the manuscript "Global immune repertoire profiling suggests multifaceted unresolved dysregulation upon systemic lupus erythematosus immunosuppressant therapy".
+This repo keeps the reproducible analysis pipeline of our manuscript "Global immune repertoire profiling suggests multifaceted unresolved dysregulation upon systemic lupus erythematosus immunosuppressant therapy".
 
 
 ## Setup environment
@@ -39,10 +39,11 @@ The code is organized as follows:
 │── renv.lock          # file keeps R packages and their version
 ├── environments.yml   # file keeps conda environment
 ```
+And there will be detailed instructions in each folder.
 
 ## Data
 
-Single cell RNA matrix and VDJ data will be available upon publication. 
+Single cell RNA matrix and VDJ data will be available upon publication.
 
 ## Reproduce the analysis
 
