@@ -13,13 +13,13 @@
 !*.md
 !*.gitignore
 !*.smk
+!Snakefile
 !Figure/*.svg
 !Figure/*.png
 !.Rprofile
 !*.yml
 !renv/*
-
-
+!renv.lock
 
 .ipynb_checkpoints
 .vscode
@@ -28,18 +28,17 @@
 
 tmp
 source
-data
 final
 env
-output_file
 
 
 vdj/immcatation/source
 vdj/VDJtools/vdjtools
-vdj/VDJview/VDJView
+vdj/VDJview/
 vdj/platypus
 tcr_vdj/VDJtools/vdjtools
 tcr_vdj/publication/vdjtools
+tcr_vdj/immcatation
 
 **/vdjtools
 .virtual_documents

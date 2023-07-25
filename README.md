@@ -20,18 +20,22 @@ We use `conda` to manage Python environment. To reproduce the environment, run
 conda env create --name <ENV_NAME> --file=environments.yml
 ```
 
+### Java (optional)
+If you want to run `VDJtools`, please install `Java` following https://www.java.com/.
+
 ## Code structure
 
 The code is organized as follows:
 
 ```bash
 .
-│── Figure/            # dir keeps the scripts for reproducing figures in the manuscript
-│── other_sc_data/     # dir keeps the scripts for building the single cell SLE atlas
-│── output_file/       # dir keeps the key outputs of the analysis pipeline
-├── scripts/           # dir keeps the scripts for RNA analysis
-│── vdj/               # dir keeps the scripts for BCR analysis
-│── tcr_vdj/           # dir keeps the scripts for TCR analysis
+│── Figure/            # dir of the scripts for reproducing figures in the manuscript
+│── data/              # dir of the input data
+│── atlas/             # dir of the scripts for building the single cell SLE atlas
+│── output_file/       # dir of the key outputs of the analysis pipeline
+├── scripts/           # dir of the scripts for RNA analysis
+│── vdj/               # dir of the scripts for BCR analysis
+│── tcr_vdj/           # dir of the scripts for TCR analysis
 │── renv.lock          # file keeps R packages and their version
 ├── environments.yml   # file keeps conda environment
 ```
@@ -42,7 +46,7 @@ Single cell RNA matrix and VDJ data will be available upon publication.
 
 ## Reproduce the analysis
 
-### RNA 
+### RNA
 We mainly use R package `Seurat` to analyze single cell RNA data, and analysis pipeline is in directory  `scripts/seurat`. Other specific analysis is also in `scripts/`, such as `scripts/monocle2`, `scripts/CellChat` and `scripts/scvelo`.
 
 ### TCR and BCR
@@ -61,4 +65,3 @@ Our manuscript is under review.
 ## Contact
 
 If you have any questions, please contact Chen-Rui Xia (xiachenrui@mail.cbi.pku.edu.cn) or open an issue on GitHub.
-

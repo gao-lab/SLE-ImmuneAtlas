@@ -96,8 +96,8 @@ f1d <- ggplot(to.plot.dt, aes(x=Feat, y=Expr, fill=Feat)) +
     labs(y="", x="")
 ggsave("./Figure/f1d.svg", f1d, dpi = 600, width = 8, height = 6)
 
-celltypist_anno <- fread('./other_sc_data/extend_data_anno_result.csv',header = T) 
-obs <- fread('./other_sc_data/predictions_obs.csv',header = T)
+celltypist_anno <- fread('./atlas/extend_data_anno_result.csv',header = T) 
+obs <- fread('./atlas/predictions_obs.csv',header = T)
 
 # obs$label <- 'unknown'
 obs$label <- celltypist_anno$predicted_labels
