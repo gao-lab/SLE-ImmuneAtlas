@@ -1,0 +1,17 @@
+* 
+!.gitignore
+!CellChat
+!NicheNet
+!SCENIC
+!conga
+!function_R
+!immcantaion
+!monocle2
+!scRepertoire
+!scvelo
+!seurat
+
+!*.py
+!*.R
+!*.ipynb
+!*.md

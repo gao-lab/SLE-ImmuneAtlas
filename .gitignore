@@ -12,21 +12,32 @@
 # !*.svg
 !*.md
 !*.gitignore
+!*.smk
+!Figure/*.svg
+!Figure/*.png
+!.Rprofile
+!*.yml
+!renv/*
 
 
 
 .ipynb_checkpoints
 .vscode
 .snakemake
+.Rproj.user
 
 tmp
 source
 data
-output_file
 final
+env
+output_file
+
+
 vdj/immcatation/source
 vdj/VDJtools/vdjtools
 vdj/VDJview/VDJView
+vdj/platypus
 tcr_vdj/VDJtools/vdjtools
 tcr_vdj/publication/vdjtools
 
