@@ -2,7 +2,7 @@
 setwd('/rd2/user/xiacr/sle')
 Sys.setenv("R_REMOTES_NO_ERRORS_FROM_WARNINGS" = "true")
 
-library('tidyverse')
+library(tidyverse)
 
 # -------------------------------- Functions -----------------------------------
 # Convert seurat object to iTALK data

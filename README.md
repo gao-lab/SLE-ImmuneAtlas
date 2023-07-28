@@ -6,7 +6,7 @@ This repo keeps the reproducible analysis pipeline of our manuscript "Global imm
 ## Setup environment
 
 ### R env
-We use `R-4.1.3`, and record the all R packages and their version in `renv.lock` file. To reproduce the environment, just run
+We use `R-4.2.1`, and record the all used R packages and their version in `renv.lock` file. To reproduce our environment, just run
 
 ```R
 install.packages("renv")
