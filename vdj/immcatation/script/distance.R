@@ -2,11 +2,11 @@ library(shazam)
 library(tidyverse)
 
 # ----------------------- read data ---------------------------
-sample <- read.csv(snakemake@input[[1]], header=T, sep='\t')  %>% as.tibble()
+sample <- read.csv(snakemake@input[[1]], header=T, sep='\t') %>% as.tibble()
 
 
 # --------------------- remove duplicate -----------------------
-sample_index <- sample %>% group_by(cell_id) %>% summarise(umi_count=max(umi_count)) 
+sample_index <- sample %>% group_by(cell_id) %>% summarise(umi_count=max(umi_count))
 sample_filter <- sample[which(paste0(sample$cell_id,sample$umi_count) %in% paste0(sample_index$cell_id,sample_index$umi_count) ),]
 # sample_filter %>% dim()
 
@@ -26,4 +26,4 @@ dev.off()
 
 # -------------------- calculate distance -----------------------
 distance <- output2@threshold
-write(distance,snakemake@output[[1]])
+write(distance, snakemake@output[[1]])

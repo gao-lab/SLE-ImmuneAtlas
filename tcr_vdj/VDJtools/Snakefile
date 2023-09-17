@@ -2,14 +2,14 @@ import snakemake
 import pandas as pd
 
 # README 
-# VDJ tools for BCR  
-# input:  filter and group 10x cellranger output into three csv files
-# output: now we just need circle plot 
+# VDJ tools for TCR  
+# input: filter and group 10x cellranger output into three csv files, by groups (HC SLE...) not by individuals
+# output: circle plots
 
 meta = pd.read_csv("./sample_meta.csv")
 SAMPLES = meta["name"]
 
-# meta["#file.name"] = "./output/vdj_format/"+meta["name"]+ '/' + meta["name"] +"_bcr.tsv"
+# meta["#file.name"] = "./output/vdj_format/"+meta["name"]+ '/' + meta["name"] +"_tcr.tsv"
 # meta["sample.id"] = meta["name"]
 # meta.insert(0, "sample.id", meta.pop("sample.id"))
 # meta.insert(0, "#file.name", meta.pop("#file.name"))
@@ -18,19 +18,19 @@ SAMPLES = meta["name"]
 
 rule all:
     input:
-        # expand("./output/vdj_format/{sample}/{sample}_bcr.tsv", sample = SAMPLES), # STEP1
-        # "bcr_vdjtools.basicstats.txt",  # STEP2
-        expand("{sample}_bcr.fancyvj.wt.pdf", sample = SAMPLES), # STEP3
+        # expand("./output/vdj_format/{sample}/{sample}_tcr.tsv", sample = SAMPLES), # STEP1
+        # "tcr_vdjtools.basicstats.txt",  # STEP2
+        expand("{sample}_tcr.fancyvj.wt.pdf", sample = SAMPLES), # STEP3
         
 # STEP1: convert 10x cellranger format to vdjtools format(single chain mode) √
 rule convert_10x_to_VDJtools:
     input:
-        raw_file = "./input/{sample}_bcr.csv"
+        raw_file = "./input/{sample}_tcr.csv"
     params:
         sample = '{sample}'
     output:
         tmp_dir = directory("./output/vdj_format/{sample}/"),
-        # vdj_file = "./output/vdj_format/{sample}/bcr_vdjtools.tsv"
+        # vdj_file = "./output/vdj_format/{sample}/tcr_vdjtools.tsv"
     script:
         "scripts/step1_convert_10x_to_VDJtools.R"
         
@@ -43,14 +43,14 @@ rule vdjtools_basic_single:
         # rules.convert_10x_to_VDJtools.output.vdj_file # not useful
         # meta_path = "./vdjtools_meta.tsv",
     output:
-        # stat_file = "bcr_vdjtools.basicstats.txt",  #can not use params
+        # stat_file = "tcr_vdjtools.basicstats.txt",  #can not use params
         # plot_heatmap = "",
-        plot_circle = "{sample}_bcr.fancyvj.wt.pdf"
+        plot_circle = "{sample}_tcr.fancyvj.wt.pdf"
     params:
-        file = "{sample}_bcr.tsv"
+        file = "{sample}_tcr.tsv"
     shell:
         # java -jar ./vdjtools/vdjtools-1.2.1.jar CalcBasicStats -m {input.meta_path} {params.prefix} 
         # java -jar ./vdjtools/vdjtools-1.2.1.jar CalcSegmentUsage -p -m {input.meta_path} -f group -l name {params.prefix} 
         """
-        java -jar ./vdjtools/vdjtools-1.2.1.jar PlotFancyVJUsage  {input.vdj_dir}/{params.file}  {wildcards.sample}_bcr
+        java -jar ./vdjtools/vdjtools-1.2.1.jar PlotFancyVJUsage  {input.vdj_dir}/{params.file}  {wildcards.sample}_tcr
         """

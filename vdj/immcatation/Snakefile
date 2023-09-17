@@ -5,6 +5,15 @@ import pandas as pd
 # README
 # To run this pipeline: you should prepare
 # 1. (software): igblast, R package in the script, add change-o python scripts into path
+#    1.1 install igblast: mamba install -c bioconda igblast
+#    1.2 instalL shazam tidyverse
+#    1.3 install change-o follow https://changeo.readthedocs.io/en/stable/install.html#installation,
+#        such as 
+#    ```
+#    pip install biopython
+#    pip3 install presto --user
+#    pip3 install changeo --user
+#    ```
 # 2. filtered_contig fasta and csv file of cell ranger output in a dir named by sample such as
 #    ---GW
 #      \___filtered_contig.fasta
@@ -13,12 +22,11 @@ import pandas as pd
 
 meta = pd.read_csv("./all_sample_meta.csv")
 SAMPLES = meta["name"]
-# SAMPLES = ['GW','XH','QJY','ZS','XYY','XYY2','ZPP','ZMY1','LL','WYF'] # test only
 
 rule all:
     input:
         file = expand('data/{sample}/10X_clone-pass_germ-pass.tsv', sample = SAMPLES),
-    
+
 rule cellrangerToAIRR:
     input:
         fq = 'data/{sample}/filtered_contig.fasta',
@@ -39,7 +47,7 @@ rule cellrangerToAIRR:
         MakeDb.py igblast -i {output.tmp} -s {input.fq} \
             -r {params.IMGT_Human_source} --10x {input.contig} --extended --outdir data/{wildcards.sample}
         '''
-        
+
 rule split_heavy_light:
     input:
         passed = 'data/{sample}/filtered_contig_igblast_db-pass.tsv',
@@ -53,8 +61,8 @@ rule split_heavy_light:
         ParseDb.py select -d {input.passed} -f locus -u "IG[LK]" \
             --logic all --regex --outname light  --outdir data/{wildcards.sample}
         '''
-        
-# 
+
+
 rule heavy_chain_clone_cluster:
     input:
         heavy = 'data/{sample}/heavy_parse-select.tsv' ,
@@ -63,8 +71,8 @@ rule heavy_chain_clone_cluster:
         distribution_pdf = 'data/{sample}/shazam_clone_distance.pdf',
     script:
         './script/distance.R'
-        
-# 
+
+
 rule heavy_chain_define_clone:
     input:
         heavy = 'data/{sample}/heavy_parse-select.tsv',
@@ -76,7 +84,7 @@ rule heavy_chain_define_clone:
         DefineClones.py -d {input.heavy} --act set --model ham \
             --norm len --dist `cat {input.distance}`
         '''
-        
+
 rule light_chain_clone_assign:
     input:
         light = 'data/{sample}/light_parse-select.tsv',
@@ -87,7 +95,6 @@ rule light_chain_clone_assign:
         '''
         light_cluster.py -d {input.heavy_cluster} -e {input.light} -o {output.passed_clone}
         '''
-    
 
 rule  germline_sequences_to_database:
     input:

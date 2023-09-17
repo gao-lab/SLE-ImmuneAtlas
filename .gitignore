@@ -25,6 +25,7 @@
 .vscode
 .snakemake
 .Rproj.user
+conda
 
 tmp
 source
@@ -36,9 +37,11 @@ vdj/immcatation/source
 vdj/VDJtools/vdjtools
 vdj/VDJview/
 vdj/platypus
+vdj/VDJtools_individual
 tcr_vdj/VDJtools/vdjtools
 tcr_vdj/publication/vdjtools
 tcr_vdj/immcatation
+tcr_vdj/VDJtools_individual
 
 **/vdjtools
 .virtual_documents
