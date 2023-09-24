@@ -19,9 +19,9 @@ dist_sc <- distToNearest(sample_single, cellIdColumn="cell_id", locusColumn="loc
 
 output2 <- findThreshold(dist_sc$dist_nearest, method="gmm", model="gamma-gamma")
 
-pdf(snakemake@output[[2]])
-plot(output2, binwidth=0.02, title="GMM Method: gamma-gamma")
-dev.off()
+# pdf(snakemake@output[[2]])
+# plot(output2, binwidth=0.02, title="GMM Method: gamma-gamma")
+# dev.off()
 
 
 # -------------------- calculate distance -----------------------

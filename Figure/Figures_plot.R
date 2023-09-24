@@ -15,6 +15,14 @@ library(patchwork)
 
 source("./scripts/function_R/utils.R")
 
+SLEDAI <- c(6,2,4,1,11,4,7,4,3,2,2,4,7,8,5,8,2,2,0,0,0,0, 11,8,6,5)
+names(SLEDAI) <- c("XH","XYY","XYY2","GW","WYF","WYF2","HXR","HXR2","ZPP","ZPP2",
+                   "LGY","HXX","GZR","MXY","SQ","LL","LL2","WYY","QJY","ZMY1","ZH","ZS",
+                   "WPX","WMZ","WMT","LC")
+SLEDAI <- as.data.frame(SLEDAI)
+meta <- unique(all_cell@meta.data[,c("treatment","orig.ident","pair","group")]) %>% remove_rownames() %>% column_to_rownames("orig.ident")
+meta <-left_join(rownames_to_column(meta),rownames_to_column(SLEDAI),
+                 by = c("rowname" = "rowname")) %>% column_to_rownames("rowname")
 
 ##################################################################
 #                           Fig1
@@ -131,13 +139,6 @@ ggsave("./Figure/f1e.svg", f1e, dpi = 600, width = 20, height =12)
 #                             Fig3
 ##################################################################
 # Fig. 3a
-SLEDAI <- c(6,2,4,1,11,4,7,4,3,2,2,4,7,8,5,8,2,2,0,0,0,0)
-names(SLEDAI) <- c("XH","XYY","XYY2","GW","WYF","WYF2","HXR","HXR2","ZPP","ZPP2",
-                   "LGY","HXX","GZR","MXY","SQ","LL","LL2","WYY","QJY","ZMY1","ZH","ZS")
-SLEDAI <- as.data.frame(SLEDAI)
-meta <- unique(pbmc_all@meta.data[,c("treatment","orig.ident","pair","group")]) %>% remove_rownames() %>% column_to_rownames("orig.ident")
-meta <-left_join(rownames_to_column(meta),rownames_to_column(SLEDAI),
-                 by = c("rowname" = "rowname")) %>% column_to_rownames("rowname")
 # paired 
 paired_sledai <- data.frame(colnames= c("HXR","LL","WYF","XYY","ZPP") ,
                             before =c(7,8,11,6,3), after = c(4,2,4,2,2))
@@ -285,72 +286,51 @@ f4b <- (p11 | p12 | p13 ) /(p21 |p22 |p23) /(p31 |p32 |p33) /(p41 |p42 |p43)
 ggsave("./Figure/f4b.svg", f4b, dpi = 600, width = 14, height = 13)
 
 # Fig. 4c
-tmp <- table(pbmc_all$orig.ident, pbmc_all$subtype) %>% data.frame()
-tmp <- reshape2::dcast(tmp,formula = Var1~ Var2, value.var = 'Freq' ) %>% 
-    column_to_rownames('Var1') %>% mutate(all = rowSums(.)) 
-# for(i in c(1:dim(tmp)[1])){
-#     for(j in c(1:(dim(tmp)[2]-1))){
-#         # print(tmp[i,j])
-#         tmp[i,j] <- tmp[i,j]/tmp[i,dim(tmp)[2]]
-#     }
-# }
-# tmp <- select(tmp, -all)
-rowSums(tmp)
-tmp2 <-left_join(rownames_to_column(tmp),rownames_to_column(SLEDAI),
-                 by = c('rowname' = 'rowname')) %>% column_to_rownames('rowname')
-# cor(tmp2) %>% View()
-
 b_sum <- table(bcell_filter$orig.ident) %>% as.data.frame()
 cd4_sum <- table(cd4_filter$orig.ident) %>% as.data.frame()
 cd8_sum <- table(cd8_filter$orig.ident) %>% as.data.frame()
 b_sum$Var1 == cd4_sum$Var1
 cd4_sum$Var1 == cd8_sum$Var1
-tmp <- tmp[match(b_sum$Var1 %>% as.vector(), rownames(tmp)),]
-rownames(tmp) == cd4_sum$Var1
 
-tmp$`B.IFN_response` <- tmp$`B.IFN-response`/b_sum$Freq
-tmp$`T.CD4.IFN_response` <- tmp$`T.CD4.IFN-response`/cd4_sum$Freq
-tmp$`T.CD8.IFN_response` <- tmp$`T.CD8.IFN-response`/cd8_sum$Freq
+b_ifn_ind <- bcell_filter@meta.data %>% filter(subtype == 'B.IFN-response') %>% 
+    count(orig.ident) %>% column_to_rownames('orig.ident')
+cd4_ifn_ind <- cd4_filter@meta.data %>% filter(subtype == 'T.CD4.IFN-response') %>% 
+    count(orig.ident) %>% column_to_rownames('orig.ident')
+cd8_ifn_ind <- cd8_filter@meta.data %>% filter(subtype == 'T.CD8.IFN-response') %>% 
+    count(orig.ident) %>% column_to_rownames('orig.ident')
 
-# pheatmap(tmp, scale = 'row')
-# pheatmap(tmp, scale = 'column')
-# pheatmap(tmp, scale = 'none')
-
-ifn_ratio_df <- tmp[,colnames(tmp) %>% str_detect('IFN')] * 100
-
-
-# ifn_ratio_df <- read.csv(file = "./tmp/ifn_ratio_df.csv", row.names = 1)
+ifn_ratio_df <- data.frame(row.names = row.names(b_ifn_ind))
+ifn_ratio_df$`B.IFN_response` <- b_ifn_ind$n / b_sum$Freq
+ifn_ratio_df$`T.CD4.IFN_response` <- cd4_ifn_ind$n / cd4_sum$Freq
+ifn_ratio_df$`T.CD8.IFN_response` <- cd8_ifn_ind$n / cd8_sum$Freq
+ifn_ratio_df <- ifn_ratio_df * 100
 ifn_ratio_df <-left_join(rownames_to_column(ifn_ratio_df), rownames_to_column(meta),
                          by = c("rowname" = "rowname")) %>% column_to_rownames("rowname")
-# scatterplotMatrix(ifn_ratio_df[1:3], groups = ifn_ratio_df$treatment ,
-#                   smooth = list(spread = T, lty.smooth=2, lwd.smooth=3, lty.spread=3, lwd.spread=2),
-#                   spread = FALSE, main="IFN-response and SLEDAI", by.groups = F,
-#                   pch = c(15,16,17), col = c("#88a16f", "#9DB0D3", "#DA9494"), diagonal=list(method ="boxplot"), 
-#                   legend = F)
-# fit<-lm(sledai~`B.IFN-response` + `T.CD8.IFN-response` + `T.CD4.IFN-response` ,data=ifn_ratio_df)
-# summary(fit)
-# plot(fit)
 
 f4c_part1 <- ggscatter(ifn_ratio_df, x = "B.IFN_response", y = "SLEDAI", color = 'treatment',
                        palette =  c("#88a16f", "#9DB0D3", "#DA9494"),
-                       add = "reg.line",  # Add regressin line
+                       add = "reg.line",  # Add regression line
                        add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
-                       conf.int = TRUE) + xlab('B.IFN-response / B cell ratio') +
-    stat_cor(method = "pearson", label.x = 1, label.y = 11, p.accuracy = 0.001, r.accuracy = 0.01)
+                      conf.int = TRUE)  %>% ggpar(legend.title = 'Treatment') +
+    xlab('B.IFN-response / B cell ratio') +
+    stat_cor(method = "pearson", label.x = 1, label.y = 11, p.accuracy = 0.001, r.accuracy = 0.01, alternative='g')
+
 
 f4c_part2 <- ggscatter(ifn_ratio_df, x = "T.CD4.IFN_response", y = "SLEDAI", color = 'treatment',
                        palette =  c("#88a16f", "#9DB0D3", "#DA9494"),
-                       add = "reg.line",  # Add regressin line
+                       add = "reg.line",  # Add regression line
                        add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
-                       conf.int = TRUE) + xlab('T.CD4.IFN-response / CD4 T ratio (%)') +
-    stat_cor(method = "pearson", label.x = 2, label.y = 11, p.accuracy = 0.001, r.accuracy = 0.01)
+                       conf.int = TRUE)  %>% ggpar(legend.title = 'Treatment') + 
+    xlab('T.CD4.IFN-response / CD4 T ratio (%)') +
+    stat_cor(method = "pearson", label.x = 1.5, label.y = 11, p.accuracy = 0.001, r.accuracy = 0.01, alternative='g')
 
 f4c_part3 <- ggscatter(ifn_ratio_df, x = "T.CD8.IFN_response", y = "SLEDAI", color = 'treatment',
                        palette =  c("#88a16f", "#9DB0D3", "#DA9494"),
-                       add = "reg.line",  # Add regressin line
+                       add = "reg.line",  # Add regression line
                        add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
-                       conf.int = TRUE) + xlab('T.CD8.IFN-response / CD8 T ratio (%)') +
-    stat_cor(method = "pearson", label.x = 0.3, label.y = 11, p.accuracy = 0.001, r.accuracy = 0.01)
+                       conf.int = TRUE) %>% ggpar(legend.title = 'Treatment') + 
+    xlab('T.CD8.IFN-response / CD8 T ratio (%)') +
+    stat_cor(method = "pearson", label.x = 2, label.y = 11, p.accuracy = 0.001, r.accuracy = 0.01, alternative='g')
 f4c <- f4c_part1 | f4c_part2 | f4c_part3
 ggsave("./Figure/f4c.svg", f4c, dpi = 600, width = 12, height = 4)
 
@@ -559,21 +539,21 @@ bcr_df_filter <- bcr_df %>% filter(barcode %in% Cells(all_b_bcr))
 Idents(all_b_bcr) <- "treatment"
 hc_bcr <- subset(all_b_bcr,idents = "HC")
 Idents(hc_bcr) <- "subtype"
-f5c_part1 <- clonalOverlap2(hc_bcr, cloneCall="gene+nt", method="jaccard",title = "Health Control",limit = c(0,0.045)) +
-  theme(axis.text=element_text(colour="black", size = 15), text = element_text(colour="black", size = 15))
+f5c_part1 <- clonalOverlap2(hc_bcr, cloneCall="gene", method="jaccard",title = "Health Control",limit = c(0, 0.07)) 
+  # theme(axis.text=element_text(colour="black", size = 15), text = element_text(colour="black", size = 15))
 
 untreat_bcr <- subset(all_b_bcr,idents = "untreated")
 Idents(untreat_bcr) <- "subtype"
-f5c_part2 <- clonalOverlap2(untreat_bcr, cloneCall="gene+nt", method="jaccard",title = "SLE Untreated",limit = c(0,0.045))
+f5c_part2 <- clonalOverlap2(untreat_bcr, cloneCall="gene", method="jaccard",title = "SLE Untreated",limit = c(0, 0.07))
 
 treat_bcr <- subset(all_b_bcr,idents = "treated")
 Idents(treat_bcr) <- "subtype"
-f5c_part3 <- clonalOverlap2(treat_bcr, cloneCall="gene+nt", method="jaccard",title = "SLE Treated",limit = c(0,0.045))
+f5c_part3 <- clonalOverlap2(treat_bcr, cloneCall="gene", method="jaccard",title = "SLE Treated",limit = c(0, 0.07))
 rm(hc_bcr, untreat_bcr, treat_bcr)
 
-ggsave("./Figure/f5c_part1.svg", f5c_part1, dpi = 600, width =12, height = 6)
-ggsave("./Figure/f5c_part2.svg", f5c_part2, dpi = 600, width =12, height = 6)
-ggsave("./Figure/f5c_part3.svg", f5c_part3, dpi = 600, width =12, height = 6)
+ggsave("./Figure/f5c_part1.svg", f5c_part1, dpi = 600, width =13, height = 6)
+ggsave("./Figure/f5c_part2.svg", f5c_part2, dpi = 600, width =13, height = 6)
+ggsave("./Figure/f5c_part3.svg", f5c_part3, dpi = 600, width =13, height = 6)
 
 # Fig. 5d
 SHM_info <- read.csv("./scripts/immcantaion/bcell_immacantation_SHM.csv")
@@ -619,14 +599,14 @@ ggsave("./Figure/f5d.svg", f5d, dpi = 600, width =15, height = 12)
 #                             Fig6
 ##################################################################
 # Fig. 6a
-tmp <- load(file = "final/scRepertoire/TCR/cd8_tcr.rdata")
+load(file = "final/scRepertoire/TCR/cd8_tcr.rdata")
 combined_tcr.df.filter <-  filter(combined_tcr.df, barcode %in% Cells(cd8_tcr))
 combined_tcr.filter <- split(combined_tcr.df.filter, f = combined_tcr.df.filter$sample)
 combined_tcr.filter <- addVariable(combined_tcr.filter, name = "group", 
                                    variables = c("before", "before","before","after", "before", "before", "before", "after", "before", "HC", "before",
                                                  "before", "after","before", "before", "after", "after", "HC", "HC","before", "after", "HC"))
 f6a_part1 <- DimPlot(cd8_tcr, group.by = "cloneType", split.by = "treatment",pt.size = 0.5)  + 
-  scale_color_brewer(palette = "RdBu", direction = 1) + NoAxes()
+  scale_color_brewer(palette = "RdBu", direction = 1,na.translate = F) + NoAxes() 
 ggsave("./Figure/f6a_part1.svg", f6a_part1, dpi = 600, width =22, height = 8)
 
 
@@ -642,7 +622,7 @@ f6a_part2 <- meta %>%ggplot(aes(x =subtype, y = value, fill = cloneType)) + geom
 ggsave("./Figure/f6a_part2.svg", f6a_part2, dpi = 600, width =14, height = 7)
 
 
-# Fig. 6a
+# Fig. 6b
 p1 <- scatterClonotype(combined_tcr.filter, cloneCall = "gene+nt",
                        x.axis = "ZPP", 
                        y.axis = "ZPP2",

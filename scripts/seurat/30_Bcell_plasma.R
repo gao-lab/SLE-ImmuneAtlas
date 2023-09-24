@@ -27,39 +27,25 @@ source('./scripts/function_R/utils.R')
 #     FindClusters(resolution = 0.8) %>% 
 #     identity()
 back_run(do_harmony,out_name = 'bcell_harm', job_name = 'bcell_harm',
-         seu_obj = bcell_harm, harmony_slot = 'orig.ident',max.iter = 30,res =c(0.8,1.0), from_begin = T)
+         seu_obj = bcell, harmony_slot = 'orig.ident',max.iter = 30, res = c(0.8, 1.0), from_begin = T)
 
-DimPlot(bcell_harm,label = T)
+DimPlot(bcell_harm, label = T)
 VlnPlot(bcell_harm, features = marker_list, stack = T)
 
-save(bcell_harm, file = './final/seurat/b_cell/02-b_cell_raw_harm.rdata')
-
-Idents(bcell_harm) <- 'seurat_clusters'
-bcell_filter <- subset(bcell_harm, idents = c(7,14,15,16),invert = T)
-# bcell_filter <- do_seurat(bcell_filter)
-bcell_filter <- do_harmony(seu_obj = bcell_filter, harmony_slot = 'orig.ident',max.iter = 30,res =c(0.8,1.0))
-back_run(do_harmony,out_name = 'bcell_filter', job_name = 'bcell_filter',
-         seu_obj = bcell_filter, harmony_slot = 'orig.ident',max.iter = 30,res =c(0.8,1.0), from_begin = T)
-# save(bcell_filter, file = './final/seurat/b_cell/02-b_cell_filter_harm.rdata')
-
-DimPlot(bcell_filter,group.by = 'orig.ident',label = T) + NoLegend() +  DimPlot(bcell_filter, label = T)+ NoLegend() 
-DimPlot(bcell_filter,group.by = 'group', label = T) +
-    DimPlot(bcell_filter, label = T)
-
-VlnPlot(bcell_filter, features = marker_list,stack = T) + NoLegend()
-VlnPlot(bcell_filter, features = b_marker_list,stack = T) + NoLegend()
-VlnPlot(bcell_filter, features = c('nCount_RNA','nFeature_RNA'),stack = F) + NoLegend()
-
+save(bcell_harm, file = './final/addtional/seurat/b_cell/02-b_cell_raw_harm.rdata')
 
 #------------------------------- Exclude plasma --------------------------------
-bcell_filter <-  subset(bcell_filter, idents = c(5,10,12),invert = T)
-back_run(do_harmony,out_name = 'bcell_filter', job_name = 'bcell_filter', from_begin = T,
-         seu_obj = bcell_filter, harmony_slot = 'orig.ident',max.iter = 30,res =c(0.6,1.0,1.2,0.8))
-bcell_filter <- do_harmony(seu_obj = bcell_filter, harmony_slot = 'orig.ident',max.iter = 30,res =c(0.6,1.0,1.2,0.8))
+bcell_filter <- subset(bcell_harm, idents = c(10, 13, 15, 6, 8), invert = T)
+# back_run(do_harmony,out_name = 'bcell_filter', job_name = 'bcell_filter', from_begin = T,
+#          seu_obj = bcell_filter, harmony_slot = 'orig.ident',max.iter = 30,res =c(0.6,1.0,1.2,0.8))
+bcell_filter <- do_harmony(seu_obj = bcell_filter, harmony_slot = 'orig.ident',
+                           max.iter = 30, res =c(0.8), from_begin = T)
 
-bcell_filter <- subset(bcell_filter, idents = c(10,11), invert = T)
-# pub
-DimPlot(bcell_filter,group.by = 'subtype', label = T,cols = get_color(len = 7),pt.size = 0.1) + NoAxes() 
+DimPlot(bcell_filter, label = T)
+VlnPlot(bcell_filter, features = c(marker_list, feats, c('MKI67')), stack = T)
+bcell_filter <- subset(bcell_filter, idents = c(10, 11, 12, 13), invert = T)
+
+DimPlot(bcell_filter,group.by = 'subtype', label = T, cols = get_color(len = 7), pt.size = 0.1) + NoAxes() 
 
 VlnPlot(bcell_filter, features = marker_list,stack = T) + NoLegend()
 VlnPlot(bcell_filter, features = b_marker_list,stack = T) + NoLegend()
@@ -69,8 +55,8 @@ DotPlot2(bcell_filter, marker_list = marker_list)
 #------------------------- Vis the Marker Gene list ----------------------------
 DimPlot(bcell_filter, label = T) + DimPlot(bcell_filter, label = T,group.by = 'group') & NoLegend()
 
-# marker list from biorxiv: Multi-regional characterisation of renal cell 
-# carcinoma and microenvironment at single cell resolution
+# marker list from biorxiv: Multi-regional characterization of renal cell 
+# carcinoma and micro environment at single cell resolution
 
 DotPlot2(bcell_filter, marker_list = c('TLR7','ISG15','IFI27','MME'))
 DotPlot2(bcell_filter, marker_list = b_marker_list)
@@ -81,9 +67,9 @@ plot_scdata(bcell_filter, color_by = "treatment", pal_setup = 'Set2') +
 
 DimPlot(bcell_filter,label = T) + DimPlot(bcell_filter, group.by = 'subtype', label = T) 
 DimPlot(bcell_filter, group.by = 'Phase')
-DotPlot2(bcell_filter, marker_list = c('IL21R' ,'BACH2','BCL6','AICDA','IRF4' ,'PRDM1','PAX5','IFNAR1','IFNAR2','CD19'),group.by = 'treatment')
+DotPlot2(bcell_filter, marker_list = c('IL21R' ,'BACH2','BCL6','AICDA','IRF4' ,'PRDM1','PAX5','IFNAR1','IFNAR2','CD19'), group.by = 'seurat_clusters')
 
-DotPlot2(bcell_filter, group.by = 'subtype', marker_list = c('PAX5','IL4R','TCL1A','IFIT1','IFIT3','ISG15','TLR7','IFI27','CD5','CD9','MME','IGHA2','IGHG1','AICDA'))
+DotPlot2(bcell_filter, group.by = 'seurat_clusters', marker_list = c('PAX5','IL4R','TCL1A','IFIT1','IFIT3','ISG15','TLR7','IFI27','CD5','CD9','MME','IGHA2','IGHG1','AICDA'))
 DotPlot2(bcell_filter,marker_list = c('IFIT1','IFIT3','ISG15','IFI27','TLR7'))
 DotPlot2(subset(bcell_filter, idents = 5),marker_list = c('IFIT1','IFIT3','ISG15','IFI27','TLR7'), group.by = 'treatment')
 DotPlot2(bcell_filter,marker_list = c('IFIT1','IFIT3','ISG15','IFI27','TLR7'), group.by = 'treatment')
@@ -91,6 +77,41 @@ DotPlot2(bcell_filter,marker_list = c('IGHG1','IGHG2','IGHG3','IGHG4','IGHA1','I
 VlnPlot(bcell_filter, features =  c('IGHG1','IGHG2','IGHG3','IGHG4','IGHA1','IGHA2','IGHA3','IGHE','IFIT1','IFIT3','ISG15'), stack = T,group.by = 'treatment')
 
 DotPlot2(bcell_filter, marker_list = b_marker_list)
+
+#----------------------------- Finder Markers ----------------------------------
+# back_run(FindMarkers, out_name = 'marker_b_sle.hc',job_name = 'marker_b_sle.hc',
+#          bcell_filter,group.by = 'treatment', ident.1 = 'untreated', ident.2 = 'HC',
+#          only.pos = T, min.pct = 0.3,logfc.threshold = 0.35)
+# marker_b_sle.hc %<>% filter(p_val_adj <0.05) %>% arrange(-avg_log2FC)
+# # marker_all_bcell_filter <- FindAllMarkers(object = bcell_filter, only.pos = T, logfc.threshold = 0.25)
+# back_run(func =FindAllMarkers,out_name = 'marker_all_bcell_filter',job_name = 'marker_all_bcell_filter',
+#          object = bcell_filter, only.pos = T, logfc.threshold = 0.25)
+# marker_all_bcell_filter %<>% filter(p_val_adj < 0.05)
+# marker_all_bcell_filter %>% group_by(cluster) %>% top_n(avg_log2FC, n = 10) %>% View()
+# 
+# marker_b_.c10 <- FindMarkers(bcell_filter, ident.1 = c(10),
+#                              logfc.threshold = 0.3, min.pct = 0.25, only.pos = T)
+# marker_b_.c10 %<>% filter(p_val_adj <0.05)  %>% arrange(-avg_log2FC)
+# 
+marker_b_.c12 <- FindMarkers(bcell_filter, ident.1 = c(12),
+                              logfc.threshold = 0.25, min.pct = 0.2, only.pos = T)
+marker_b_.c12 %<>% filter(p_val_adj <0.05) %>% arrange(-avg_log2FC)
+
+#---------------------------- Anno the Sub type --------------------------------
+bcell_filter$subtype <- 'unknown'
+bcell_filter$subtype[which(bcell_filter$RNA_snn_res.0.8 %in% c(2))] <- 'B.transition'
+bcell_filter$subtype[which(bcell_filter$RNA_snn_res.0.8 %in% c(0,1))] <- 'B.naive'
+bcell_filter$subtype[which(bcell_filter$RNA_snn_res.0.8 %in% c(3,9))] <- 'B.mem.CXCR3+'
+bcell_filter$subtype[which(bcell_filter$RNA_snn_res.0.8 %in% c(5))] <- 'B.mem.CD27-'
+bcell_filter$subtype[which(bcell_filter$RNA_snn_res.0.8 %in% c(7))] <- 'B.mem.IGHM+'
+bcell_filter$subtype[which(bcell_filter$RNA_snn_res.0.8 %in% c(6,8))] <- 'B.mem'
+bcell_filter$subtype[which(bcell_filter$RNA_snn_res.0.8 %in% c(4))] <- 'B.IFN-response'
+
+table(bcell_filter$subtype)
+DimPlot(bcell_filter, group.by = 'subtype', label = T) + NoLegend()
+
+bcell_filter <- subset(bcell_filter, idents = 9, invert = T)
+
 
 # pub plot 
 bcell_filter$subtype <- factor(bcell_filter$subtype, 
@@ -115,45 +136,7 @@ DotPlot2(bcell_filter, marker_list = c('STAT2','STAT1','IRF9','IFIT1','IFI44L','
           panel.background = element_rect(colour = "grey", size=1)) + xlab('') + 
     theme(axis.text.x = element_text(angle = 90))
 
-#----------------------------- Finder Markers ----------------------------------
-# marker_b_harm_c2 <- FindMarkers(bcell_filter, ident.1 = 2, ident.2 = 0, only.pos = T, min.pct = 0.2,)
-back_run(FindMarkers, out_name = 'marker_b_sle.hc',job_name = 'marker_b_sle.hc',
-         bcell_filter,group.by = 'treatment', ident.1 = 'untreated', ident.2 = 'HC', 
-         only.pos = T, min.pct = 0.3,logfc.threshold = 0.35 )
-marker_b_sle.hc %<>% filter(p_val_adj <0.05) %>% arrange(-avg_log2FC)
-# marker_all_bcell_filter <- FindAllMarkers(object = bcell_filter, only.pos = T, logfc.threshold = 0.25)
-back_run(func =FindAllMarkers,out_name = 'marker_all_bcell_filter',job_name = 'marker_all_bcell_filter',
-         object = bcell_filter, only.pos = T, logfc.threshold = 0.25)
-marker_all_bcell_filter %<>% filter(p_val_adj <0.05)
-marker_all_bcell_filter %>% group_by(cluster) %>% top_n(avg_log2FC  , n = 10) %>% View()
-
-marker_b_.c678c359 <- FindMarkers(bcell_filter, ident.1 = c(6,7,8), ident.2 = c(3,5,9),
-                                  logfc.threshold = 0.25,min.pct = 0.2)
-marker_b_.c678c359 %<>% filter(p_val_adj <0.05)  %>% arrange(-avg_log2FC)
-
-marker_b_.c678 <- FindMarkers(bcell_filter, ident.1 = c(6,7,8),
-                              logfc.threshold = 0.25,min.pct = 0.2)
-marker_b_.c678 %<>% filter(p_val_adj <0.05)  %>% arrange(-avg_log2FC)
-
-#---------------------------- Anno the Sub type --------------------------------
-bcell_filter$subtype <- 'unknown'
-# bcell_filter$subtype[which(bcell_filter$RNA_snn_res.0.8 %in% c(11))] <- 'B.transition'
-bcell_filter$subtype[which(bcell_filter$RNA_snn_res.0.8 %in% c(2))] <- 'B.transition'
-bcell_filter$subtype[which(bcell_filter$RNA_snn_res.0.8 %in% c(0,1))] <- 'B.naive'
-bcell_filter$subtype[which(bcell_filter$RNA_snn_res.0.8 %in% c(3,9))] <- 'B.mem.CXCR3+'
-bcell_filter$subtype[which(bcell_filter$RNA_snn_res.0.8 %in% c(5))] <- 'B.mem.CD27-'
-bcell_filter$subtype[which(bcell_filter$RNA_snn_res.0.8 %in% c(6))] <- 'B.mem.IGHM+'
-bcell_filter$subtype[which(bcell_filter$RNA_snn_res.0.8 %in% c(7,8))] <- 'B.mem'
-bcell_filter$subtype[which(bcell_filter$RNA_snn_res.0.8 %in% c(4))] <- 'B.IFN-response'
-# bcell_filter$subtype[which(bcell_filter$RNA_snn_res.0.8 %in% c())] <- 'low.quality'
-
-table(bcell_filter$subtype)
-DimPlot(bcell_filter, group.by = 'subtype', label = T) + NoLegend()
-
-bcell_filter <- subset(bcell_filter, idents = 9, invert = T)
-
 #------------------------ Ratio of B cell in Sample ----------------------------
-# pub
 # Bar plot :B cell clusters distribution in subtypes
 ggplot(data = bcell_filter@meta.data, aes(x = bcell_filter$treatment, 
                                           fill =bcell_filter$subtype))+
@@ -200,7 +183,7 @@ bcell_filter@meta.data %>% group_by(orig.ident,subtype) %>% summarise(sub_num = 
                       palette =c("#FC4E07", "#00AFBB"))+ 
     facet_wrap(~subtype,scales = "free")  + stat_compare_means(label.x = 1.2,method = 't.test')
 
-# Box plot :(unpaired)cell subtype ratio between treatment
+# Box plot :(unpaired) cell subtype ratio between treatment
 bcell_filter@meta.data  %>% 
     group_by(orig.ident,subtype) %>% summarise(sub_num = n()) %>% 
     mutate(sample_num = sum(sub_num)) %>% mutate(Ratio = sub_num/sample_num*100) %>%
@@ -233,7 +216,7 @@ data.frame(sample = tmp1$orig.ident, subtype= tmp1$subtype,
               palette = "npg") +  stat_compare_means(paired = TRUE, method = 't.test',label.x = 1.4,label = 'p.format')+
     ylab('Prolife Plasma ratio') + facet_wrap(~subtype,scales= "free",ncol = 4 )
 
-# Heatmap: sample clustering based on B cell subtype 
+# Heatmap: sample clustering based on B cell sub type 
 bcell_sample_ratio_df <- table(bcell_filter$subtype, bcell_filter$orig.ident) %>% 
     as.data.frame() %>% filter(Var2 !='pSS_pah') %>%group_by(Var2) %>% 
     mutate(Frequency = sum(Freq)) %>% mutate(Ratio = Freq/Frequency*100) %>%
@@ -243,6 +226,6 @@ heatmap(as.matrix(bcell_sample_ratio_df))
 # heatmap(as.matrix(bcell_sample_ratio_df),scale = c('col'))
 
 
-#------------------------ Save the Anno Objcet --------------------------------------
-save(bcell_filter, file = './final/seurat/b_cell/03-b_cell_anno_filter_harm.rdata')
+#------------------------ Save the Anno Object --------------------------------------
+save(bcell_filter, file = './final/addtional/seurat/b_cell/03-b_cell_anno_filter_harm.rdata')
 

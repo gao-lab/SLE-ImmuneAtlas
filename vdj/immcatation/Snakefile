@@ -11,8 +11,8 @@ import pandas as pd
 #        such as 
 #    ```
 #    pip install biopython
-#    pip3 install presto --user
-#    pip3 install changeo --user
+#    pip3 install presto 
+#    pip3 install changeo
 #    ```
 # 2. filtered_contig fasta and csv file of cell ranger output in a dir named by sample such as
 #    ---GW
@@ -68,7 +68,7 @@ rule heavy_chain_clone_cluster:
         heavy = 'data/{sample}/heavy_parse-select.tsv' ,
     output:
         distance = 'data/{sample}/shazam_clone_distance.txt',
-        distribution_pdf = 'data/{sample}/shazam_clone_distance.pdf',
+        # distribution_pdf = 'data/{sample}/shazam_clone_distance.pdf',
     script:
         './script/distance.R'
 

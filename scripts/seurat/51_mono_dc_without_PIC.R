@@ -1,34 +1,4 @@
-library(Scillus)
 
-setwd('/data/sle')
-output_path <- './output_file/seurat/mono_dc/'
-source('./scripts/function_R/utils.R')
-
-#------------------------------ Re Analysis ------------------------------------
-mono_dc_filter <- subset(mono_dc_harmony, idents = c(6,9,14,12,13,15,17), invert = T)
-mono_dc_filter <- do_seurat(mono_dc_filter)
-mono_dc_pic <- subset(mono_dc_harmony, idents = c(6,9,14,12,13,15,17))
-save(mono_dc_pic,file=  paste0(output_path,'pic_mono_dc_harmony.rdata'))
-
-#---------------------------- Harmony Batch Remove -----------------------------
-# run Harmony ------
-mono_dc_filter <- mono_dc_filter %>% 
-  RunHarmony("orig.ident", plot_convergence = TRUE, max.iter.harmony = 20)
-
-mono_dc_filter <- mono_dc_filter %>% 
-  RunUMAP(reduction = "harmony", dims = 1:20) %>% 
-  FindNeighbors(reduction = "harmony", dims = 1:20) %>% 
-  FindClusters(resolution = 0.8) %>% 
-  identity()
-save(mono_dc_filter, file = paste0(output_path, 'mono_dc_filter_harmony.rdata'))
-
-DimPlot(mono_dc_filter,group.by = 'orig.ident') + DimPlot(mono_dc_filter, group.by = 'subtype', label = T) 
-plot_scdata(mono_dc_filter, color_by = "treatment", pal_setup = 'Set2') + 
-  plot_scdata(mono_dc_filter, color_by = "subtype", pal_setup = 'Set1')
-
-# add meta
-mono_dc_filter$disease <- 'SLE'
-mono_dc_filter$disease[which(mono_dc_filter$group == 'HC')] <- 'HC'
 
 #---------------------------- Vis the Marker Gene ------------------------------
 DotPlot(mono_dc_filter, features = c('CD14','FCGR3A','CLEC4C',macro_sub_marker), group.by = 'subtype')+
@@ -37,8 +7,7 @@ DotPlot(mono_dc_filter, features = c('CD14','FCGR3A','CLEC4C',macro_sub_marker),
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+ylab('')
 
 Idents(mono_dc_filter) <- 'subtype'
-DotPlot(mono_dc_filter, features = c('IRF5','IRF9','IFNAR1','IFNAR2','TLR7','TLR9','IRF7'),
-        split.by = 'treatment', cols = c("red", "blue", "green"))
+DotPlot(mono_dc_filter, features = c('IRF5','IRF9','IFNAR1','IFNAR2','TLR7','TLR9','IRF7'))
 
 #---------------------------- Vis the distribution------------------------------
 tmp_df <- mono_dc_filter@meta.data %>% filter(group != 'pSS_pah')
@@ -95,10 +64,6 @@ ggpaired(mono_pair_df, cond1 = 'before', cond2 = 'after',
          fill  = "condition", line.color = "gray", line.size = 0.4,
          palette = "npg") +  stat_compare_means(paired = TRUE, method = 't.test',label.x = 1.4)+
   ylab('Prolife Plasma ratio') + facet_wrap(~subtype,scales= "free" )
-
-
-#------------------------------- Marker genes-----------------------------------
-# marker_DC_pDC <- Find
 
 
 #---------------------------------- Save ---------------------------------------

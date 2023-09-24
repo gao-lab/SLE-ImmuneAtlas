@@ -1,6 +1,5 @@
 library(cowplot)
 library(harmony)
-library(RISC)
 library(Seurat)
 library(tidyverse)
 library(ggpubr)
@@ -12,26 +11,22 @@ source('./scripts/function_R/utils.R')
 load('./final//seurat/mono_dc/01-mono_dc_raw.rdata')
 
 #---------------------------- Harmony Batch Remove -----------------------------
-
 back_run(do_harmony,out_name = 'mono_dc_harm', job_name = 'mono_dc_harm',
-         seu_obj = mono_dc_harm, harmony_slot = 'orig.ident',max.iter = 30,res =c(0.8,1.0), from_begin =T)
-save(mono_dc_harm, file = 'final/seurat/mono_dc/02-mono_dc_harm.rdata')
+         seu_obj = mono_dc, harmony_slot = 'orig.ident',max.iter = 30,res =c(0.8,1.0), from_begin =T)
+
+save(mono_dc_harm, file = 'final/addtional/seurat/mono_dc/02-mono_dc_harm.rdata')
 
 #---------------------------- Remove Doublets -----------------------------
+VlnPlot(mono_dc_harm, features = c(marker_list, feats, c('CD34','CD38')), stack = T)
+
 DimPlot(mono_dc_harm, label = T) + DimPlot(mono_dc_harm, group.by = 'group')
-mono_dc_filter <- subset(mono_dc_harm, idents = c(6,11,15,18,20,9,16), invert = T)
+mono_dc_filter <- subset(mono_dc_harm, idents = c(10,11,15,17,7,13,18,19), invert = T)
 DimPlot(mono_dc_filter, label = T) + DimPlot(mono_dc_filter, group.by = 'group')
 
-mono_index <- CellSelector(DimPlot(mono_dc_filter))
-mono_dc_filter <- subset(mono_dc_filter, cells = mono_index, invert = T)
-
-marker_mono_c19 <- FindMarkers(mono_dc_harm, ident.1 = 19, only.pos = T, min.pct = 0.25)
-marker_mono_c19   %<>%  filter(p_val_adj < 0.05) %>% arrange(-avg_log2FC )
-
-DotPlot(mono_dc_filter, features = marker_list)+
-  scale_colour_gradient2(low = "#4169E1", mid = "#F5F5F5", high = "#DC143C")+
-  scale_size(breaks = c(0, 25, 50, 75)) +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+#---------------------------- Rerun Harmony analysis ---------------------------
+mono_dc_filter <- do_harmony(mono_dc_filter, harmony_slot = 'orig.ident',
+                             max.iter = 30, res = c(0.8), from_begin = T)
+DotPlot2(mono_dc_filter, marker_list = marker_list)
 FeaturePlot(mono_dc_harm, features = feats[1:2])
 
 DotPlot2(mono_dc_filter, marker_list = c('CD14','FCGR3A')) 
@@ -94,7 +89,6 @@ mono_dc_filter$subtype[which(mono_dc_filter$seurat_clusters %in% c(12))] <- 'cDC
 mono_dc_filter$subtype[which(mono_dc_filter$seurat_clusters %in% c(19))] <- 'cDC2'
 mono_dc_filter$subtype[which(mono_dc_filter$seurat_clusters %in% c(13))] <- 'pDC'
 mono_dc_filter$subtype[which(mono_dc_filter$seurat_clusters %in% c(14))] <- 'Macrophage'
-mono_dc_filter$subtype[which(mono_dc_filter$seurat_clusters %in% c())] <- 'doubelt'
 table(mono_dc_filter$subtype)
 
 # pub

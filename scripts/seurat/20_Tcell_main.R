@@ -7,8 +7,8 @@ output_path <- './final/seurat/t_cell/'
 
 #------------------------------ Re Analysis ------------------------------------
 # tcell <- do_seurat(seu_obj = tcell,res = c())
-tcell <- back_run(do_seurat,out_name = 'tcell', job_name = 'tcell',
-                  seu_obj = tcell,res = c(1.0,0.8))
+# tcell <- back_run(do_seurat, out_name = 'tcell', job_name = 'tcell',
+#                   seu_obj = tcell,res = c(1.0,0.8))
 # save(tcell, file = 'final/seurat/t_cell/02-t_cell_raw_cluster.rdata')
 
 #------------------------------ Harmony Batch Remove ---------------------------
@@ -22,9 +22,9 @@ tcell <- back_run(do_seurat,out_name = 'tcell', job_name = 'tcell',
 #   FindClusters(resolution = 0.8) %>% 
 #   identity()
 # do_harmony(seu_obj = tcell,harmony_slot = 'orig.ident',max.iter = 30,res =c(0.8,1.0) )
-back_run(do_harmony,out_name = 'tcell_harm', job_name = 'tcell_harm',
-         seu_obj = tcell_harm, harmony_slot = 'orig.ident',max.iter = 30,res =c(1.0,0.8),from_begin = T)
-save(tcell_harm, file = 'final/seurat/t_cell/02-t_cell_raw_harm.rdata')
+back_run(do_harmony, out_name = 'tcell_harm', job_name = 'tcell_harm',
+         seu_obj = tcell, harmony_slot = 'orig.ident', max.iter = 30, res =c(1.0,0.8), from_begin = T)
+save(tcell_harm, file = 'final/addtional/seurat/t_cell/02-t_cell_raw_harm.rdata')
 
 DimPlot(tcell_harm, reduction = "umap", label = TRUE, pt.size = .1)
 DimPlot(tcell_harm, reduction = "umap", label = TRUE, group.by = 'Phase')
@@ -83,13 +83,12 @@ DotPlot(tcell_harm, features = c('CD4','CD8A','CD8B')) +
 FeaturePlot(tcell_harm, features = c('CD4','CD8A','CD8B'), ncol = 3) + 
   DimPlot(tcell_harm, reduction = "umap", label = TRUE, pt.size = .1)
 
-VlnPlot(tcell_harm, features = feats,stack = F, ncol = 2)
+# VlnPlot(tcell_harm, features = feats,stack = F, ncol = 2)
+VlnPlot(tcell_harm,features = c(marker_list,feats), stack = T)
+
 # invariant NKT and MAIT and yd T
-DotPlot(tcell_harm, features = c(t_invarient_NKT_marker, t_MAIT_marker, t_yd_marker)) +
-  scale_colour_gradient2(low = "#4169E1", mid = "#F5F5F5", high = "#DC143C")+
-  scale_size(breaks = c(0, 25, 50, 75)) + 
-  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=0.5))+
-  ylab('') + xlab('')
+t_yd_marker <- c('TRDC')
+DotPlot2(tcell_harm, marker_list = c(t_MAIT_marker, t_yd_marker))
 
 # check TRA and TRB
 DotPlot(tcell_harm, features = grep(rownames(tcell_harm),pattern = "^TRA[VDJ]", value = T, invert = F, perl = T)) +
@@ -104,7 +103,7 @@ DotPlot(tcell_harm, features = grep(rownames(tcell_harm),pattern = "^TRB[VDJ]", 
   ylab('') + xlab('')
 
 #---------------------------- Anno the Sub type --------------------------------
-# cluster  ratio is correlated with cell number
+# cluster ratio is correlated with cell number
 tcell_harm@meta.data %>% group_by(orig.ident) %>% filter(seurat_clusters == 11) %>% 
   summarise(nkt=n()) %>% 
   left_join(y = all_cell@meta.data%>%group_by(orig.ident)%>% summarise(all=n()))%>%
@@ -122,16 +121,13 @@ tcell_harm@meta.data  %>% group_by(orig.ident,seurat_clusters) %>%
 
 
 tcell_harm$subtype <- 'unknown'
-tcell_harm$subtype[which(tcell_harm$seurat_clusters %in% c(0,3,6,17))] <- 'T.CD8.cyto'
-tcell_harm$subtype[which(tcell_harm$seurat_clusters %in% c(4,14))] <- 'T.CD8.naive'
-tcell_harm$subtype[which(tcell_harm$seurat_clusters %in% c(1,2,8))] <- 'T.CD4.naive'
+tcell_harm$subtype[which(tcell_harm$seurat_clusters %in% c(1,2,6,7,12,21))] <- 'T.CD4'
+tcell_harm$subtype[which(tcell_harm$seurat_clusters %in% c(0,3,4,9,13,18))] <- 'T.CD8'
 tcell_harm$subtype[which(tcell_harm$seurat_clusters %in% c(5,16))] <- 'NK'
-tcell_harm$subtype[which(tcell_harm$seurat_clusters %in% c(9,12))] <- 'T.CD4.cyto'
-tcell_harm$subtype[which(tcell_harm$seurat_clusters %in% c(13,18))] <- 'T.prolife'
-tcell_harm$subtype[which(tcell_harm$seurat_clusters %in% c(7))] <- 'T.yd'
+tcell_harm$subtype[which(tcell_harm$seurat_clusters %in% c(14,19))] <- 'T.prolife'
+tcell_harm$subtype[which(tcell_harm$seurat_clusters %in% c(8))] <- 'T.yd'
 tcell_harm$subtype[which(tcell_harm$seurat_clusters %in% c(10))] <- 'MAIT'
-# tcell_harm$subtype[which(tcell_harm$seurat_clusters %in% c())] <- 'low_quality'
-tcell_harm$subtype[which(tcell_harm$seurat_clusters %in% c(11,15,19))] <- 'doublet'
+tcell_harm$subtype[which(tcell_harm$seurat_clusters %in% c(11,15,20,17))] <- 'doublet'
 table(tcell_harm$subtype)
 DimPlot(tcell_harm, group.by = 'subtype', label = T) + NoLegend()
 

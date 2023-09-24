@@ -8,12 +8,12 @@ source('./scripts/function_R/utils.R')
 
 # Already Harmony 
 load('./final//seurat/t_cell/03-CD4_Tcell_raw_harm.rdata')
-DimPlot(cd8_filter, label = T,cols = get_color(12), pt.size = 0.3) + NoAxes() 
+DimPlot(cd8_filter, label = T, cols = get_color(12), pt.size = 0.3) + NoAxes() 
 # DimPlot(cd8_filter, label = T) + DimPlot(cd8_filter,group.by = 'seurat_clusters')
 VlnPlot(cd8_filter,features = c('CD4','CD8A','CD8B'), ncol = 3,stack = T)
 
 # filter cluster 15
-cd8_filter <- subset(cd8_filter, idents =c(8,11), invert =T)
+cd8_filter <- subset(cd8_filter, idents =c(8, 11), invert =T)
 select.cells <- CellSelector(plot = DimPlot(cd8_filter, label = T))
 cd8_filter <-subset(cd8_filter,cells = select.cells, invert = T)
 
@@ -32,6 +32,7 @@ DotPlot2(cd8_filter, marker_list = c('GZMB','GZMH','NKG7','CCL5','IFIT3',
 
 DotPlot2(cd8_filter, marker_list = c('IFIT3','ISG15','MX1','OAS1','IFI44L'))
 
+DotPlot2(cd8_filter, marker_list = c('IFIT3','ISG15','MX1','EOMES','LEF1', 'KLRD1', 'CTLA4'))
 #------------------------------- Finder markers -----------------------------------
 plan('multiprocess', workers = 10)
 options(future.globals.maxSize= 100 * 1000 * 1024 ^2 ) 
@@ -54,10 +55,11 @@ marker_cd8_c10 <- FindMarkers(cd8_filter, ident.1 = 10, only.pos = T,logfc.thres
 #---------------------------------- Anno ---------------------------------------
 cd8_filter$subtype <- 'unknown'
 cd8_filter$subtype[which(cd8_filter$seurat_clusters %in% c(9))] <- 'T.CD8.Tex'
-cd8_filter$subtype[which(cd8_filter$seurat_clusters %in% c(4,5,6))] <- 'T.CD8.Naive'
-cd8_filter$subtype[which(cd8_filter$seurat_clusters %in% c(10))] <- 'T.CD8.IFN-response'
-cd8_filter$subtype[which(cd8_filter$seurat_clusters %in% c(2,7))] <- 'T.CD8.mem'
+cd8_filter$subtype[which(cd8_filter$seurat_clusters %in% c(2,5,7,10,11))] <- 'T.CD8.Naive'
+cd8_filter$subtype[which(cd8_filter$seurat_clusters %in% c(8))] <- 'T.CD8.IFN-response'
+cd8_filter$subtype[which(cd8_filter$seurat_clusters %in% c(4,6))] <- 'T.CD8.mem'
 cd8_filter$subtype[which(cd8_filter$seurat_clusters %in% c(0,1,3))] <- 'T.CD8.Teff'
+table(cd8_filter$subtype)
 
 DimPlot(cd8_filter, label = T, group.by = 'subtype',cols = get_color(5), pt.size = 0.3) + NoAxes()
 Idents(cd8_filter) <- 'subtype'
@@ -65,7 +67,7 @@ Idents(cd8_filter) <- 'subtype'
 #---------------------------------- Ratio---------------------------------------
 getPalette = colorRampPalette(brewer.pal(9, "Set1"))
 
-# overall  ratio
+# overall ratio
 cd8_filter@meta.data %>% filter(group != 'pSS_pah') %>% 
   ggplot( aes(x = disease , fill = seurat_clusters))+
   geom_bar(stat = 'count',position = 'fill')+
@@ -81,7 +83,7 @@ cd8_filter@meta.data  %>% group_by(orig.ident,subtype) %>% summarise(sub_num = n
   ggpubr::ggboxplot(x='group',y='Ratio', fill = 'group',
                     palette =c("#FC4E07","#00AFBB"),legend = 'right')+ 
   facet_wrap(~subtype,scales = "free", ncol = 5) + 
-  stat_compare_means( method = "t.test" ,label.x = 1.2)
+  stat_compare_means( method = "wilcox" ,label.x = 1.2)
 
 # paired test
 tmp1<- cd8_filter@meta.data  %>% 
@@ -115,5 +117,5 @@ cd8_filter@meta.data  %>%
            palette = "npg") + facet_wrap(~subtype,scales= "free" )
 
 #---------------------------------- Save ---------------------------------------
-save(cd8_filter,file = './final/seurat/t_cell/04-CD8_Tcell_filter_anno.rdata')
+save(cd8_filter,file = './final/addtional/seurat/t_cell/04-CD8_Tcell_filter_anno.rdata')
 

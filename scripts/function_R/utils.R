@@ -262,26 +262,34 @@ vizGenes2 <- function(combined_xcr, gene = 'V', chain='IGH',y.axis = 'J',title= 
 # @title        : title of the plot
 # @limit        : set limit of max value(value greater than this vill be white !!!)
 # >>> Nothing (plotting)
-clonalOverlap2 <- function(seu_with_xcr, cloneCall = 'gene+nt',method='jaccard',
-                           title= 'Need Title',limit = c(0,0.5) ){
-  clonalOverlap(seu_with_xcr, cloneCall=cloneCall, method=method,exportTable = T) %>% reshape2::melt('names') %>% 
-    ggplot(aes(x = names,y = variable,fill = value))+
-    geom_tile()+theme_bw()+
-    theme_minimal()+ # 设置主题为无边框
-    scale_fill_viridis( na.value = "white",limit =limit,space = "Lab",name = paste0(str_to_title(method) ,' index')) +
-    labs(title = title)+
-    theme(axis.text.x = element_text(angle = 45,vjust = 1, hjust = 1),
-          plot.title = element_text(size = 14,hjust = 0.5,face = "bold"),
+clonalOverlap2 <- function(seu_with_xcr, cloneCall = 'gene', method='jaccard', split.by='subtype',
+                           title= 'Need Title',limit = c(0, 0.5) ){
+    low <- limit[0]
+    mid <- limit[1] / 2
+    high <- limit[1]
+  clonalOverlap(seu_with_xcr, cloneCall= cloneCall, method = method, exportTable = T, split.by = split.by) %>% reshape2::melt('names') %>% 
+    ggplot(aes(x = names, y = variable, fill = value)) +
+    geom_tile(aes(fill = value)) +
+    # scale_fill_viridis(na.value = "white", limit =limit, space = "Lab", name = paste0(str_to_title(method), ' index')) +
+      # scale_fill_gradient2('value', limits=limit, breaks = c(low, mid, high),  low = "blue", high = "red", mid='white',na.value = "white") +
+      scale_fill_continuous(low="#F5F5F5", high="darkred", guide="colorbar",na.value="white", limit = limit, name = paste0(str_to_title(method), ' index')) +
+      # guides(fill=guide_legend(title = paste0(str_to_title(method), ' index'))) + 
+    labs(title = title) +
+  theme_bw() + theme_minimal() + # 设置主题为无边框
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+          plot.title = element_text(size = 14, hjust = 0.5, face = "bold"),
           legend.title = element_text(size = 12),
           axis.title = element_blank(), # 去除横纵坐标轴标题标签
+          panel.border = element_blank(),
           panel.grid.major = element_blank(), # 去除背景网格线
+          panel.grid.minor = element_blank(),
           panel.background = element_blank(), # 去除背景颜色
           legend.justification = c(1,0),
-          legend.position = c(1.3,0.3), # 图例位置
-          legend.direction = "horizontal")+ # vertical(垂直)/horizontal(水平)
-    coord_fixed()+ # 确保x轴一个单位与y轴一个单位长度相同
-    guides(fill = guide_colorbar(barwidth = 9,barheight = 1.5, # 图例长宽
-                                 title.position = "top",title.hjust = 0.1))
+          legend.position = c(0.9, 0.3), # 图例位置
+          legend.direction = "horizontal") + # vertical(垂直)/horizontal(水平)
+    coord_fixed()  # 确保x轴一个单位与y轴一个单位长度相同
+    # guides(fill = guide_colorbar(barwidth = 9, barheight = 1.5, # 图例长宽
+    #                              title.position = "top", title.hjust = 0.1))
 }
 
 
@@ -509,7 +517,7 @@ do_harmony <- function(seu_obj = seu_obj,harmony_slot='orig.ident',theta = 2,fro
   }
 # pdf()
   seu_obj <- seu_obj %>% 
-    RunHarmony(group.by.vars = harmony_slot,theta = theta, plot_convergence = F, max.iter.harmony = max.iter)%>% 
+    RunHarmony(group.by.vars = harmony_slot,theta = theta, plot_convergence = F, max.iter.harmony = max.iter) %>% 
     RunUMAP(reduction = "harmony", dims = 1:20) %>% 
     FindNeighbors(reduction = "harmony", dims = 1:20) %>% 
     FindClusters(resolution = res) %>% 
